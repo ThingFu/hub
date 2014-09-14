@@ -1,0 +1,10 @@
+{
+    "tid": "433mhz-4buttons",
+    "name": "4 Button",
+    "description": "",
+    "protocol": "433MHZ",
+    "attributes": [],
+    "event_update_buffer": 3000,
+    "vendor": "unknown",
+    "model": "4button"
+}

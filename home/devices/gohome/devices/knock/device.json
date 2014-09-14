@@ -1,0 +1,6 @@
+{
+    "tid": "433mhz-knock",
+    "name": "Wireless Knock Sensor",
+    "protocol": "433MHZ",
+    "eventUpdateBuffer": 3000
+}

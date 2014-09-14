@@ -1,0 +1,10 @@
+{
+    "tid": "433mhz-1button",
+    "name": "Single Button",
+    "description": "",
+    "protocol": "433MHZ",
+    "attributes": [],
+    "event_update_buffer": 3000,
+    "vendor": "unknown",
+    "model": "1button"
+}

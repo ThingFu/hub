@@ -1,0 +1,26 @@
+{
+    "name": "Sample Rule",
+    "description": "Sample Rule",
+    "enabled": true,
+    "priority": 1,
+    "targets": [
+        "7820592"
+    ],
+    "when": [
+        {
+            "target": "7820592",
+            "trigger": "sense"
+        }
+    ],
+    "async": true,
+    "then": [
+        {
+            "do": "sendmail",
+            "config": {
+                "to": "zubairhamed@gmail.com",
+                "subject": "Button Pressed on {{date_now}}",
+                "content": "Big Red Button Pressed!"
+            }
+        }
+    ]
+}

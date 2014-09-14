@@ -1,0 +1,134 @@
+{{define "dashboard"}}
+{{template "header" .}}
+<!-- Right side column. Contains the navbar and content of the page -->
+<aside class="right-side">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>Dashboard</h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Dashboard</li>
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <!-- Header Widgets -->
+        <div class="row">
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-aqua">
+                    <div class="inner">
+                        <h3>{{.RAM_used}}MB</h3>
+                        <p>RAM Utilised</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-tasks"></i>
+                    </div>
+                    <a href="/sysinfo" class="small-box-footer">System Info</a>
+                </div>
+            </div><!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-green">
+                    <div class="inner">
+                        <h3>{{.Device_count}}</h3>
+                        <p>Devices</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">&nbsp;</a>
+                </div>
+            </div><!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-yellow">
+                    <div class="inner">
+                        <h3>{{.Events_count}}</h3>
+                        <p>Events Processed</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <a href="/events" class="small-box-footer">
+                        View Events
+                    </a>
+                </div>
+            </div><!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-red">
+                    <div class="inner">
+                        <h3>{{.Uptime}}</h3>
+                        <p>Uptime</p>
+                    </div>
+                    <div class="icon">
+                        <i class="glyphicon glyphicon-time"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">&nbsp;</a>
+                </div>
+            </div><!-- ./col -->
+        </div><!-- /.row -->
+        <br />
+        <!-- Main row -->
+        <div class="row">
+            <!-- Left col -->
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#dashboard-home" data-toggle="tab">Home</a>
+                    </li>
+
+                    <li>
+                        <a href="#dashboard-health" data-toggle="tab">Health</a>
+                    </li>
+
+                    <li>
+                        <a href="#dashboard-web" data-toggle="tab">Web</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content no-padding">
+                    <div class="tab-pane active" id="dashboard-home" style="position:relative;">
+                        {{with .Home_devices}}
+                        {{range . }}
+                        <div class="col-md-4">
+                            <!-- Primary box -->
+                            <div class="box box-primary">
+                                <div class="box-header" data-toggle="tooltip" title="{{.Name}}">
+                                    <h3 class="box-title">{{.Name}}</h3>
+                                </div>
+                                <div class="box-body">
+                                    {{.RenderWidget}}
+                                </div><!-- /.box-body -->
+                                <div class="box-footer">
+                                    <div class="text-center">
+                                        <a href="/widget/{{.GetId}}/view" class="btn btn-social-icon btn-bitbucket">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+
+                                        <a href="/widget/{{.GetId}}/configure" class="btn btn-social-icon btn-bitbucket">
+                                            <i class="fa fa-gears"></i>
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div><!-- /.col -->
+                        {{end}}
+                        {{end}}
+                    </div>
+                    <div class="tab-pane" id="dashboard-health" style="position:relative;">
+
+                    </div>
+                    <div class="tab-pane" id="dashboard-web" style="position:relative;">
+
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.row (main row) -->
+    </section><!-- /.content -->
+</aside><!-- /.right-side -->
+{{template "footer" .}}
+{{end}}

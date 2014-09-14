@@ -1,0 +1,26 @@
+<div style="height: 150px;">
+    <table width="100%">
+        <tr>
+            <td width="33%" style="text-align: right; vertical-align: middle; font-weight: bold; font-size: 3.5em;">
+                {{if .LastState}}
+                {{with .LastState}}
+                {{.tempMajor}}&deg;
+                {{end}}
+                {{end}}
+            </td>
+            <td width="33%" style="text-align: center;">
+                <img src="device/433mhz-wt450/resource/icon/128x"/>
+            </td>
+            <td width="33%" style="text-align: left; vertical-align: middle; font-weight: bold; font-size: 3.5em;">
+                {{if .LastState}}
+                {{with .LastState}}
+                {{.humidity}}%
+                {{end}}
+                {{end}}
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+

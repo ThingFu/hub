@@ -1,0 +1,8 @@
+{
+    "tid": "dlink-dcs930l",
+    "name": "Dlink Wireless N Camera DCS 930L",
+    "description": "",
+    "protocol": "WIFI",
+    "attributes": [],
+    "eventUpdateBuffer": 3000
+}

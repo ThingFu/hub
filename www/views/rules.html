@@ -1,0 +1,47 @@
+{{define "rules"}}
+{{template "header" .}}
+<!-- Right side column. Contains the navbar and content of the page -->
+<aside class="right-side">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>Rules</h1>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></a>
+            </li>
+            <li class="active">Rules</li>
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="col-md-12">
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{with .Rules}}
+                {{range .}}
+                <tr>
+                    <td>{{.Name}}</td>
+                    <td class="hidden-xs text-center">
+                        <div class="btn-group">
+                            <a href="/rule/{{.Id}}">
+                                <button type="button" nunchi-op="session" class="nunchi-op btn btn-success btn-gradient"> <span class="glyphicon glyphicon-earphone"></span> </button>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {{end}}
+                {{end}}
+                </tbody>
+            </table>
+        </div>
+    </section><!-- /.content -->
+</aside><!-- /.right-side -->
+{{template "footer" .}}
+{{end}}

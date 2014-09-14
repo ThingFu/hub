@@ -1,0 +1,218 @@
+{
+    "tid": "lgtv-47ls5700",
+    "name": "LG SmartTV - 47LS5700",
+    "description": "",
+    "cycletime": 1800000,
+    "vendor": "LG",
+    "model": "47LS5700",
+    "attributes": [
+        {
+            "name": "pairingKey",
+            "type": "string",
+            "config": true,
+            "required": true,
+            "default": ""
+        },
+        {
+            "name": "host",
+            "type": "string",
+            "config": true,
+            "required": true,
+            "default": "http://localhost"
+        }
+    ],
+    "operations": [
+        {
+            "name": "Power Off",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Arrow Down",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Arrow Left",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Arrow Right",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Back",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Button 1",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Button 2",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Button 3",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Button 4",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Channel Down",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Channel Up",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Enter",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Exit",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "External Input",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Home",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Mute",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "MyApps",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Netcast",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Pause",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Play",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Previous Channel",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Stop",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Volume Up",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        },
+        {
+            "name": "Volume Down",
+            "description": "",
+            "config": {
+                "command": 1
+            },
+            "params": []
+        }
+    ]
+}

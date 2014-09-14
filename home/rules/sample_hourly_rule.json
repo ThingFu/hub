@@ -1,0 +1,21 @@
+{
+    "name": "Sample - Hourly Rule Trigger",
+    "description": "Triggered Once an Hour",
+    "enabled": false,
+    "priority": 1,
+    "when": [
+        {
+            "trigger": "hourly"
+        }
+    ],
+    "then": [
+    {
+        "do": "sendmail",
+        "config": {
+            "to": "zubairhamed@gmail.com",
+            "subject": "Sample Hourly Rule on {{date_now}}",
+            "content": "Sample Hourly Rule!"
+        }
+    }
+]
+}

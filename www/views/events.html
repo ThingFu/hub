@@ -1,0 +1,46 @@
+{{define "events"}}
+{{template "header" .}}
+<aside class="right-side">
+    <section class="content-header">
+        <h1>Events</h1>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></a>
+            </li>
+            <li class="active">Events</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        <div class="col-md-12">
+
+            <ul class="timeline">
+                <li class="time-label">
+                    <span class="bg-red">13th Sep 2014</span>
+                </li>
+
+
+                {{with .Events}}
+                {{range . }}
+                <li>
+                    <i class="fa fa-envelope bg-blue"></i>
+                    <div class="timeline-item">
+                        <span class="time"><i class="fa fa-clock-o"></i> {{Ago .Ts}}</span>
+                        {{.LongText}}
+                    </div>
+                </li>
+                {{end}}
+                {{end}}
+
+                <li>
+                    <i class="fa fa-clock-o"></i>
+                </li>
+            </ul>
+
+
+
+        </div>
+    </section><!-- /.content -->
+</aside><!-- /.right-side -->
+{{template "footer" .}}
+{{end}}

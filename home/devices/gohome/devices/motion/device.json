@@ -1,0 +1,7 @@
+{
+    "tid": "433mhz-nb-motion",
+    "name": "Wireless Motion Sensor",
+    "description": "",
+    "protocol": "433MHZ",
+    "event_update_buffer": 5000
+}
