@@ -2,14 +2,14 @@ package protocol
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"github.com/go-home/hub/api"
+	"github.com/go-home/hub/utils"
 	serial "github.com/tarm/goserial"
 	"log"
 	"strings"
-	"errors"
-	"github.com/go-home/hub/utils"
 	"time"
-	"fmt"
 )
 
 // |preamble|bitlength|protocol|data|checksum|end|
@@ -66,7 +66,7 @@ func (p *RF433ProtocolHandler) Start() {
 	}
 }
 
-func (p *RF433ProtocolHandler) Handle(payload interface {}) {
+func (p *RF433ProtocolHandler) Handle(payload interface{}) {
 	buf := payload.(string)
 	data := new(RF433Data)
 	dec := json.NewDecoder(strings.NewReader(buf))
@@ -97,8 +97,8 @@ func (p *RF433ProtocolHandler) handleWT450(data RF433Data) {
 }
 
 /**
-	Matches and handles any RF433 code against a list of 433MHZ Device Sensors.
- */
+Matches and handles any RF433 code against a list of 433MHZ Device Sensors.
+*/
 func (p *RF433ProtocolHandler) handleCodeMatch(data RF433Data) {
 	fmt.Println("RF433: ", data)
 	ser := data.Data["decimal"]
@@ -147,7 +147,7 @@ func (p *RF433ProtocolHandler) getDevice(ser string) (*api.Device, *api.Sensor, 
 			}
 		}
 	}
-	return new (api.Device), new (api.Sensor), errors.New("Unknown Device")
+	return new(api.Device), new(api.Sensor), errors.New("Unknown Device")
 }
 
 func bin2dec(num string) string {
@@ -182,10 +182,10 @@ func (p *RF433ProtocolHandler) GetLabel() string {
 	return "RF 433MHZ"
 }
 
-func (p *RF433ProtocolHandler)  SetContainer(api.Container) {
+func (p *RF433ProtocolHandler) SetContainer(api.Container) {
 
 }
 
-func (p *RF433ProtocolHandler)  ValidateWiring() {
+func (p *RF433ProtocolHandler) ValidateWiring() {
 
 }

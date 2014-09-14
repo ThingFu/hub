@@ -3,10 +3,10 @@ package protocol
 import "github.com/go-home/hub/api"
 
 type HttpProtocolHandler struct {
-	factory			api.Factory
-	environment		api.Environment
-	deviceService	api.DeviceService
-	config			api.ProtocolConfiguration
+	factory       api.Factory
+	environment   api.Environment
+	deviceService api.DeviceService
+	config        api.ProtocolConfiguration
 }
 
 func (p *HttpProtocolHandler) Start() {
@@ -21,7 +21,7 @@ func (p *HttpProtocolHandler) SetFactory(o api.Factory) {
 	p.factory = o
 }
 
-func (p *HttpProtocolHandler) SetDeviceService (o api.DeviceService) {
+func (p *HttpProtocolHandler) SetDeviceService(o api.DeviceService) {
 	p.deviceService = o
 }
 
@@ -45,15 +45,14 @@ func (p *HttpProtocolHandler) GetLabel() string {
 	return "HTTP"
 }
 
-func (p *HttpProtocolHandler) Handle(payload interface {}) {
+func (p *HttpProtocolHandler) Handle(payload interface{}) {
 
 }
 
-func (p *HttpProtocolHandler)  SetContainer(api.Container) {
+func (p *HttpProtocolHandler) SetContainer(api.Container) {
 
 }
 
-func (p *HttpProtocolHandler)  ValidateWiring() {
+func (p *HttpProtocolHandler) ValidateWiring() {
 
 }
-

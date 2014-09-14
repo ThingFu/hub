@@ -6,30 +6,30 @@ package api
 
 import (
 	"bytes"
+	"fmt"
 	bson "gopkg.in/mgo.v2/bson"
 	"html/template"
 	"io/ioutil"
 	"log"
 	"time"
-	"fmt"
 )
 
 type Device struct {
 	DatabaseId  bson.ObjectId `bson:"_id"`
-	Id          string	`bson:"uid"`
-	Name        string	`bson:"lbl"`
-	Group       string	`bson:"grp"`
-	Class		string 	`bson:"c"`
-	Type        string	`bson:"tid"`
-	Enabled     bool	`bson:"en"`
-	Description string	`bson:"desc"`
-	LogEvents   bool	`bson:"log"`
+	Id          string        `bson:"uid"`
+	Name        string        `bson:"lbl"`
+	Group       string        `bson:"grp"`
+	Class       string        `bson:"c"`
+	Type        string        `bson:"tid"`
+	Enabled     bool          `bson:"en"`
+	Description string        `bson:"desc"`
+	LogEvents   bool          `bson:"log"`
 	Descriptor  DeviceType
-	LastState   map[string]interface{}	`bson:"state"`
-	Attributes  []DeviceAttribute	`bson:"attrs"`
+	LastState   map[string]interface{} `bson:"state"`
+	Attributes  []DeviceAttribute      `bson:"attrs"`
 	LastEvent   time.Time
 	LastCycle   time.Time
-	Sensors		[]Sensor	`bson:"sub"`
+	Sensors     []Sensor `bson:"sub"`
 }
 
 func NewDevice() *Device {
@@ -104,5 +104,3 @@ func (d *Device) SaveAttribute(name string, value interface{}) error {
 func (d *Device) UpdateLastEvent(t time.Time) {
 	d.LastEvent = t
 }
-
-

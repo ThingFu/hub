@@ -13,13 +13,13 @@ import (
 )
 
 type DefaultDeviceService struct {
-	deviceTypes  map[string]api.DeviceType
-	devices      map[string]api.Device
+	deviceTypes map[string]api.DeviceType
+	devices     map[string]api.Device
 
 	rulesService api.RulesService
 	container    api.Container
 	factory      api.Factory
-	dataSource	 api.DataSource
+	dataSource   api.DataSource
 }
 
 func NewDeviceService() *DefaultDeviceService {
@@ -103,7 +103,7 @@ func (o *DefaultDeviceService) Handle(device *api.Device, sensor *api.Sensor) {
 	evt.ShortText, evt.LongText = drv.GetEventText(device, sensor)
 	evt.Event = api.EVENT_SENSE
 
-	fmt.Println(evt.ShortText , evt.LongText)
+	fmt.Println(evt.ShortText, evt.LongText)
 
 	o.dataSource.PutEvent(evt)
 	fmt.Println("Save Event to DB:" + device.GetId())

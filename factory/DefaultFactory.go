@@ -5,22 +5,22 @@
 package factory
 
 import (
-	"github.com/go-home/hub/rules/consequences"
 	"github.com/go-home/hub/api"
-	"github.com/go-home/hub/rules/conditions"
-	"github.com/go-home/hub/protocol"
 	"github.com/go-home/hub/device/adapters"
+	"github.com/go-home/hub/protocol"
+	"github.com/go-home/hub/rules/conditions"
+	"github.com/go-home/hub/rules/consequences"
 )
 
 type DefaultFactory struct {
-	container	api.Container
+	container api.Container
 }
 
 func (d *DefaultFactory) GetContainer() api.Container {
 	return d.container
 }
 
-func (d *DefaultFactory) SetContainer (c api.Container) {
+func (d *DefaultFactory) SetContainer(c api.Container) {
 	d.container = c
 }
 
@@ -50,16 +50,16 @@ func (d *DefaultFactory) CreateProtocolHandler(t string, cfg api.ProtocolConfigu
 	var handler api.ProtocolHandler
 	switch t {
 	case "RF433":
-		handler = new (protocol.RF433ProtocolHandler)
+		handler = new(protocol.RF433ProtocolHandler)
 
 	case "http":
-		handler = new (protocol.HttpProtocolHandler)
+		handler = new(protocol.HttpProtocolHandler)
 
 	case "zigbee":
-		handler = new (protocol.ZigbeeProtocolHandler)
+		handler = new(protocol.ZigbeeProtocolHandler)
 
 	case "sim":
-		handler = new (protocol.DelegatingSimulationProtocolHandler)
+		handler = new(protocol.DelegatingSimulationProtocolHandler)
 	}
 	handler.SetDeviceService(d.container.DeviceService())
 	handler.SetProtocolConfiguration(cfg)
@@ -93,7 +93,7 @@ func (s *DefaultFactory) CreateDeviceAdapter(t string) api.DeviceAdapter {
 		adapter = new(adapters.AdapterIPCamera)
 
 	case "433mhz-4buttons":
-		adapter = new (adapters.Adapter4ButtonWireless433)
+		adapter = new(adapters.Adapter4ButtonWireless433)
 
 	default:
 		return nil

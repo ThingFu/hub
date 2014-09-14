@@ -6,30 +6,31 @@ package container
 
 import (
 	"github.com/go-home/hub/api"
-	"github.com/go-home/hub/rules"
-	"github.com/go-home/hub/device"
-	"github.com/go-home/hub/events"
-	"github.com/go-home/hub/env"
 	"github.com/go-home/hub/data/source"
+	"github.com/go-home/hub/device"
+	"github.com/go-home/hub/env"
+	"github.com/go-home/hub/events"
 	"github.com/go-home/hub/factory"
+	"github.com/go-home/hub/rules"
 	"log"
 )
 
 var CONTAINER *DefaultContainer = nil
+
 func Instance() api.Container {
 	return CONTAINER
 }
 
 func Initialize(home string, config api.Configuration) (api.Container, api.Environment) {
-	CONTAINER = new (DefaultContainer)
+	CONTAINER = new(DefaultContainer)
 
 	env := env.NewEnvironment(home, config)
 	CONTAINER.Register(env, "api.Environment")
 	CONTAINER.Register(rules.NewRulesService(), "api.RulesService")
 	CONTAINER.Register(device.NewDeviceService(), "api.DeviceService")
-	CONTAINER.Register(new (events.DefaultScheduleService), "api.ScheduleService")
-	CONTAINER.Register(new (source.MongoDataSource), "api.DataSource")
-	CONTAINER.Register(new (factory.DefaultFactory), "api.Factory")
+	CONTAINER.Register(new(events.DefaultScheduleService), "api.ScheduleService")
+	CONTAINER.Register(new(source.MongoDataSource), "api.DataSource")
+	CONTAINER.Register(new(factory.DefaultFactory), "api.Factory")
 
 	CONTAINER.startWire()
 
@@ -44,13 +45,13 @@ func Initialize(home string, config api.Configuration) (api.Container, api.Envir
 }
 
 type DefaultContainer struct {
-	dataSource 			api.DataSource
-	rulesService		api.RulesService
-	deviceService		api.DeviceService
-	scheduleService		api.ScheduleService
-	environment			api.Environment
-	factory				api.Factory
-	protocolHandlers    map[string]api.ProtocolHandler
+	dataSource       api.DataSource
+	rulesService     api.RulesService
+	deviceService    api.DeviceService
+	scheduleService  api.ScheduleService
+	environment      api.Environment
+	factory          api.Factory
+	protocolHandlers map[string]api.ProtocolHandler
 }
 
 func (c *DefaultContainer) Register(svc api.ContainerAware, t string) {
@@ -164,7 +165,7 @@ func (c *DefaultContainer) Env() api.Environment {
 }
 
 func (c *DefaultContainer) setScheduleService(o api.ScheduleService) {
-	c.scheduleService = o;
+	c.scheduleService = o
 }
 
 func (c *DefaultContainer) ScheduleService() api.ScheduleService {
@@ -179,12 +180,10 @@ func (c *DefaultContainer) Factory() api.Factory {
 	return c.factory
 }
 
-
-func (c *DefaultContainer)ProtocolHandlers() map[string]api.ProtocolHandler {
+func (c *DefaultContainer) ProtocolHandlers() map[string]api.ProtocolHandler {
 	return c.protocolHandlers
 }
 
-func (c *DefaultContainer)ProtocolHandler(p string) api.ProtocolHandler {
+func (c *DefaultContainer) ProtocolHandler(p string) api.ProtocolHandler {
 	return c.protocolHandlers[p]
 }
-

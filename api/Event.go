@@ -13,20 +13,19 @@ const (
 	EVENT_SENSE = 0
 )
 
-
 type Event struct {
-	Uid			string
-	Device		string
-	Sensor		string
-	Ts			time.Time
-	ShortText	string
-	LongText	string
-	Event		int
-	Data 		interface {}
+	Uid       string
+	Device    string
+	Sensor    string
+	Ts        time.Time
+	ShortText string
+	LongText  string
+	Event     int
+	Data      interface{}
 }
 
 func NewEvent() *Event {
-	evt := new (Event)
+	evt := new(Event)
 	evt.Ts = time.Now()
 
 	return evt

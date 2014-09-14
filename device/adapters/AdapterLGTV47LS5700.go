@@ -5,10 +5,10 @@
 package adapters
 
 import (
+	"github.com/go-home/hub/api"
 	"log"
 	"net/http"
 	"strings"
-	"github.com/go-home/hub/api"
 )
 
 type AdapterLGTV47LS5700 struct {

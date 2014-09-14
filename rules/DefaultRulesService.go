@@ -5,11 +5,11 @@
 package rules
 
 import (
+	"fmt"
 	"github.com/go-home/hub/api"
 	"github.com/go-home/hub/utils"
 	"log"
 	"time"
-	"fmt"
 )
 
 type DefaultRulesService struct {
@@ -151,4 +151,3 @@ func NewRulesService() *DefaultRulesService {
 
 	return svc
 }
-

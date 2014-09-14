@@ -5,11 +5,11 @@
 package web
 
 import (
+	"github.com/go-home/hub/container"
 	"github.com/gorilla/mux"
+	"log"
 	"net/http"
 	"strconv"
-	"github.com/go-home/hub/container"
-	"log"
 )
 
 type WebApplication struct {
@@ -25,9 +25,9 @@ func NewWebApplication(port int) {
 
 	http.Handle("/", r)
 	log.Println("[INFO] Start Node WebServer @ " + portStr)
-	err := http.ListenAndServe(":" + portStr, nil)
+	err := http.ListenAndServe(":"+portStr, nil)
 	if err != nil {
-		log.Print("Error starting GoHome: ", err )
+		log.Print("Error starting GoHome: ", err)
 	}
 }
 
@@ -42,7 +42,7 @@ func (w WebApplication) initializeRoutes() *mux.Router {
 	dashboardSetup.deviceService = c.DeviceService()
 	dashboardSetup.environment = c.Env()
 	dashboardSetup.factory = c.Factory()
-	dashboardSetup.container = c;
+	dashboardSetup.container = c
 	dashboardSetup.Setup(r)
 
 	apiSetup := new(WebApplicationApi)
@@ -52,4 +52,3 @@ func (w WebApplication) initializeRoutes() *mux.Router {
 
 	return r
 }
-

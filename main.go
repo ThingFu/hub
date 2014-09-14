@@ -8,10 +8,10 @@ import (
 	"encoding/json"
 	"flag"
 	"github.com/go-home/hub/api"
+	"github.com/go-home/hub/container"
 	"github.com/go-home/hub/setup"
 	"io/ioutil"
 	"log"
-	"github.com/go-home/hub/container"
 )
 
 func main() {

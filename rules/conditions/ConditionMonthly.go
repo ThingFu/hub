@@ -5,8 +5,8 @@
 package conditions
 
 import (
-	"time"
 	"github.com/go-home/hub/api"
+	"time"
 )
 
 type Monthly struct {

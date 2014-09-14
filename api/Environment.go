@@ -11,4 +11,3 @@ type Environment interface {
 	IsStartedUp() bool
 	ContainerAware
 }
-

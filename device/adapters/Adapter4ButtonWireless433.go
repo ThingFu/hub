@@ -1,12 +1,11 @@
 package adapters
 
 import (
-	"github.com/go-home/hub/api"
 	"fmt"
+	"github.com/go-home/hub/api"
 )
 
 type Adapter4ButtonWireless433 struct {
-
 }
 
 func (d *Adapter4ButtonWireless433) Cycle(dev *api.Device) {

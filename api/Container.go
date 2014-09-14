@@ -15,5 +15,3 @@ type Container interface {
 	ProtocolHandlers() map[string]ProtocolHandler
 	ProtocolHandler(string) ProtocolHandler
 }
-
-

@@ -5,13 +5,12 @@ package consequences
 
 import (
 	"fmt"
-	"log"
-	"github.com/go-home/hub/utils"
 	"github.com/go-home/hub/api"
+	"github.com/go-home/hub/utils"
+	"log"
 )
 
 type SendMail struct {
-
 }
 
 func (s SendMail) Execute(config map[string]interface{}, container api.Container) {
@@ -31,7 +30,7 @@ func (s SendMail) Execute(config map[string]interface{}, container api.Container
 
 	err := utils.SendEmail(host, port, user, pass, []string{to}, subject, content)
 	if err != nil {
-		log.Print("Error sending email ", err )
+		log.Print("Error sending email ", err)
 	}
 
 	fmt.Println("%v", config)

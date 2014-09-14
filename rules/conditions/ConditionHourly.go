@@ -6,8 +6,8 @@ package conditions
 
 import (
 	"fmt"
-	"time"
 	"github.com/go-home/hub/api"
+	"time"
 )
 
 type Hourly struct {

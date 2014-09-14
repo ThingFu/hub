@@ -1,15 +1,15 @@
 package tests
 
 import (
-	"testing"
-	"gohome/node/device"
-	"gohome/node/api"
 	"fmt"
+	"gohome/node/api"
+	"gohome/node/device"
+	"testing"
 )
 
 func TestRegisterDevices(t *testing.T) {
-	ds := new (MockDataSource)
-	env := new (MockEnvironment)
+	ds := new(MockDataSource)
+	env := new(MockEnvironment)
 
 	deviceService := device.NewDefaultDeviceService(env, ds)
 
@@ -34,7 +34,7 @@ func NewDefaultDeviceService(env api.Environment, ds api.DataSource) *DefaultDev
 
 	return svc
 }
- */
+*/
 
 /*
 	fmt.Println("[INFO] Register Devices")
@@ -45,4 +45,4 @@ func NewDefaultDeviceService(env api.Environment, ds api.DataSource) *DefaultDev
 	}
 }
 
- */
+*/

@@ -31,7 +31,6 @@ func (d *AdapterDigitalHumidityTemperature433) GetEventText(*api.Device, *api.Se
 	return "", ""
 }
 
-
 /*
 func parseState (data RF433Data) map[string]float64 {
 	return 0.0

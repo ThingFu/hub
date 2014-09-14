@@ -45,15 +45,14 @@ func (p *ZigbeeProtocolHandler) GetLabel() string {
 	return "Zigbee"
 }
 
-func (p *ZigbeeProtocolHandler) Handle(payload interface {}) {
+func (p *ZigbeeProtocolHandler) Handle(payload interface{}) {
 
 }
 
-func (p *ZigbeeProtocolHandler)  SetContainer(api.Container) {
+func (p *ZigbeeProtocolHandler) SetContainer(api.Container) {
 
 }
 
-func (p *ZigbeeProtocolHandler)  ValidateWiring() {
+func (p *ZigbeeProtocolHandler) ValidateWiring() {
 
 }
-

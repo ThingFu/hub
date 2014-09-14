@@ -47,14 +47,13 @@ func (p *DelegatingSimulationProtocolHandler) GetLabel() string {
 	return "Simulation (For Debugging Only)"
 }
 
-func (p *DelegatingSimulationProtocolHandler) Handle(payload interface {}) {
+func (p *DelegatingSimulationProtocolHandler) Handle(payload interface{}) {
 
 }
-func (p *DelegatingSimulationProtocolHandler)  SetContainer(api.Container) {
-
-}
-
-func (p *DelegatingSimulationProtocolHandler)  ValidateWiring() {
+func (p *DelegatingSimulationProtocolHandler) SetContainer(api.Container) {
 
 }
 
+func (p *DelegatingSimulationProtocolHandler) ValidateWiring() {
+
+}

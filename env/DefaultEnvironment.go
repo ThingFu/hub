@@ -10,11 +10,11 @@ import (
 )
 
 type DefaultEnvironment struct {
-	startup   	*utils.GoTime
-	config    	api.Configuration
-	startedUp 	bool
-	home      	string
-	container	api.Container
+	startup   *utils.GoTime
+	config    api.Configuration
+	startedUp bool
+	home      string
+	container api.Container
 }
 
 func (e *DefaultEnvironment) GetUptime() string {
@@ -37,7 +37,7 @@ func (d *DefaultEnvironment) GetContainer() api.Container {
 	return d.container
 }
 
-func (d *DefaultEnvironment) SetContainer (c api.Container) {
+func (d *DefaultEnvironment) SetContainer(c api.Container) {
 	d.container = c
 }
 
@@ -46,7 +46,7 @@ func (s *DefaultEnvironment) ValidateWiring() {
 }
 
 func NewEnvironment(home string, config api.Configuration) api.Environment {
-	env := new (DefaultEnvironment)
+	env := new(DefaultEnvironment)
 	env.home = home
 	env.config = config
 	now := utils.Now()

@@ -8,5 +8,5 @@ type ProtocolConfiguration struct {
 	Enabled bool
 	Port    string
 	Baud    int
-	Conn	string
+	Conn    string
 }

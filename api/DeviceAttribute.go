@@ -5,12 +5,12 @@
 package api
 
 type DeviceAttribute struct {
-	Name     string	`bson:"n"`
-	Type     string	`bson:"t"`
-	Config   bool	`bson:"cfg"`
-	Required bool	`bson:"req"`
-	Default  interface{}	`bson:"def"`
-	Value    interface{}	`bson:"val"`
+	Name     string      `bson:"n"`
+	Type     string      `bson:"t"`
+	Config   bool        `bson:"cfg"`
+	Required bool        `bson:"req"`
+	Default  interface{} `bson:"def"`
+	Value    interface{} `bson:"val"`
 }
 
 func (d *DeviceAttribute) AsString() string {

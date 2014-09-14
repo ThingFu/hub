@@ -5,23 +5,23 @@
 package events
 
 import (
-	"time"
 	"github.com/go-home/hub/api"
 	"log"
+	"time"
 )
 
 type DefaultScheduleService struct {
-	ruleTicker 		*time.Ticker
-	rulesService	api.RulesService
-	deviceService	api.DeviceService
-	container		api.Container
+	ruleTicker    *time.Ticker
+	rulesService  api.RulesService
+	deviceService api.DeviceService
+	container     api.Container
 }
 
 func (d *DefaultScheduleService) GetContainer() api.Container {
 	return d.container
 }
 
-func (d *DefaultScheduleService) SetContainer (c api.Container) {
+func (d *DefaultScheduleService) SetContainer(c api.Container) {
 	d.container = c
 }
 
@@ -45,7 +45,7 @@ func (s DefaultScheduleService) Start() {
 }
 
 func (d *DefaultScheduleService) Stop() {
-	
+
 }
 
 func (d *DefaultScheduleService) ValidateWiring() {
@@ -65,4 +65,3 @@ func (d *DefaultScheduleService) SetRulesService(s api.RulesService) {
 func (d *DefaultScheduleService) SetDeviceService(s api.DeviceService) {
 	d.deviceService = s
 }
-

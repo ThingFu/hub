@@ -5,7 +5,6 @@ import (
 )
 
 type MockDataSource struct {
-
 }
 
 func (e *MockDataSource) GetDevices() []api.Device {
@@ -29,16 +28,14 @@ func (e *MockDataSource) PutEvent() {
 }
 
 type MockEnvironment struct {
-
 }
-
 
 func (e *MockEnvironment) GetUptime() string {
 	return ""
 }
 
 func (e *MockEnvironment) GetConfig() api.Configuration {
-	cfg := new (api.Configuration)
+	cfg := new(api.Configuration)
 	cfg.ServerPort = 8181
 
 	return *cfg

@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/go-home/hub/api"
+	"github.com/go-home/hub/utils"
 	"github.com/gorilla/mux"
 	"html/template"
 	"io/ioutil"
@@ -16,12 +17,11 @@ import (
 	"runtime"
 	"strings"
 	"time"
-	"github.com/go-home/hub/utils"
 )
 
-var funcMap = template.FuncMap {
-	"Ago": func (_t time.Time) string {
-		gt := new (utils.GoTime)
+var funcMap = template.FuncMap{
+	"Ago": func(_t time.Time) string {
+		gt := new(utils.GoTime)
 		gt.SetTime(_t)
 		return gt.Ago()
 	},
@@ -44,14 +44,14 @@ var templates = template.Must(
 		"www/views/widget_config.html").Funcs(funcMap))
 */
 
-func compileTemplate (name string) *template.Template {
+func compileTemplate(name string) *template.Template {
 	t := template.New(name)
 	t = template.Must(t.Funcs(funcMap).ParseGlob("www/views/layouts/*.html"))
 
 	return template.Must(t.ParseFiles("www/views/" + name + ".html"))
 }
 
-func templateOutput (name string, model interface {}) []byte {
+func templateOutput(name string, model interface{}) []byte {
 	tpl := compileTemplate(name)
 
 	var buf bytes.Buffer
@@ -62,14 +62,13 @@ func templateOutput (name string, model interface {}) []byte {
 	return buf.Bytes()
 }
 
-
 type WebApplicationDashboard struct {
 	rulesService  api.RulesService
 	deviceService api.DeviceService
 	dataSource    api.DataSource
 	environment   api.Environment
-	factory		  api.Factory
-	container	  api.Container
+	factory       api.Factory
+	container     api.Container
 }
 
 func (app *WebApplicationDashboard) Setup(r *mux.Router) {
@@ -236,17 +235,17 @@ func (app *WebApplicationDashboard) handleSimulationService(w http.ResponseWrite
 	handler.Handle(content)
 
 	/*
-	dev, _ := app.deviceService.GetDevice("7820592")
-	// facts.Device = &dev
+		dev, _ := app.deviceService.GetDevice("7820592")
+		// facts.Device = &dev
 
-	go app.deviceService.Handle(dev)
+		go app.deviceService.Handle(dev)
 
-	// go rulesManager.Trigger(TRIGGER_DEVICE, facts)
+		// go rulesManager.Trigger(TRIGGER_DEVICE, facts)
 	*/
 }
 
 func (app *WebApplicationDashboard) handleEventsView(w http.ResponseWriter, req *http.Request) {
-	model := new (webModelEvents)
+	model := new(webModelEvents)
 	model.Events = app.dataSource.GetDeviceEvents(10)
 	w.Write(templateOutput("events", model))
 }
@@ -289,4 +288,3 @@ type webModelDeviceAdd struct {
 type webModelEvents struct {
 	Events []api.Event
 }
-

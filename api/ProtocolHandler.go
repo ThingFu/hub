@@ -10,7 +10,7 @@ type ProtocolHandler interface {
 	IsEnabled() bool
 	GetName() string
 	GetLabel() string
-	Handle(data interface {})
+	Handle(data interface{})
 
 	SetProtocolConfiguration(ProtocolConfiguration)
 	SetDeviceService(DeviceService)

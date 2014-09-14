@@ -5,17 +5,17 @@
 package setup
 
 import (
-	"github.com/go-home/hub/container"
-	"github.com/go-home/hub/web"
+	"encoding/json"
 	"fmt"
+	"github.com/go-home/hub/api"
+	"github.com/go-home/hub/container"
+	"github.com/go-home/hub/utils"
+	"github.com/go-home/hub/web"
+	"io/ioutil"
+	"log"
+	"os"
 	"path/filepath"
 	"strings"
-	"os"
-	"io/ioutil"
-	"encoding/json"
-	"github.com/go-home/hub/utils"
-	"github.com/go-home/hub/api"
-	"log"
 )
 
 func Setup(env api.Environment) {
@@ -39,7 +39,7 @@ func startScheduler() {
 func loadRules(env api.Environment) {
 	log.Println("[INFO] Dividing by Zero")
 	rulesService := container.Instance().RulesService()
-	filepath.Walk(env.GetHome() + "/rules", func(path string, f os.FileInfo, err error) error {
+	filepath.Walk(env.GetHome()+"/rules", func(path string, f os.FileInfo, err error) error {
 		if !f.IsDir() {
 			content, err := ioutil.ReadFile(path)
 			if err != nil {
@@ -114,9 +114,8 @@ func setupProtocols() {
 
 	handlers := c.ProtocolHandlers()
 	for _, handler := range handlers {
-		if (handler.IsEnabled()) {
+		if handler.IsEnabled() {
 			handler.Start()
 		}
 	}
 }
-

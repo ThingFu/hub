@@ -5,12 +5,12 @@
 package api
 
 type DeviceType struct {
-	TypeId            string	`json:"tid"`
+	TypeId            string `json:"tid"`
 	Name              string
 	Description       string
 	Protocol          string
-	Vendor			  string
-	Model 			  string
+	Vendor            string
+	Model             string
 	EventUpdateBuffer int
 	Path              string
 	Group             string
