@@ -31,6 +31,7 @@ func (d *DefaultFactory) CreateCondition(t string) api.Condition {
 	} else if t == "hourly" {
 		condition = new(conditions.Hourly)
 	}
+
 	return condition
 }
 

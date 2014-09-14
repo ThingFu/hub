@@ -16,8 +16,6 @@ type SendMail struct {
 }
 
 func (s SendMail) Execute(config map[string]interface{}, container api.Container) {
-	fmt.Println("Send Mail")
-
 	mailConfig := container.Env().GetConfig().Mail
 
 	subject := config["subject"].(string)

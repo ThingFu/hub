@@ -4,9 +4,12 @@
 
 package conditions
 
-import "github.com/go-home/hub/api"
+import (
+	"github.com/go-home/hub/api"
+)
 
 type Sense struct {
+
 }
 
 func (s Sense) Evaluate(when *api.RuleWhen, facts *api.RuleFacts, rule *api.Rule) bool {
@@ -21,14 +24,3 @@ func (s Sense) Evaluate(when *api.RuleWhen, facts *api.RuleFacts, rule *api.Rule
 	return true
 }
 
-/*
-exports.name = "sense";
-
-exports.fn = function ($when, $fact, $rule) {
-    var $target = $fact.target;
-    if ($when.target !== $target) {
-        return false;
-    }
-    return true;
-}
-*/
