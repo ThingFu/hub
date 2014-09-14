@@ -1,29 +1,3 @@
-# README #
+### Goal
+The goal of the project is to provide a platform for interacting with physical devices in your home. Unlike many other platforms, first and foremost, everything should run locally and autonomously on the Hub without the need for a cloud solution. This of course would mean, short of exposing the hub service on your DMZ, you won't be able to access it over the Internet. 
 
-This README would normally document whatever steps are necessary to get your application up and running.
-
-### What is this repository for? ###
-
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
-
-### How do I get set up? ###
-
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
