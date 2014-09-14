@@ -4,5 +4,7 @@
 
 package api
 
+// Meta-attributes for a given operation
 type DeviceOperationConfiguration struct {
+
 }

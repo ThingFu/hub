@@ -14,6 +14,7 @@ import (
 	"time"
 )
 
+// Representing a device or a thing
 type Device struct {
 	DatabaseId  bson.ObjectId `bson:"_id"`
 	Id          string        `bson:"uid"`

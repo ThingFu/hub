@@ -6,7 +6,6 @@ package adapters
 
 import (
 	"github.com/go-home/hub/api"
-	"log"
 )
 
 type AdapterDigitalHumidityTemperature433 struct {

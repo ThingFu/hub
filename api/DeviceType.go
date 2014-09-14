@@ -4,6 +4,7 @@
 
 package api
 
+// Device descriptors as defined in <home>/devices
 type DeviceType struct {
 	TypeId            string `json:"tid"`
 	Name              string

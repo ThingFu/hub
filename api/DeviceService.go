@@ -4,6 +4,7 @@
 
 package api
 
+// Service for handling devices
 type DeviceService interface {
 	GetDevice(string) (Device, bool)
 	SaveDevice(Device)

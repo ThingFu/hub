@@ -21,8 +21,9 @@ func (d *Adapter1ButtonWireless433) OnSense(dev *api.Device, data api.DeviceData
 	log.Println("Sense : Wireless Button")
 }
 
-func (d *Adapter1ButtonWireless433) GetEventText(dev *api.Device, *api.Sensor) (shortText string, longText string) {
-	shortText, longText = fmt.Sprintf("Button %s pressed", dev.Name)
+func (d *Adapter1ButtonWireless433) GetEventText(dev *api.Device, sensor *api.Sensor) (shortText string, longText string) {
+	txt := fmt.Sprintf("Button %s pressed", dev.Name)
+	shortText, longText = txt, txt
 
 	return
 }

@@ -4,6 +4,7 @@
 
 package api
 
+// Interface contract for any services which needs to be supported by the Container
 type ContainerAware interface {
 	SetContainer(Container)
 	ValidateWiring()

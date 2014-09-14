@@ -4,6 +4,7 @@
 
 package api
 
+// Operations/Actuables for a device
 type DeviceOperation struct {
 	Name        string
 	Description string

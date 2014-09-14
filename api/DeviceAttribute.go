@@ -4,6 +4,7 @@
 
 package api
 
+// Attributes for a given device
 type DeviceAttribute struct {
 	Name     string      `bson:"n"`
 	Type     string      `bson:"t"`

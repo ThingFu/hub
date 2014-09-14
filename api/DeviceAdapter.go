@@ -6,6 +6,7 @@ package api
 
 import _ "net/http"
 
+// Device adapter to support any sensing or actuation
 type DeviceAdapter interface {
 	Cycle(*Device)
 	OnSense(*Device, DeviceData)

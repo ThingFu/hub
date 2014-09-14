@@ -20,8 +20,10 @@ func (sensor *AdapterContactSensor433) OnSense(dev *api.Device, data api.DeviceD
 
 }
 
-func (d *AdapterContactSensor433) GetEventText(dev *api.Device, *api.Sensor) (shortText string, longText string) {
-	shortText, longText = fmt.Sprintf("%s opened", dev.Name)
+func (d *AdapterContactSensor433) GetEventText(dev *api.Device,sensor *api.Sensor) (shortText string, longText string) {
+	txt := fmt.Sprintf("%s opened", dev.Name)
+	shortText, longText = txt, txt
+
 
 	return
 }
