@@ -9,7 +9,7 @@ import _ "net/http"
 // Device adapter to support any sensing or actuation
 type DeviceAdapter interface {
 	Cycle(*Device)
-	OnSense(*Device, DeviceData)
+	OnSense(*Device, DeviceData) (state map[string]interface{})
 	GetEventText(*Device, *Sensor) (shortText string, longText string)
 	// HandleGet(req http.Request, res http.Response)
 }

@@ -11,6 +11,7 @@ type DataSource interface {
 	GetDeviceEvents(int) []Event
 	SaveDevice(Device)
 	PutEvent(*Event)
+	SaveState(*Device, map[string] interface {})
 	ContainerAware
 
 	SetEnvironment(Environment)
