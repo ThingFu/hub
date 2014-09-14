@@ -3,6 +3,7 @@
     "name": "WT450 Temperature and Humidity",
     "description": "",
     "protocol": "433MHZ",
-    "vendor": "",
-    "model": ""
+    "vendor": "unknown",
+    "model": "unknown",
+    "logEvents": false
 }

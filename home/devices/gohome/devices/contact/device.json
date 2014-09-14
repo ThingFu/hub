@@ -1,6 +1,10 @@
 {
-    "tid": "433mhz-contactsensor",
+    "tid": "433mhz-contact",
     "name": "Wireless Contact Sensor",
     "protocol": "433MHZ",
-    "eventUpdateBuffer": 1000
+    "eventUpdateBuffer": 1000,
+    "vendor": "unknown",
+    "model": "unknown",
+    "logEvents": true
+
 }

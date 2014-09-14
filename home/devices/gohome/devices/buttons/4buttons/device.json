@@ -6,5 +6,6 @@
     "attributes": [],
     "event_update_buffer": 3000,
     "vendor": "unknown",
-    "model": "4button"
+    "model": "unknown",
+    "logEvents": true
 }

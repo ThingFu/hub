@@ -7,6 +7,7 @@ package adapters
 import (
 	"github.com/go-home/hub/api"
 	"strconv"
+	"fmt"
 )
 
 type AdapterDigitalHumidityTemperature433 struct {
@@ -35,7 +36,14 @@ func (d *AdapterDigitalHumidityTemperature433) OnSense(dev *api.Device, data api
 	return
 }
 
-func (d *AdapterDigitalHumidityTemperature433) GetEventText(*api.Device, *api.Sensor) (shortText string, longText string) {
-	return "", ""
+func (d *AdapterDigitalHumidityTemperature433) GetEventText(device *api.Device, sensor *api.Sensor, state map[string]interface {}) (shortText string, longText string) {
+	humidity := state["h"]
+	tH := state["tH"]
+	tL := state["tL"]
+
+	txt := fmt.Sprintf("Temperature %d.%d, Rel. Humidity %d%% @ %s", tH, tL, humidity, device.Name)
+	shortText, longText = txt, txt
+
+	return
 }
 

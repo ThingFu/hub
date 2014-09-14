@@ -11,7 +11,6 @@ import (
 	"strconv"
 )
 
-// |preamble|bitlength|protocol|data|checksum|end|
 type RF433Data struct {
 	Protocol	int
 	BinData		string
@@ -75,6 +74,10 @@ func (p *RF433ProtocolHandler) Handle(payload interface{}) {
 	buf := payload.(string)
 	spl := strings.Split(buf, "|")
 
+	if len(spl) < 5 {
+		return;
+	}
+
 	data := new(RF433Data)
 	prot, _ := strconv.Atoi(spl[1])
 	data.Protocol = prot
@@ -125,6 +128,7 @@ func (p *RF433ProtocolHandler) handleCodeMatch(data *RF433Data) {
 	}
 
 	dev, sensor, ok := p.getDevice(ser)
+
 	if ok != nil {
 		log.Println("Unknown Device ", ser)
 	} else {

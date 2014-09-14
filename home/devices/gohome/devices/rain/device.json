@@ -1,5 +1,6 @@
 {
     "id": "nunchi-rain",
     "name": "Rain Sensor",
-    "description": ""
+    "description": "",
+    "logEvents": true
 }

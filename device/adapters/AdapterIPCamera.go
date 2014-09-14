@@ -19,6 +19,6 @@ func (d *AdapterIPCamera) OnSense(dev *api.Device, data api.DeviceData) (state m
 	return nil
 }
 
-func (d *AdapterIPCamera) GetEventText(*api.Device, *api.Sensor) (shortText string, longText string) {
+func (d *AdapterIPCamera) GetEventText(device *api.Device, sensor *api.Sensor, state map[string]interface {}) (shortText string, longText string) {
 	return "", ""
 }

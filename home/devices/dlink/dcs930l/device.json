@@ -4,5 +4,6 @@
     "description": "",
     "protocol": "WIFI",
     "attributes": [],
-    "eventUpdateBuffer": 3000
+    "eventUpdateBuffer": 3000,
+    "logEvents": false
 }

@@ -91,16 +91,10 @@ func (o *DefaultDeviceService) GetDevices() []api.Device {
 func (o *DefaultDeviceService) Handle(device *api.Device, sensor *api.Sensor, state map[string]interface {}) {
 	facts := new(api.RuleFacts)
 	facts.Device = device
+	facts.Sensor = sensor
 	facts.Target = device.GetId()
 
 	drv := o.factory.CreateDeviceAdapter(device.Descriptor.TypeId)
-
-	// TODO: Save Event to DB
-	evt := api.NewEvent()
-	evt.Device = device.Id
-	evt.Sensor = sensor.Name
-	evt.ShortText, evt.LongText = drv.GetEventText(device, sensor)
-	evt.Event = api.EVENT_SENSE
 
 	// Save latest state of device
 	if state != nil {
@@ -109,7 +103,16 @@ func (o *DefaultDeviceService) Handle(device *api.Device, sensor *api.Sensor, st
 	}
 
 	// Save event to DB
-	o.dataSource.PutEvent(evt)
+	desc := device.Descriptor
+	if desc.LogEvents {
+		evt := api.NewEvent()
+		evt.Device = device.Id
+		evt.Sensor = sensor.Name
+		evt.ShortText, evt.LongText = drv.GetEventText(device, sensor, state)
+		evt.Event = api.EVENT_SENSE
+
+		o.dataSource.PutEvent(evt)
+	}
 
 	// TODO: Publish Event to Cloud
 	o.rulesService.Trigger(api.TRIGGER_DEVICE, facts)

@@ -1,6 +1,7 @@
 // Copyright 2014 Zubair Hamed. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
+
 package consequences
 
 import (
@@ -11,6 +12,7 @@ import (
 )
 
 type SendMail struct {
+
 }
 
 func (s SendMail) Execute(config map[string]interface{}, container api.Container) {
@@ -26,7 +28,6 @@ func (s SendMail) Execute(config map[string]interface{}, container api.Container
 	port := mailConfig.Port
 	user := mailConfig.User
 	pass := mailConfig.Pass
-	// conn := host + ":" + strconv.Itoa(port)
 
 	err := utils.SendEmail(host, port, user, pass, []string{to}, subject, content)
 	if err != nil {

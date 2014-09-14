@@ -5,6 +5,7 @@
     "cycletime": 1800000,
     "vendor": "LG",
     "model": "47LS5700",
+    "logEvents": false,
     "attributes": [
         {
             "name": "pairingKey",

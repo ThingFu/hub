@@ -13,6 +13,11 @@ func (s Sense) Evaluate(when *api.RuleWhen, facts *api.RuleFacts, rule *api.Rule
 	if when.Target != facts.Target {
 		return false
 	}
+
+	if when.Sensor != facts.Sensor.Name {
+		return false
+	}
+
 	return true
 }
 

@@ -74,7 +74,7 @@ func (s *DefaultFactory) CreateDeviceAdapter(t string) api.DeviceAdapter {
 	case "lgtv-47ls5700":
 		adapter = new(adapters.AdapterLGTV47LS5700)
 
-	case "433mhz-contactsensor":
+	case "433mhz-contact":
 		adapter = new(adapters.AdapterContactSensor433)
 
 	case "433mhz-1button":

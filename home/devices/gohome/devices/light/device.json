@@ -1,5 +1,6 @@
 {
     "tid": "nunchi-light",
     "name": "Light Sensor",
-    "description": ""
+    "description": "",
+    "logEvents": true
 }

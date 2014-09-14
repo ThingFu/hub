@@ -1,5 +1,6 @@
 {
     "tid": "nunchi-chime",
     "name": "Chime Sensor",
-    "description": ""
+    "description": "",
+    "logEvents": true
 }

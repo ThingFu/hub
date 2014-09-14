@@ -24,7 +24,7 @@ type Device struct {
 	Type        string        `bson:"tid"`
 	Enabled     bool          `bson:"en"`
 	Description string        `bson:"desc"`
-	LogEvents   bool          `bson:"log"`
+	LogEvents   bool          `bson:"logEvents"`
 	Descriptor  DeviceType
 	LastState   map[string]interface{} `bson:"state"`
 	Attributes  []DeviceAttribute      `bson:"attrs"`

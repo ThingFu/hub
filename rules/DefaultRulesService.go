@@ -5,7 +5,6 @@
 package rules
 
 import (
-	"fmt"
 	"github.com/go-home/hub/api"
 	"github.com/go-home/hub/utils"
 	"log"
@@ -32,7 +31,6 @@ func (r DefaultRulesService) Trigger(triggerType int, facts *api.RuleFacts) {
 	device := facts.Device
 
 	if triggerType == api.TRIGGER_DEVICE {
-		fmt.Println("Triggering ", facts)
 		deviceDescriptor := device.Descriptor
 		target := facts.Target
 
