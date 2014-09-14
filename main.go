@@ -23,7 +23,7 @@ func main() {
 	log.Println("[INFO] Home: " + home)
 	log.Println("[INFO] Learning Kung-Fu..")
 
-	content, err := ioutil.ReadFile(string(home + "/node_config.json"))
+	content, err := ioutil.ReadFile(string(home + "/" + api.CONFIG_FILE))
 	if err != nil {
 		log.Fatal(err)
 	}

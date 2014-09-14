@@ -4,6 +4,12 @@
 
 package api
 
+// Configuration as loaded from <home>/hub-config.json
+
+const (
+	CONFIG_FILE = "hub-config.json"
+)
+
 type MailConfig struct {
 	User string
 	Pass string
