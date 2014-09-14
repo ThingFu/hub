@@ -1,0 +1,17 @@
+{
+    "ImportPath": "github.com/zubairhamed/gohome-hub",
+    "GoVersion": "go1.2",
+    "Deps": [
+        {
+            "ImportPath": "gopkg.in/mgo.v2"
+        },
+        {
+            "ImportPath": "github.com/gorilla/mux",
+            "Rev": "4b8fbc56f3b2400a7c7ea3dba9b3539787c486b6"
+        },
+        {
+            "ImportPath": "github.com/tarm/goserial",
+            "Rev": "b1a1181412bc617a989d8bce3d0d29f7bce2ab7f"
+        }
+    ]
+}
