@@ -7,6 +7,7 @@ package adapters
 import (
 	"github.com/go-home/hub/api"
 	"log"
+	"fmt"
 )
 
 type Adapter1ButtonWireless433 struct {
@@ -20,6 +21,10 @@ func (d *Adapter1ButtonWireless433) OnSense(dev *api.Device, data api.DeviceData
 	log.Println("Sense : Wireless Button")
 }
 
-func (d *Adapter1ButtonWireless433) GetEventText(*api.Device, *api.Sensor) (shortText string, longText string) {
-	return "", ""
+func (d *Adapter1ButtonWireless433) GetEventText(dev *api.Device, *api.Sensor) (shortText string, longText string) {
+	shortText, longText = fmt.Sprintf("Button %s pressed", dev.Name)
+
+	return
 }
+
+

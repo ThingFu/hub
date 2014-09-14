@@ -4,7 +4,10 @@
 
 package adapters
 
-import "github.com/go-home/hub/api"
+import (
+	"github.com/go-home/hub/api"
+	"fmt"
+)
 
 type AdapterContactSensor433 struct {
 }
@@ -17,6 +20,8 @@ func (sensor *AdapterContactSensor433) OnSense(dev *api.Device, data api.DeviceD
 
 }
 
-func (d *AdapterContactSensor433) GetEventText(*api.Device, *api.Sensor) (shortText string, longText string) {
-	return "", ""
+func (d *AdapterContactSensor433) GetEventText(dev *api.Device, *api.Sensor) (shortText string, longText string) {
+	shortText, longText = fmt.Sprintf("%s opened", dev.Name)
+
+	return
 }

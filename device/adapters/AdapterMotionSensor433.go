@@ -6,6 +6,7 @@ package adapters
 
 import (
 	"github.com/go-home/hub/api"
+	"fmt"
 )
 
 type AdapterMotionSensor433 struct {
@@ -16,18 +17,9 @@ func (d *AdapterMotionSensor433) Cycle(dev *api.Device) {
 }
 
 func (d *AdapterMotionSensor433) OnSense(dev *api.Device, data api.DeviceData) {
-	/*
-	   var $devMgr = $svcs.$devMgr;
-	   var $db = $svcs.$db;
 
-	   dev.icon =  "imoon imoon-feed text-blue";
-
-	   $db.putEvent(dev, "sense", "Motion Detected.");
-	   $devMgr.updateState(dev.id, {});
-
-	*/
 }
 
-func (d *AdapterMotionSensor433) GetEventText(*api.Device, *api.Sensor) (shortText string, longText string) {
-	return "", ""
+func (d *AdapterMotionSensor433) GetEventText(dev *api.Device, *api.Sensor) (shortText string, longText string) {
+	shortText, longText = fmt.Sprintf("Motion by %s detected", dev.Name)
 }

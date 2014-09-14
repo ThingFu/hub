@@ -17,8 +17,6 @@ func (d *AdapterDigitalHumidityTemperature433) Cycle(dev *api.Device) {
 }
 
 func (d *AdapterDigitalHumidityTemperature433) OnSense(dev *api.Device, data api.DeviceData) {
-	log.Println("Sense WT450")
-
 	// deviceManager := device.DeviceManagerInstance()
 	/*
 	   var $devMgr = $svcs.$devMgr;
