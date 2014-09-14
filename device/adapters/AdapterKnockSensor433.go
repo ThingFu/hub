@@ -15,8 +15,8 @@ func (o *AdapterKnockSensor433) Cycle(dev *api.Device) {
 
 }
 
-func (o *AdapterKnockSensor433) OnSense(dev *api.Device, data api.DeviceData) {
-
+func (o *AdapterKnockSensor433) OnSense(dev *api.Device, data api.DeviceData) (state map[string]interface{}) {
+	return nil
 }
 
 func (d *AdapterKnockSensor433) GetEventText(*api.Device, *api.Sensor) (shortText string, longText string) {

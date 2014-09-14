@@ -4,7 +4,7 @@
             <td width="33%" style="text-align: right; vertical-align: middle; font-weight: bold; font-size: 3.5em;">
                 {{if .LastState}}
                 {{with .LastState}}
-                {{.tempMajor}}&deg;
+                {{.tH}}&deg;
                 {{end}}
                 {{end}}
             </td>
@@ -14,7 +14,7 @@
             <td width="33%" style="text-align: left; vertical-align: middle; font-weight: bold; font-size: 3.5em;">
                 {{if .LastState}}
                 {{with .LastState}}
-                {{.humidity}}%
+                {{.h}}%
                 {{end}}
                 {{end}}
             </td>

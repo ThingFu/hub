@@ -5,7 +5,6 @@
 package device
 
 import (
-	"fmt"
 	"github.com/go-home/hub/api"
 	"github.com/go-home/hub/utils"
 	"log"
@@ -89,7 +88,7 @@ func (o *DefaultDeviceService) GetDevices() []api.Device {
 	return v
 }
 
-func (o *DefaultDeviceService) Handle(device *api.Device, sensor *api.Sensor) {
+func (o *DefaultDeviceService) Handle(device *api.Device, sensor *api.Sensor, state map[string]interface {}) {
 	facts := new(api.RuleFacts)
 	facts.Device = device
 	facts.Target = device.GetId()
@@ -103,10 +102,14 @@ func (o *DefaultDeviceService) Handle(device *api.Device, sensor *api.Sensor) {
 	evt.ShortText, evt.LongText = drv.GetEventText(device, sensor)
 	evt.Event = api.EVENT_SENSE
 
-	fmt.Println(evt.ShortText, evt.LongText)
+	// Save latest state of device
+	if state != nil {
+		state["lastUpdated"] = time.Now()
+		o.dataSource.SaveState(device, state)
+	}
 
+	// Save event to DB
 	o.dataSource.PutEvent(evt)
-	fmt.Println("Save Event to DB:" + device.GetId())
 
 	// TODO: Publish Event to Cloud
 	o.rulesService.Trigger(api.TRIGGER_DEVICE, facts)

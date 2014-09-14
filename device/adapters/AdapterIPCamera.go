@@ -15,8 +15,8 @@ func (d *AdapterIPCamera) Cycle(dev *api.Device) {
 
 }
 
-func (d *AdapterIPCamera) OnSense(dev *api.Device, data api.DeviceData) {
-
+func (d *AdapterIPCamera) OnSense(dev *api.Device, data api.DeviceData) (state map[string]interface{}) {
+	return nil
 }
 
 func (d *AdapterIPCamera) GetEventText(*api.Device, *api.Sensor) (shortText string, longText string) {

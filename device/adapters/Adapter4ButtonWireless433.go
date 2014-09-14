@@ -12,8 +12,8 @@ func (d *Adapter4ButtonWireless433) Cycle(dev *api.Device) {
 
 }
 
-func (d *Adapter4ButtonWireless433) OnSense(dev *api.Device, data api.DeviceData) {
-
+func (d *Adapter4ButtonWireless433) OnSense(dev *api.Device, data api.DeviceData) (state map[string]interface{}) {
+	return nil
 }
 
 func (d *Adapter4ButtonWireless433) GetEventText(dev *api.Device, sensor *api.Sensor) (shortText string, longText string) {

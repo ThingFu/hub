@@ -16,8 +16,8 @@ func (s *AdapterContactSensor433) Cycle(dev *api.Device) {
 
 }
 
-func (sensor *AdapterContactSensor433) OnSense(dev *api.Device, data api.DeviceData) {
-
+func (sensor *AdapterContactSensor433) OnSense(dev *api.Device, data api.DeviceData) (state map[string]interface{}) {
+	return nil
 }
 
 func (d *AdapterContactSensor433) GetEventText(dev *api.Device,sensor *api.Sensor) (shortText string, longText string) {

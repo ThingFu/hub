@@ -17,8 +17,10 @@ func (d *Adapter1ButtonWireless433) Cycle(dev *api.Device) {
 
 }
 
-func (d *Adapter1ButtonWireless433) OnSense(dev *api.Device, data api.DeviceData) {
+func (d *Adapter1ButtonWireless433) OnSense(dev *api.Device, data api.DeviceData) (state map[string]interface{}) {
 	log.Println("Sense : Wireless Button")
+
+	return nil
 }
 
 func (d *Adapter1ButtonWireless433) GetEventText(dev *api.Device, sensor *api.Sensor) (shortText string, longText string) {

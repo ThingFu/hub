@@ -89,6 +89,42 @@ func (m *MongoDataSource) PutEvent(evt *api.Event) {
 	}()
 }
 
+func (m *MongoDataSource )SaveState(dev *api.Device, state map[string] interface {}) {
+	go func() {
+		session, err := mgo.Dial(m.host)
+		defer session.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+		session.SetMode(mgo.Monotonic, true)
+		c := session.DB("devices").C("devices")
+
+		var change = mgo.Change {
+			ReturnNew: true,
+			Update: bson.M{
+				"$set": bson.M{
+					"state": state,
+				},
+			},
+		}
+
+		if _, err = c.FindId(dev.DatabaseId).Apply(change, &dev); err != nil {
+			panic(err)
+		}
+	}()
+}
+/*
+ var change = mgo.Change{
+        ReturnNew: true,
+        Update: bson.M{
+            "$set": bson.M{
+                "cp": time.Now(),
+            }}}
+    if changeInfo, err = collection.FindId(todo.Id).Apply(change, &todo); err != nil {
+        panic(err)
+    }
+ */
+
 func (s *MongoDataSource) ValidateWiring() {
 	if s.env == nil {
 		log.Fatal("Environment not wired to MongoDataSource")

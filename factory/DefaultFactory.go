@@ -86,7 +86,7 @@ func (s *DefaultFactory) CreateDeviceAdapter(t string) api.DeviceAdapter {
 	case "433mhz-knock":
 		adapter = new(adapters.AdapterKnockSensor433)
 
-	case "motion":
+	case "433mhz-motion":
 		adapter = new(adapters.AdapterMotionSensor433)
 
 	case "dlink-dcs930l":

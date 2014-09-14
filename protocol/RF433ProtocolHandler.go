@@ -1,26 +1,31 @@
 package protocol
 
 import (
-	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/go-home/hub/api"
 	"github.com/go-home/hub/utils"
 	serial "github.com/tarm/goserial"
 	"log"
 	"strings"
 	"time"
+	"strconv"
 )
 
 // |preamble|bitlength|protocol|data|checksum|end|
 type RF433Data struct {
-	Data      map[string]interface{}
-	BitLength int
-	Protocol  int
+	Protocol	int
+	BinData		string
+	DecData		string
 }
 
-func (d RF433Data) GetData() map[string]interface{} {
-	return d.Data
+func (r *RF433Data ) GetData() map[string]interface{} {
+	ret := make(map[string]interface{})
+
+	ret["protocol"] = r.Protocol
+	ret["bin"] = r.BinData
+	ret["dec"] = r.DecData
+
+	return ret
 }
 
 // Handles 433MHZ signals via Serial
@@ -68,70 +73,89 @@ func (p *RF433ProtocolHandler) Start() {
 
 func (p *RF433ProtocolHandler) Handle(payload interface{}) {
 	buf := payload.(string)
-	data := new(RF433Data)
-	dec := json.NewDecoder(strings.NewReader(buf))
-	dec.UseNumber()
-	dec.Decode(data)
+	spl := strings.Split(buf, "|")
 
-	if data.Protocol == 5 && data.BitLength == 36 {
-		go p.handleWT450(*data)
+	data := new(RF433Data)
+	prot, _ := strconv.Atoi(spl[1])
+	data.Protocol = prot
+	data.BinData = spl[2]
+	data.DecData = spl[3]
+
+	if data.Protocol == 5 && len(data.BinData) == 36 {
+		go p.handleWT450(data)
 	} else {
-		go p.handleCodeMatch(*data)
+		go p.handleCodeMatch(data)
 	}
 }
 
-func (p *RF433ProtocolHandler) handleWT450(data RF433Data) {
-	bin := data.Data["bin"].(string)
+func (p *RF433ProtocolHandler) handleWT450(data *RF433Data) {
+	dec, _ := strconv.Atoi(data.DecData)
+	ser := "nb-wt450-" + strconv.Itoa(dec >> 26)
 
-	dec := bin2dec(bin)
-	serial := "nb-wt450-" + dec
+	dev, sensor, err := p.getDevice(ser)
 
-	dev, ok := p.deviceService.GetDevice(serial)
+	if err == nil {
+		drv := p.factory.CreateDeviceAdapter("433mhz-wt450")
 
-	if ok {
-		sensor := dev.GetSensor("dht")
-		drv := p.factory.CreateDeviceAdapter("wt450")
-		go drv.OnSense(&dev, data)
-		go p.deviceService.Handle(&dev, sensor)
+		go func() {
+			state := drv.OnSense(dev, data)
+
+			lastEvent := sensor.LastEvent
+			desc := dev.Descriptor
+			if utils.TimeWithinThreshold(lastEvent, desc.EventUpdateBuffer, 5000) {
+				sensor.UpdateLastEvent(time.Now())
+				p.deviceService.SaveDevice(*dev)
+
+				p.deviceService.Handle(dev, sensor, state)
+			}
+		}()
 	}
 }
 
 /**
 Matches and handles any RF433 code against a list of 433MHZ Device Sensors.
 */
-func (p *RF433ProtocolHandler) handleCodeMatch(data RF433Data) {
-	fmt.Println("RF433: ", data)
-	ser := data.Data["decimal"]
+func (p *RF433ProtocolHandler) handleCodeMatch(data *RF433Data) {
+	ser := data.DecData
 
 	// If serial data gets messed up
-	if ser == nil {
+	if ser == "" {
 		log.Println("Something is wrong. Code from RF 433 sensor is nil. Skipping..")
 		return
 	}
-	dev, sensor, ok := p.getDevice(ser.(json.Number).String())
+
+	dev, sensor, ok := p.getDevice(ser)
 	if ok != nil {
 		log.Println("Unknown Device ", ser)
 	} else {
 		t := p.deviceService.GetDeviceType(dev.Type)
 		drv := p.factory.CreateDeviceAdapter(t.TypeId)
-		desc := dev.Descriptor
-		go drv.OnSense(dev, data)
-
-		// We don't want to run rules or fire events too frequently,
-		// so check against device descriptor's Event Update Buffer
-		// if we should go ahead
-		lastEvent := sensor.LastEvent
-		if utils.TimeWithinThreshold(lastEvent, desc.EventUpdateBuffer, 5000) {
-			sensor.UpdateLastEvent(time.Now())
-			p.deviceService.SaveDevice(*dev)
-
-			go p.deviceService.Handle(dev, sensor)
+		if drv == nil {
+			log.Println("No adapter for device type " + dev.Type)
+			return
 		}
 
+		// Sense and Handle Device Event
+		go func() {
+			state := drv.OnSense(dev, data)
+
+			// We don't want to run rules or fire events too frequently,
+			// so check against device descriptor's Event Update Buffer
+			// if we should go ahead
+			lastEvent := sensor.LastEvent
+			desc := dev.Descriptor
+			if utils.TimeWithinThreshold(lastEvent, desc.EventUpdateBuffer, 5000) {
+				sensor.UpdateLastEvent(time.Now())
+				p.deviceService.SaveDevice(*dev)
+
+				p.deviceService.Handle(dev, sensor, state)
+			}
+		}()
 	}
 }
 
 func (p *RF433ProtocolHandler) getDevice(ser string) (*api.Device, *api.Sensor, error) {
+
 	devices := p.deviceService.GetDevices()
 	for i, _ := range devices {
 		device := &devices[i]
@@ -141,6 +165,7 @@ func (p *RF433ProtocolHandler) getDevice(ser string) (*api.Device, *api.Sensor, 
 		if desc.Protocol == "433MHZ" {
 			for j, _ := range sensors {
 				sensor := &sensors[j]
+
 				if sensor.Code == ser {
 					return device, sensor, nil
 				}
@@ -148,10 +173,6 @@ func (p *RF433ProtocolHandler) getDevice(ser string) (*api.Device, *api.Sensor, 
 		}
 	}
 	return new(api.Device), new(api.Sensor), errors.New("Unknown Device")
-}
-
-func bin2dec(num string) string {
-	return ""
 }
 
 func (p *RF433ProtocolHandler) SetFactory(o api.Factory) {
