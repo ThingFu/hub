@@ -15,7 +15,7 @@ const (
 )
 
 const (
-	TRIGGER_INTERVAL = 0
+	TRIGGER_INTERVAL uint8 = 0
 	TRIGGER_DEVICE   = 1
 )
 
@@ -25,7 +25,7 @@ type Rule struct {
 	Name        string
 	Description string
 	Enabled     bool
-	Priority    int
+	Priority    byte
 	Targets     []string
 	When        []RuleWhen
 	Then        []RuleThen

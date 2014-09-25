@@ -13,24 +13,34 @@ import (
 )
 
 type MongoDataSource struct {
-	host      string
-	env       api.Environment
-	container api.Container
+	host      		string
+	env       		api.Environment
+	container 		api.Container
+	session			*mgo.Session
+}
+
+func NewMongoDataSource() *MongoDataSource {
+	m := new (MongoDataSource)
+
+	session, err := mgo.Dial(m.host)
+	if err != nil {
+		log.Fatalf("CreateSession: %s\n", err)
+	}
+	session.SetMode(mgo.Monotonic, true)
+	m.session = session
+
+	return m
 }
 
 func (m *MongoDataSource) GetDevices() []api.Device {
-	session, err := mgo.Dial(m.host)
+	session := m.session.Copy()
 	defer session.Close()
-	if err != nil {
-		log.Fatal(err)
-	}
-	session.SetMode(mgo.Monotonic, true)
 
 	c := session.DB("devices").C("devices")
 	var results []api.Device
 
 	q := c.Find(bson.M{}).Sort("lbl")
-	err = q.All(&results)
+	q.All(&results)
 
 	return results
 }
@@ -42,18 +52,15 @@ func (m *MongoDataSource) PutDevice(dev *api.Device) {
 }
 
 func (m *MongoDataSource) GetDeviceEvents(limit int) []api.Event {
-	session, err := mgo.Dial(m.host)
+	session := m.session.Copy()
 	defer session.Close()
-	if err != nil {
-		log.Fatal(err)
-	}
-	session.SetMode(mgo.Monotonic, true)
+
 	c := session.DB("events").C("events")
 	var results []api.Event
 	if limit > 0 {
-		err = c.Find(bson.M{}).Limit(limit).Sort("-ts").All(&results)
+		c.Find(bson.M{}).Limit(limit).Sort("-ts").All(&results)
 	} else {
-		err = c.Find(bson.M{}).All(&results)
+		c.Find(bson.M{}).All(&results)
 	}
 
 	events := make([]api.Event, len(results))
@@ -65,12 +72,8 @@ func (m *MongoDataSource) GetDeviceEvents(limit int) []api.Event {
 }
 
 func (m *MongoDataSource) SaveDevice(dev api.Device) {
-	session, err := mgo.Dial(m.host)
+	session := m.session.Copy()
 	defer session.Close()
-	if err != nil {
-		log.Fatal(err)
-	}
-	session.SetMode(mgo.Monotonic, true)
 
 	c := session.DB("devices").C("devices")
 
@@ -79,12 +82,9 @@ func (m *MongoDataSource) SaveDevice(dev api.Device) {
 
 func (m *MongoDataSource) PutEvent(evt *api.Event) {
 	go func() {
-		session, err := mgo.Dial(m.host)
+		session := m.session.Copy()
 		defer session.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
-		session.SetMode(mgo.Monotonic, true)
+
 		c := session.DB("events").C("events")
 
 		c.Insert(evt)
@@ -93,12 +93,9 @@ func (m *MongoDataSource) PutEvent(evt *api.Event) {
 
 func (m *MongoDataSource )SaveState(dev *api.Device, state map[string] interface {}) {
 	go func() {
-		session, err := mgo.Dial(m.host)
+		session := m.session.Copy()
 		defer session.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
-		session.SetMode(mgo.Monotonic, true)
+
 		c := session.DB("devices").C("devices")
 
 		var change = mgo.Change {
@@ -110,7 +107,7 @@ func (m *MongoDataSource )SaveState(dev *api.Device, state map[string] interface
 			},
 		}
 
-		if _, err = c.FindId(dev.DatabaseId).Apply(change, &dev); err != nil {
+		if _, err := c.FindId(dev.DatabaseId).Apply(change, &dev); err != nil {
 			panic(err)
 		}
 	}()

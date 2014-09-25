@@ -6,7 +6,7 @@ package api
 
 type RulesService interface {
 	GetRules() map[string]Rule
-	Trigger(triggerType int, facts *RuleFacts)
+	Trigger(triggerType uint8, facts *RuleFacts)
 	ContainerAware
 	RegisterRule(Rule)
 

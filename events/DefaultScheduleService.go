@@ -33,7 +33,7 @@ func (s DefaultScheduleService) Start() {
 		for {
 			select {
 			case <-s.ruleTicker.C:
-				s.rulesService.Trigger(0, new(api.RuleFacts))
+				s.rulesService.Trigger(api.TRIGGER_INTERVAL, new(api.RuleFacts))
 				s.deviceService.Cycle()
 
 			case <-quit:

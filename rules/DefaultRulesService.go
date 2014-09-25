@@ -26,7 +26,7 @@ func (r DefaultRulesService) GetRules() map[string]api.Rule {
 	return r.rules
 }
 
-func (r DefaultRulesService) Trigger(triggerType int, facts *api.RuleFacts) {
+func (r DefaultRulesService) Trigger(triggerType uint8, facts *api.RuleFacts) {
 	exec := make(map[string]api.Rule)
 	device := facts.Device
 

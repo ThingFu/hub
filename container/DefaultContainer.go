@@ -29,7 +29,7 @@ func Initialize(home string, config api.Configuration) (api.Container, api.Envir
 	CONTAINER.Register(rules.NewRulesService(), "api.RulesService")
 	CONTAINER.Register(device.NewDeviceService(), "api.DeviceService")
 	CONTAINER.Register(new(events.DefaultScheduleService), "api.ScheduleService")
-	CONTAINER.Register(new(source.MongoDataSource), "api.DataSource")
+	CONTAINER.Register(source.NewMongoDataSource(), "api.DataSource")
 	CONTAINER.Register(new(factory.DefaultFactory), "api.Factory")
 
 	CONTAINER.startWire()

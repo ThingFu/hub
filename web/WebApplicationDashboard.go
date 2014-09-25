@@ -165,7 +165,7 @@ func (app *WebApplicationDashboard) handleManageRules(w http.ResponseWriter, req
 }
 
 func (app *WebApplicationDashboard) handleEditRules(w http.ResponseWriter, req *http.Request) {
-	w.Write(templateOutput("rules", nil))
+	w.Write(templateOutput("rule_edit", nil))
 }
 
 func (app *WebApplicationDashboard) handleDeviceAdd(w http.ResponseWriter, req *http.Request) {

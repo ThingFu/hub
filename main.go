@@ -13,6 +13,7 @@ import (
 	"io/ioutil"
 	"log"
 	_ "fmt"
+	_ "net/http/pprof"
 )
 
 func main() {
