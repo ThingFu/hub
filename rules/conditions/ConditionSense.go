@@ -8,6 +8,7 @@ import (
 	"github.com/go-home/hub/api"
 )
 
+// Executed when a Sensor senses
 type Sense struct {
 
 }

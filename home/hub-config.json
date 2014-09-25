@@ -1,6 +1,5 @@
 {
     "NodeID": "LocalDev",
-    "ServerPort": 8181,
     "MaxProcs": 1,
     "DB": "localhost:27017",
     "Protocols": {

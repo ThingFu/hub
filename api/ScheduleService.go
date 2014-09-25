@@ -10,6 +10,7 @@ const (
 	SCHEDULE_TICKER_INTERVAL = 15 * time.Second
 )
 
+// Service for managing scheduled tasks, e.g. the Cycle for devices
 type ScheduleService interface {
 	Start()
 	Stop()

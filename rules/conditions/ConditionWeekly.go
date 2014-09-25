@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+// Executed once a week
 type Weekly struct {
 }
 

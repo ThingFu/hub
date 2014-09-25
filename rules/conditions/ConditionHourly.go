@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+// Executed every hour
 type Hourly struct {
 }
 

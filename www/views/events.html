@@ -1,5 +1,5 @@
-{{define "events"}}
-{{template "header" .}}
+#{define "events"}#
+#{template "header" .}#
 <aside class="right-side">
     <section class="content-header">
         <h1>Events</h1>
@@ -20,17 +20,17 @@
                 </li>
 
 
-                {{with .Events}}
-                {{range . }}
+                #{with .Events}#
+                #{range . }#
                 <li>
                     <i class="fa fa-envelope bg-blue"></i>
                     <div class="timeline-item">
-                        <span class="time"><i class="fa fa-clock-o"></i> {{Ago .Ts}}</span>
-                        {{.LongText}}
+                        <span class="time"><i class="fa fa-clock-o"></i> #{Ago .Ts}#</span>
+                        #{.LongText}#
                     </div>
                 </li>
-                {{end}}
-                {{end}}
+                #{end}#
+                #{end}#
 
                 <li>
                     <i class="fa fa-clock-o"></i>
@@ -42,5 +42,5 @@
         </div>
     </section><!-- /.content -->
 </aside><!-- /.right-side -->
-{{template "footer" .}}
-{{end}}
+#{template "footer" .}#
+#{end}#

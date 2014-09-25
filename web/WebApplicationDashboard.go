@@ -14,6 +14,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	// _ "net/http/pprof"
 	"runtime"
 	"strings"
 	"time"
@@ -27,26 +28,10 @@ var funcMap = template.FuncMap{
 	},
 }
 
-/*
-var templates = template.Must(
-	templates.ParseFiles(
-		"www/views/layouts/header.html",
-		"www/views/layouts/footer.html",
-		"www/views/dashboard.html",
-		"www/views/rules.html",
-		"www/views/settings.html",
-		"www/views/events.html",
-		"www/views/widget_view.html",
-		"www/views/add_device.html",
-		"www/views/devices.html",
-		"www/views/sysinfo.html",
-		"www/views/about.html",
-		"www/views/widget_config.html").Funcs(funcMap))
-*/
-
 func compileTemplate(name string) *template.Template {
 	t := template.New(name)
 	t = template.Must(t.Funcs(funcMap).ParseGlob("www/views/layouts/*.html"))
+	t.Delims("#{", "}#")
 
 	return template.Must(t.ParseFiles("www/views/" + name + ".html"))
 }
@@ -83,9 +68,81 @@ func (app *WebApplicationDashboard) Setup(r *mux.Router) {
 	r.HandleFunc("/device/{deviceType}/resource/icon/128x", app.handleResourceIcon)
 	r.HandleFunc("/dashboard", app.handleDashboard)
 	r.HandleFunc("/device/add", app.handleDeviceAdd)
+	r.HandleFunc("/device/add/{typeId}", app.handleDeviceAddNew).Methods("POST", "GET")
 	r.HandleFunc("/devices", app.handleDevices)
 	r.HandleFunc("/sysinfo", app.handleSysInfo)
 	r.HandleFunc("/about", app.handleAbout)
+}
+
+func renderContent(path string, model interface {}) template.HTML {
+	fileContent, _ := ioutil.ReadFile(path)
+	stringContent := string(fileContent)
+
+	tmpl, err := template.New("__tpl_" + path).Parse(stringContent)
+	if err != nil {
+		log.Fatalf("execution failed: %s", err)
+	}
+
+	buf := bytes.NewBufferString("")
+	err = tmpl.Execute(buf, model)
+
+	htmlContent := buf.String()
+	return template.HTML(htmlContent)
+}
+
+func (app *WebApplicationDashboard) handleDeviceAddNew(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+	typeId := vars["typeId"]
+	if req.Method == "GET" {
+		thing := app.deviceService.GetDeviceType(typeId)
+		deviceType := app.deviceService.GetDeviceType(typeId)
+
+		model := new (webModelDeviceAddNew)
+		model.AddNewContent =  renderContent (thing.Path + "/add.html", deviceType)
+
+		w.Write(templateOutput("device_addnew", model))
+	} else
+	if req.Method == "POST" {
+		//
+		body, _ := ioutil.ReadAll(req.Body)
+		content := string(body)
+
+		/*
+		{
+			"_id" : ObjectId("540f33e9ffe79223bcb81706"),
+			"uid" : "d3cc6575",
+			"c" : "motion",
+			"tid" : "433mhz-motion",
+			"lbl" : "Motion@Main Door",
+			"grp" : "home",
+			"prot" : "433MHZ",
+			"sub" : [
+				{ "n" : "Sensor", "lbl" : "s", "code" : "5592405" }
+			]
+		}
+
+		{
+			"_id" : ObjectId("5410894f11b9eeb306b151fa"),
+			"uid" : "b7d51d00",
+			"c" : "button",
+			"tid" : "433mhz-4buttons",
+			"lbl" : "Test Button",
+			"grp" : "home",
+			"prot" : "433MHZ",
+			"sub" : [
+				{ "n" : "button_a", "lbl" : "Button A", "code" : "5592512" },
+				{ "n" : "button_b", "lbl" : "Button B", "code" : "5592368" },
+				{ "n" : "button_c", "lbl" : "Button C", "code" : "5592332" },
+				{ "n" : "button_d", "lbl" : "Button D", "code" : "5592323" }
+			]
+		}
+		 */
+
+		fmt.Println(content)
+		fmt.Println("POST!!")
+	}
+
+
 }
 
 func (app *WebApplicationDashboard) handleAbout(w http.ResponseWriter, req *http.Request) {
@@ -115,17 +172,16 @@ func (app *WebApplicationDashboard) handleDeviceAdd(w http.ResponseWriter, req *
 	var model = new(webModelDeviceAdd)
 	model.Devices = app.deviceService.GetDeviceTypes()
 
-	w.Write(templateOutput("add_device", model))
+	w.Write(templateOutput("device_add", model))
 }
 
 func (app *WebApplicationDashboard) handleDashboard(w http.ResponseWriter, req *http.Request) {
-	// TODO Pre-render templates
 	var dp = new(webModelDashboard)
 
 	memStats := runtime.MemStats{}
 	runtime.ReadMemStats(&memStats)
 	ramUsed := int(((float64(memStats.Sys) / 1024 / 1024) * 100) / 100)
-	dp.RAM_used = fmt.Sprintf("%d", ramUsed)
+	dp.RAM_used = fmt.Sprintf("%d MB", ramUsed)
 
 	dp.Events_count = len(app.dataSource.GetDeviceEvents(0))
 
@@ -173,7 +229,7 @@ func (app *WebApplicationDashboard) handleWidgetView(w http.ResponseWriter, req 
 		model.Content = template.HTML(buf.String())
 		model.Device = dev
 
-		w.Write(templateOutput("widget_view", model))
+		w.Write(templateOutput("device_view", model))
 	}
 }
 
@@ -182,7 +238,7 @@ func (app *WebApplicationDashboard) handleWidgetConfigure(w http.ResponseWriter,
 
 	dev, ok := app.deviceService.GetDevice(vars["deviceId"])
 	if ok {
-		w.Write(templateOutput("widget_config", dev))
+		w.Write(templateOutput("device_config", dev))
 	}
 }
 
@@ -214,7 +270,6 @@ func (app *WebApplicationDashboard) handleWidgetUpdateConfiguration(w http.Respo
 		}
 	}
 
-	app.dataSource.SaveDevice(dev)
 	app.deviceService.SaveDevice(dev)
 
 	if ok {
@@ -233,15 +288,6 @@ func (app *WebApplicationDashboard) handleSimulationService(w http.ResponseWrite
 	content := string(body)
 	handler := app.container.ProtocolHandler(protocol)
 	handler.Handle(content)
-
-	/*
-		dev, _ := app.deviceService.GetDevice("7820592")
-		// facts.Device = &dev
-
-		go app.deviceService.Handle(dev)
-
-		// go rulesManager.Trigger(TRIGGER_DEVICE, facts)
-	*/
 }
 
 func (app *WebApplicationDashboard) handleEventsView(w http.ResponseWriter, req *http.Request) {
@@ -287,4 +333,8 @@ type webModelDeviceAdd struct {
 
 type webModelEvents struct {
 	Events []api.Event
+}
+
+type webModelDeviceAddNew struct {
+	AddNewContent	template.HTML
 }

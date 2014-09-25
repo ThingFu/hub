@@ -1,0 +1,44 @@
+<form name="mainFrm">
+    <div class="box-body">
+
+        <input type="hidden" ng-model="frm.device_type"  />
+
+        <div class="form-group">
+            <label>Type</label>
+            <input type="text" class="form-control" value="{{.Name}}" disabled />
+        </div>
+
+        <div class="form-group">
+            <label>Label</label>
+            <input type="text" ng-model="frm.device_name" class="form-control" value="" />
+        </div>
+
+        <div class="form-group">
+            <label>Description</label>
+            <textarea ng-model="frm.device_description"  class="form-control" rows="3">{{.Description}}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Code</label>
+            <input type="text" class="form-control" ng-model="frm.device_code" />
+        </div>
+    </div>
+    <div class="box-footer">
+        <button ng-click="submitForm()" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+<script>
+    angular.module("gohomeapp", []).controller("ctrlmain", function($scope, $http) {
+        $scope.frm = {}
+        $scope.frm.device_type = "{{.TypeId}}";
+
+        $scope.submitForm = function(item, event) {
+            var p = $http.post("", $scope.frm, {})
+            p.success(function(dataFromServer, status, headers, config) {
+                alert("Submitted..")
+            });
+        }
+    })
+</script>
+
+

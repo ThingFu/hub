@@ -1,5 +1,5 @@
-{{define "widget_view"}}
-{{template "header" .}}
+#{define "device_view"}#
+#{template "header" .}#
 <!-- Right side column. Contains the navbar and content of the page -->
 <aside class="right-side">
     <!-- Content Header (Page header) -->
@@ -9,7 +9,7 @@
             <li>
                 <a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></a>
             </li>
-            <li>{{.Device.Name}}</li>
+            <li>#{.Device.Name}#</li>
             <li class="active">View Device</li>
         </ol>
     </section>
@@ -17,10 +17,10 @@
     <!-- Main content -->
     <section class="content">
         <div class="col-md-12">
-        {{.Content}}
+        #{.Content}#
         </div>
     </section><!-- /.content -->
 </aside><!-- /.right-side -->
-{{template "footer" .}}
-{{end}}
+#{template "footer" .}#
+#{end}#
 

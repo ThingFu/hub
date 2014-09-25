@@ -56,6 +56,7 @@ func (o *DefaultDeviceService) GetDevice(id string) (dev api.Device, ok bool) {
 }
 
 func (o *DefaultDeviceService) SaveDevice(d api.Device) {
+	go o.dataSource.SaveDevice(d)
 	o.devices[d.GetId()] = d
 }
 

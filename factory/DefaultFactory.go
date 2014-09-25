@@ -96,6 +96,9 @@ func (s *DefaultFactory) CreateDeviceAdapter(t string) api.DeviceAdapter {
 	case "433mhz-4buttons":
 		adapter = new(adapters.Adapter4ButtonWireless433)
 
+	case "weather":
+		adapter = new(adapters.AdapterWeather)
+
 	default:
 		return nil
 	}

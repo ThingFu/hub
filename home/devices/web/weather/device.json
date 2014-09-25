@@ -1,0 +1,18 @@
+{
+    "tid": "weather",
+    "name": "Weather Widget",
+    "description": "",
+    "cycletime": 5000,
+    "vendor": "unknown",
+    "model": "unknown",
+    "logEvents": false,
+    "attributes": [
+        {
+            "name": "city",
+            "type": "string",
+            "config": true,
+            "required": true,
+            "default": "Singapore"
+        }
+    ]
+}

@@ -1,5 +1,5 @@
-{{define "add_device"}}
-{{template "header" .}}
+#{define "device_add"}#
+#{template "header" .}#
 <!-- Right side column. Contains the navbar and content of the page -->
 <aside class="right-side">
     <!-- Content Header (Page header) -->
@@ -26,14 +26,14 @@
                 </tr>
                 </thead>
                 <tbody>
-                {{with .Devices}}
-                {{range .}}
+                #{with .Devices}#
+                #{range .}#
                 <tr>
-                    <td>{{.Name}}</td>
-                    <td>{{.Protocol}}</td>
-                    <td>{{.Group}}</td>
+                    <td>#{.Name}#</td>
+                    <td>#{.Protocol}#</td>
+                    <td>#{.Group}#</td>
                     <th>
-                        <a href="/device/add/{{.TypeId}}">
+                        <a href="/device/add/#{.TypeId}#">
                             <button type="button" class="btn btn-info btn-gradient">
                                 <span class="glyphicons glyphicons-user"></span>
                             </button>
@@ -41,12 +41,12 @@
                     </th>
                 </tr>
 
-                {{end}}
-                {{end}}
+                #{end}#
+                #{end}#
                 </tbody>
             </table>
         </div>
     </section><!-- /.content -->
 </aside><!-- /.right-side -->
-{{template "footer" .}}
-{{end}}
+#{template "footer" .}#
+#{end}#

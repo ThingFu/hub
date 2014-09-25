@@ -9,6 +9,7 @@ import (
 	mgo "gopkg.in/mgo.v2"
 	bson "gopkg.in/mgo.v2/bson"
 	"log"
+	_ "fmt"
 )
 
 type MongoDataSource struct {
@@ -28,7 +29,8 @@ func (m *MongoDataSource) GetDevices() []api.Device {
 	c := session.DB("devices").C("devices")
 	var results []api.Device
 
-	err = c.Find(bson.M{}).All(&results)
+	q := c.Find(bson.M{}).Sort("lbl")
+	err = q.All(&results)
 
 	return results
 }

@@ -1,5 +1,5 @@
-{{define "rules"}}
-{{template "header" .}}
+#{define "rules"}#
+#{template "header" .}#
 <!-- Right side column. Contains the navbar and content of the page -->
 <aside class="right-side">
     <!-- Content Header (Page header) -->
@@ -24,24 +24,24 @@
                 </tr>
                 </thead>
                 <tbody>
-                {{with .Rules}}
-                {{range .}}
+                #{with .Rules}#
+                #{range .}#
                 <tr>
-                    <td>{{.Name}}</td>
+                    <td>#{.Name}#</td>
                     <td class="hidden-xs text-center">
                         <div class="btn-group">
-                            <a href="/rule/{{.Id}}">
+                            <a href="/rule/#{.Id}#">
                                 <button type="button" nunchi-op="session" class="nunchi-op btn btn-success btn-gradient"> <span class="glyphicon glyphicon-earphone"></span> </button>
                             </a>
                         </div>
                     </td>
                 </tr>
-                {{end}}
-                {{end}}
+                #{end}#
+                #{end}#
                 </tbody>
             </table>
         </div>
     </section><!-- /.content -->
 </aside><!-- /.right-side -->
-{{template "footer" .}}
-{{end}}
+#{template "footer" .}#
+#{end}#

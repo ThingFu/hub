@@ -19,7 +19,6 @@ import (
 )
 
 func Setup(env api.Environment) {
-
 	// setupChan := make(chan bool, 6)
 	go loadDeviceTypes(env)
 	loadDevices(env)

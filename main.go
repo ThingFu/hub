@@ -12,6 +12,7 @@ import (
 	"github.com/go-home/hub/setup"
 	"io/ioutil"
 	"log"
+	_ "fmt"
 )
 
 func main() {
@@ -33,12 +34,23 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	validateConfig(config)
+	validateConfig(&config)
 	_, env := container.Initialize(home, config)
 
 	setup.Setup(env)
 }
 
-func validateConfig(cfg api.Configuration) {
+func validateConfig(cfg *api.Configuration) {
+	if cfg.Db == "" {
+		log.Fatal("Database Parameter Missing")
+	}
 
+	if cfg.ServerPort == 0 {
+		log.Println("Server port not defined. Defaulting to 8181")
+		cfg.ServerPort = 8181
+	}
+
+	if len(cfg.Protocols) == 0 {
+		log.Println("No protocols defined")
+	}
 }

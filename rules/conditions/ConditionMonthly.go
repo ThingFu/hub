@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+// Execute once a month
 type Monthly struct {
 }
 

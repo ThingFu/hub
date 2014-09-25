@@ -2,6 +2,7 @@ package api
 
 import "time"
 
+// Represents a sensor on a device
 type Sensor struct {
 	Name      string `bson:"n"`
 	Label     string `bson:"lbl"`

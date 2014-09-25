@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+// Executed once a day
 type Daily struct {
 }
 

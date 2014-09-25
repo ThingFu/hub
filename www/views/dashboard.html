@@ -1,7 +1,7 @@
-{{define "dashboard"}}
-{{template "header" .}}
+#{define "dashboard"}#
+#{template "header" .}#
 <!-- Right side column. Contains the navbar and content of the page -->
-<aside class="right-side">
+<aside class="right-side" ng-controller="ctrl-dashboard">
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>Dashboard</h1>
@@ -19,7 +19,7 @@
                 <!-- small box -->
                 <div class="small-box bg-aqua">
                     <div class="inner">
-                        <h3>{{.RAM_used}}MB</h3>
+                        <h3 ng-bind="model.RAMUsed">&nbsp;</h3>
                         <p>RAM Utilised</p>
                     </div>
                     <div class="icon">
@@ -32,7 +32,7 @@
                 <!-- small box -->
                 <div class="small-box bg-green">
                     <div class="inner">
-                        <h3>{{.Device_count}}</h3>
+                        <h3 ng-bind="model.DeviceCount">&nbsp;</h3>
                         <p>Devices</p>
                     </div>
                     <div class="icon">
@@ -45,7 +45,7 @@
                 <!-- small box -->
                 <div class="small-box bg-yellow">
                     <div class="inner">
-                        <h3>{{.Events_count}}</h3>
+                        <h3 ng-bind="model.EventsProcessed">&nbsp;</h3>
                         <p>Events Processed</p>
                     </div>
                     <div class="icon">
@@ -60,7 +60,7 @@
                 <!-- small box -->
                 <div class="small-box bg-red">
                     <div class="inner">
-                        <h3>{{.Uptime}}</h3>
+                        <h3 ng-bind="model.Uptime">&nbsp;</h3>
                         <p>Uptime</p>
                     </div>
                     <div class="icon">
@@ -90,34 +90,64 @@
                 </ul>
 
                 <div class="tab-content no-padding">
-                    <div class="tab-pane active" id="dashboard-home" style="position:relative;">
-                        {{with .Home_devices}}
-                        {{range . }}
-                        <div class="col-md-4">
-                            <!-- Primary box -->
+                    <div class="tab-pane active" id="dashboard-home">
+                        <div class="col-md-4" ng-repeat="Device in model.Devices">
+                            <br />
                             <div class="box box-primary">
-                                <div class="box-header" data-toggle="tooltip" title="{{.Name}}">
-                                    <h3 class="box-title">{{.Name}}</h3>
+                                <div class="box-header" data-toggle="tooltip" title="{{Device.Name}}">
+                                    <h3 class="box-title">{{Device.Name}}</h3>
                                 </div>
-                                <div class="box-body">
-                                    {{.RenderWidget}}
-                                </div><!-- /.box-body -->
+                                <div class="box-body" ng-bind-html="Device.Content | htmlcontent"></div>
                                 <div class="box-footer">
                                     <div class="text-center">
-                                        <a href="/widget/{{.GetId}}/view" class="btn btn-social-icon btn-bitbucket">
+                                        <a href="/widget/{{Device.Id}}/view" class="btn btn-social-icon btn-bitbucket">
                                             <i class="fa fa-eye"></i>
                                         </a>
 
-                                        <a href="/widget/{{.GetId}}/configure" class="btn btn-social-icon btn-bitbucket">
+                                        <a href="/widget/{{Device.Id}}/configure" class="btn btn-social-icon btn-bitbucket">
                                             <i class="fa fa-gears"></i>
                                         </a>
                                     </div>
 
                                 </div>
                             </div>
-                        </div><!-- /.col -->
-                        {{end}}
-                        {{end}}
+                        </div>
+
+
+                        #{with .Home_devices}#
+                        #{range . }#
+                        <!--
+                        <div class="col-md-4">
+                            <div class="box box-primary">
+                                <div class="box-header" data-toggle="tooltip" title="#{.Name}#">
+                                    <h3 class="box-title">#{.Name}#</h3>
+                                </div>
+                                <div class="box-body">
+                                    #{.RenderWidget}#
+                                </div>
+                                <div class="box-footer">
+                                    <div class="text-center">
+                                        <a href="/widget/#{.GetId}#/view" class="btn btn-social-icon btn-bitbucket">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+
+                                        <a href="/widget/#{.GetId}#/configure" class="btn btn-social-icon btn-bitbucket">
+                                            <i class="fa fa-gears"></i>
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        -->
+
+
+
+
+
+
+                        #{end}#
+                        #{end}#
                     </div>
                     <div class="tab-pane" id="dashboard-health" style="position:relative;">
 
@@ -130,5 +160,5 @@
         </div><!-- /.row (main row) -->
     </section><!-- /.content -->
 </aside><!-- /.right-side -->
-{{template "footer" .}}
-{{end}}
+#{template "footer" .}#
+#{end}#

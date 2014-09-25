@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+// Execute once every quarter
 type Quarterly struct {
 }
 

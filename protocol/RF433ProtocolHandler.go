@@ -11,6 +11,7 @@ import (
 	"strconv"
 )
 
+// Data given by the MCU
 type RF433Data struct {
 	Protocol	int
 	BinData		string

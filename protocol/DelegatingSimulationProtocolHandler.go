@@ -4,6 +4,8 @@ import (
 	"github.com/go-home/hub/api"
 )
 
+// Protocol used by the Simulation URL
+// This constructs and delegates to actual Protocol Handlers
 type DelegatingSimulationProtocolHandler struct {
 	factory       api.Factory
 	environment   api.Environment
