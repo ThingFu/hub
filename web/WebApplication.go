@@ -124,7 +124,7 @@ func (app *WebApplication) apiUiDashboard(w http.ResponseWriter, req *http.Reque
 	runtime.ReadMemStats(&memStats)
 	ramUsed := int(((float64(memStats.Sys) / 1024 / 1024) * 100) / 100)
 	model["RAMUsed"] = fmt.Sprintf("%d MB", ramUsed)
-	model["EventsProcessed"] = len(app.dataSource.GetDeviceEvents(0))
+	model["EventsProcessed"] = app.dataSource.GetDeviceEventsCount()
 	model["Uptime"] = app.environment.GetUptime()
 
 	devices := app.deviceService.GetDevices()

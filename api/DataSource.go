@@ -8,6 +8,8 @@ package api
 type DataSource interface {
 	GetDevices() []Device
 	PutDevice(*Device)
+
+	GetDeviceEventsCount() int
 	GetDeviceEvents(int) []Event
 	SaveDevice(Device)
 	PutEvent(*Event)

@@ -51,6 +51,16 @@ func (m *MongoDataSource) PutDevice(dev *api.Device) {
 	}()
 }
 
+func (m *MongoDataSource) GetDeviceEventsCount() (count int) {
+	session := m.session.Copy()
+	defer session.Close()
+
+	c := session.DB("events").C("events")
+	count, _ = c.Count()
+
+	return
+}
+
 func (m *MongoDataSource) GetDeviceEvents(limit int) []api.Event {
 	session := m.session.Copy()
 	defer session.Close()

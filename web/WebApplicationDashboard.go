@@ -14,8 +14,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	// _ "net/http/pprof"
-	"runtime"
 	"strings"
 	"time"
 )
@@ -176,6 +174,7 @@ func (app *WebApplicationDashboard) handleDeviceAdd(w http.ResponseWriter, req *
 }
 
 func (app *WebApplicationDashboard) handleDashboard(w http.ResponseWriter, req *http.Request) {
+	/*
 	var dp = new(webModelDashboard)
 
 	memStats := runtime.MemStats{}
@@ -183,16 +182,17 @@ func (app *WebApplicationDashboard) handleDashboard(w http.ResponseWriter, req *
 	ramUsed := int(((float64(memStats.Sys) / 1024 / 1024) * 100) / 100)
 	dp.RAM_used = fmt.Sprintf("%d MB", ramUsed)
 
-	dp.Events_count = len(app.dataSource.GetDeviceEvents(0))
+	dp.Events_count = app.dataSource.GetDeviceEventsCount()
 
 	dp.Disk_Free = ""
 	dp.Uptime = app.environment.GetUptime()
 	devices := app.deviceService.GetDevices()
 	dp.Home_devices = devices
 	dp.Device_count = len(devices)
+	*/
 
 	// return to client via t.Execute
-	w.Write(templateOutput("dashboard", dp))
+	w.Write(templateOutput("dashboard", nil))
 }
 
 func (app *WebApplicationDashboard) handleResourceIcon(w http.ResponseWriter, req *http.Request) {
