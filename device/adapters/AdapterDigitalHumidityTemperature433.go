@@ -5,13 +5,12 @@
 package adapters
 
 import (
+	"fmt"
 	"github.com/go-home/hub/api"
 	"strconv"
-	"fmt"
 )
 
 type AdapterDigitalHumidityTemperature433 struct {
-
 }
 
 func (d *AdapterDigitalHumidityTemperature433) Cycle(dev *api.Device) {
@@ -27,16 +26,16 @@ func (d *AdapterDigitalHumidityTemperature433) OnSense(dev *api.Device, data api
 	tempHigh := mask & (dec >> 8)
 	tempLow := mask & dec
 
-	state = make(map[string] interface {})
+	state = make(map[string]interface{})
 
 	state["h"] = humidity
-	state["tH"] =  tempHigh-50
+	state["tH"] = tempHigh - 50
 	state["tL"] = tempLow
 
 	return
 }
 
-func (d *AdapterDigitalHumidityTemperature433) GetEventText(device *api.Device, sensor *api.Sensor, state map[string]interface {}) (shortText string, longText string) {
+func (d *AdapterDigitalHumidityTemperature433) GetEventText(device *api.Device, sensor *api.Sensor, state map[string]interface{}) (shortText string, longText string) {
 	humidity := state["h"]
 	tH := state["tH"]
 	tL := state["tL"]
@@ -46,4 +45,3 @@ func (d *AdapterDigitalHumidityTemperature433) GetEventText(device *api.Device, 
 
 	return
 }
-

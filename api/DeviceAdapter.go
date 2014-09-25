@@ -10,6 +10,6 @@ import _ "net/http"
 type DeviceAdapter interface {
 	Cycle(*Device)
 	OnSense(*Device, DeviceData) (state map[string]interface{})
-	GetEventText(device *Device, sensor *Sensor, state map[string]interface {}) (shortText string, longText string)
+	GetEventText(device *Device, sensor *Sensor, state map[string]interface{}) (shortText string, longText string)
 	// HandleGet(req http.Request, res http.Response)
 }

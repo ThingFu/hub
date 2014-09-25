@@ -7,44 +7,42 @@ package adapters
 import (
 	"github.com/go-home/hub/api"
 	/*
-	"log"
-	"fmt"
-	"net/http"
-	"io/ioutil"
-	*/
-)
+		"log"
+		"fmt"
+		"net/http"
+		"io/ioutil"
+	*/)
 
 type AdapterWeather struct {
-
 }
 
 func (d *AdapterWeather) Cycle(dev *api.Device) {
 	/*
-	city := dev.GetAttribute("city").Value.(string)
-	url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/weather?q=%s", city)
+		city := dev.GetAttribute("city").Value.(string)
+		url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/weather?q=%s", city)
 
-	client := &http.Client{}
-	request, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		log.Println("Not able to get weather data")
+		client := &http.Client{}
+		request, err := http.NewRequest("GET", url, nil)
+		if err != nil {
+			log.Println("Not able to get weather data")
 
-		return
-	}
+			return
+		}
 
-	response, err := client.Do(request)
-	defer response.Body.Close()
-	if err != nil {
-		log.Println("Not able to get weather data")
+		response, err := client.Do(request)
+		defer response.Body.Close()
+		if err != nil {
+			log.Println("Not able to get weather data")
 
-		return
-	}
+			return
+		}
 
-	content, err := ioutil.ReadAll(response.Body)
+		content, err := ioutil.ReadAll(response.Body)
 
 
-	fmt.Println(string(content[:len(content)]))
+		fmt.Println(string(content[:len(content)]))
 
-	log.Println("Adapter Weather Cycle")
+		log.Println("Adapter Weather Cycle")
 	*/
 }
 
@@ -52,8 +50,6 @@ func (d *AdapterWeather) OnSense(dev *api.Device, data api.DeviceData) (state ma
 	return nil
 }
 
-func (d *AdapterWeather) GetEventText(dev *api.Device, sensor *api.Sensor, state map[string]interface {}) (shortText string, longText string) {
+func (d *AdapterWeather) GetEventText(dev *api.Device, sensor *api.Sensor, state map[string]interface{}) (shortText string, longText string) {
 	return
 }
-
-

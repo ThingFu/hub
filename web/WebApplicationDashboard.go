@@ -72,7 +72,7 @@ func (app *WebApplicationDashboard) Setup(r *mux.Router) {
 	r.HandleFunc("/about", app.handleAbout)
 }
 
-func renderContent(path string, model interface {}) template.HTML {
+func renderContent(path string, model interface{}) template.HTML {
 	fileContent, _ := ioutil.ReadFile(path)
 	stringContent := string(fileContent)
 
@@ -95,51 +95,49 @@ func (app *WebApplicationDashboard) handleDeviceAddNew(w http.ResponseWriter, re
 		thing := app.deviceService.GetDeviceType(typeId)
 		deviceType := app.deviceService.GetDeviceType(typeId)
 
-		model := new (webModelDeviceAddNew)
-		model.AddNewContent =  renderContent (thing.Path + "/add.html", deviceType)
+		model := new(webModelDeviceAddNew)
+		model.AddNewContent = renderContent(thing.Path+"/add.html", deviceType)
 
 		w.Write(templateOutput("device_addnew", model))
-	} else
-	if req.Method == "POST" {
+	} else if req.Method == "POST" {
 		//
 		body, _ := ioutil.ReadAll(req.Body)
 		content := string(body)
 
 		/*
-		{
-			"_id" : ObjectId("540f33e9ffe79223bcb81706"),
-			"uid" : "d3cc6575",
-			"c" : "motion",
-			"tid" : "433mhz-motion",
-			"lbl" : "Motion@Main Door",
-			"grp" : "home",
-			"prot" : "433MHZ",
-			"sub" : [
-				{ "n" : "Sensor", "lbl" : "s", "code" : "5592405" }
-			]
-		}
+			{
+				"_id" : ObjectId("540f33e9ffe79223bcb81706"),
+				"uid" : "d3cc6575",
+				"c" : "motion",
+				"tid" : "433mhz-motion",
+				"lbl" : "Motion@Main Door",
+				"grp" : "home",
+				"prot" : "433MHZ",
+				"sub" : [
+					{ "n" : "Sensor", "lbl" : "s", "code" : "5592405" }
+				]
+			}
 
-		{
-			"_id" : ObjectId("5410894f11b9eeb306b151fa"),
-			"uid" : "b7d51d00",
-			"c" : "button",
-			"tid" : "433mhz-4buttons",
-			"lbl" : "Test Button",
-			"grp" : "home",
-			"prot" : "433MHZ",
-			"sub" : [
-				{ "n" : "button_a", "lbl" : "Button A", "code" : "5592512" },
-				{ "n" : "button_b", "lbl" : "Button B", "code" : "5592368" },
-				{ "n" : "button_c", "lbl" : "Button C", "code" : "5592332" },
-				{ "n" : "button_d", "lbl" : "Button D", "code" : "5592323" }
-			]
-		}
-		 */
+			{
+				"_id" : ObjectId("5410894f11b9eeb306b151fa"),
+				"uid" : "b7d51d00",
+				"c" : "button",
+				"tid" : "433mhz-4buttons",
+				"lbl" : "Test Button",
+				"grp" : "home",
+				"prot" : "433MHZ",
+				"sub" : [
+					{ "n" : "button_a", "lbl" : "Button A", "code" : "5592512" },
+					{ "n" : "button_b", "lbl" : "Button B", "code" : "5592368" },
+					{ "n" : "button_c", "lbl" : "Button C", "code" : "5592332" },
+					{ "n" : "button_d", "lbl" : "Button D", "code" : "5592323" }
+				]
+			}
+		*/
 
 		fmt.Println(content)
 		fmt.Println("POST!!")
 	}
-
 
 }
 
@@ -175,20 +173,20 @@ func (app *WebApplicationDashboard) handleDeviceAdd(w http.ResponseWriter, req *
 
 func (app *WebApplicationDashboard) handleDashboard(w http.ResponseWriter, req *http.Request) {
 	/*
-	var dp = new(webModelDashboard)
+		var dp = new(webModelDashboard)
 
-	memStats := runtime.MemStats{}
-	runtime.ReadMemStats(&memStats)
-	ramUsed := int(((float64(memStats.Sys) / 1024 / 1024) * 100) / 100)
-	dp.RAM_used = fmt.Sprintf("%d MB", ramUsed)
+		memStats := runtime.MemStats{}
+		runtime.ReadMemStats(&memStats)
+		ramUsed := int(((float64(memStats.Sys) / 1024 / 1024) * 100) / 100)
+		dp.RAM_used = fmt.Sprintf("%d MB", ramUsed)
 
-	dp.Events_count = app.dataSource.GetDeviceEventsCount()
+		dp.Events_count = app.dataSource.GetDeviceEventsCount()
 
-	dp.Disk_Free = ""
-	dp.Uptime = app.environment.GetUptime()
-	devices := app.deviceService.GetDevices()
-	dp.Home_devices = devices
-	dp.Device_count = len(devices)
+		dp.Disk_Free = ""
+		dp.Uptime = app.environment.GetUptime()
+		devices := app.deviceService.GetDevices()
+		dp.Home_devices = devices
+		dp.Device_count = len(devices)
 	*/
 
 	// return to client via t.Execute
@@ -336,5 +334,5 @@ type webModelEvents struct {
 }
 
 type webModelDeviceAddNew struct {
-	AddNewContent	template.HTML
+	AddNewContent template.HTML
 }

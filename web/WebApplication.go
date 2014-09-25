@@ -5,18 +5,18 @@
 package web
 
 import (
-	"github.com/go-home/hub/container"
-	"github.com/gorilla/mux"
-	"log"
-	"net/http"
-	"strconv"
-	"runtime"
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/go-home/hub/api"
-	"io/ioutil"
+	"github.com/go-home/hub/container"
+	"github.com/gorilla/mux"
 	"html/template"
-	"bytes"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"runtime"
+	"strconv"
 )
 
 type WebApplication struct {
@@ -58,6 +58,7 @@ func (w WebApplication) initializeRoutes() *mux.Router {
 
 	// START: NEW
 	r.HandleFunc("/api/ui/dashboard", w.apiUiDashboard)
+	r.HandleFunc("/api/ui/device/{deviceId}/view", w.apiUiDeviceView)
 	// END: NEW
 
 	c := container.Instance()
@@ -79,7 +80,7 @@ func (w WebApplication) initializeRoutes() *mux.Router {
 	return r
 }
 
-func renderStringContent(path string, model interface {}) string {
+func renderStringContent(path string, model interface{}) string {
 	fileContent, _ := ioutil.ReadFile(path)
 	stringContent := string(fileContent)
 
@@ -95,29 +96,9 @@ func renderStringContent(path string, model interface {}) string {
 	return htmlContent
 }
 
-/*
-func (d *Device) RenderWidget() template.HTML {
-	path := d.Descriptor.Path
-
-	fileContent, _ := ioutil.ReadFile(path + "/widget.html")
-	stringContent := string(fileContent)
-
-	tmpl, err := template.New("widget_" + d.Descriptor.Name).Parse(stringContent)
-	if err != nil {
-		log.Fatalf("execution failed: %s", err)
-	}
-
-	buf := bytes.NewBufferString("")
-	err = tmpl.Execute(buf, d)
-
-	htmlContent := buf.String()
-	return template.HTML(htmlContent)
-}
- */
-
 // /api/ui/dashboard
 func (app *WebApplication) apiUiDashboard(w http.ResponseWriter, req *http.Request) {
-	model := make(map[string]interface {})
+	model := make(map[string]interface{})
 
 	// RAM Used
 	memStats := runtime.MemStats{}
@@ -131,9 +112,9 @@ func (app *WebApplication) apiUiDashboard(w http.ResponseWriter, req *http.Reque
 
 	device_models := make([]*api.Device, len(devices))
 
-	for i:=0; i < len(devices); i++ {
+	for i := 0; i < len(devices); i++ {
 		dev := &devices[i]
-		dev.Content = renderStringContent(dev.Descriptor.Path + "/widget.html", dev)
+		dev.Content = renderStringContent(dev.Descriptor.Path+"/widget.html", dev)
 		device_models = append(device_models, dev)
 	}
 
@@ -144,9 +125,20 @@ func (app *WebApplication) apiUiDashboard(w http.ResponseWriter, req *http.Reque
 	w.Write(out)
 }
 
+// api/ui/device/id
+func (app *WebApplication) apiUiDeviceView(w http.ResponseWriter, req *http.Request) {
+	model := make(map[string]interface{})
+	vars := mux.Vars(req)
+	dev, ok := app.deviceService.GetDevice(vars["deviceId"])
+	if ok {
+		dev.Content = renderStringContent(dev.Descriptor.Path+"/view.html", dev)
+		model["Device"] = dev
+	}
+
+	out, _ := json.Marshal(model)
+	w.Write(out)
+}
+
 // api/events/{limit}
 
 // api/device/types
-
-
-

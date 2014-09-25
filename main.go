@@ -7,12 +7,12 @@ package main
 import (
 	"encoding/json"
 	"flag"
+	_ "fmt"
 	"github.com/go-home/hub/api"
 	"github.com/go-home/hub/container"
 	"github.com/go-home/hub/setup"
 	"io/ioutil"
 	"log"
-	_ "fmt"
 	_ "net/http/pprof"
 )
 

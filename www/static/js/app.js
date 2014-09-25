@@ -21,5 +21,14 @@ function ReloadDashboard($http, $scope) {
     resp.success(function(data, status, headers, config) {
         $scope.model = data;
     });
-
 }
+
+__APP.controller("ctrl-thingview", function($scope, $http, $interval) {
+    $scope.model = {}
+
+    var resp = $http.get("/api/ui/device/dlink-dcs930l/view");
+    resp.success(function(data, status, headers, config) {
+        console.debug (data)
+        $scope.model = data;
+    });
+});

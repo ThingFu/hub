@@ -12,7 +12,6 @@ import (
 )
 
 type SendMail struct {
-
 }
 
 func (s SendMail) Execute(config map[string]interface{}, container api.Container) {

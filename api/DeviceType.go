@@ -7,7 +7,7 @@ package api
 // Device descriptors as defined in <home>/devices
 type DeviceType struct {
 	TypeId            string `json:"tid"`
-	LogEvents		  bool	 `json:"logEvents"`
+	LogEvents         bool   `json:"logEvents"`
 	Name              string
 	Description       string
 	Protocol          string

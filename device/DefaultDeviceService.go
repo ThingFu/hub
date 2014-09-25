@@ -89,7 +89,7 @@ func (o *DefaultDeviceService) GetDevices() []api.Device {
 	return v
 }
 
-func (o *DefaultDeviceService) Handle(device *api.Device, sensor *api.Sensor, state map[string]interface {}) {
+func (o *DefaultDeviceService) Handle(device *api.Device, sensor *api.Sensor, state map[string]interface{}) {
 	facts := new(api.RuleFacts)
 	facts.Device = device
 	facts.Sensor = sensor

@@ -31,7 +31,7 @@ type Device struct {
 	LastEvent   time.Time
 	LastCycle   time.Time
 	Sensors     []Sensor `bson:"sub"`
-	Content		string
+	Content     string
 }
 
 func NewDevice() *Device {

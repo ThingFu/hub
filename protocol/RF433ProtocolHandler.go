@@ -6,19 +6,19 @@ import (
 	"github.com/go-home/hub/utils"
 	serial "github.com/tarm/goserial"
 	"log"
+	"strconv"
 	"strings"
 	"time"
-	"strconv"
 )
 
 // Data given by the MCU
 type RF433Data struct {
-	Protocol	int
-	BinData		string
-	DecData		string
+	Protocol int
+	BinData  string
+	DecData  string
 }
 
-func (r *RF433Data ) GetData() map[string]interface{} {
+func (r *RF433Data) GetData() map[string]interface{} {
 	ret := make(map[string]interface{})
 
 	ret["protocol"] = r.Protocol
@@ -76,7 +76,7 @@ func (p *RF433ProtocolHandler) Handle(payload interface{}) {
 	spl := strings.Split(buf, "|")
 
 	if len(spl) < 5 {
-		return;
+		return
 	}
 
 	data := new(RF433Data)
@@ -94,7 +94,7 @@ func (p *RF433ProtocolHandler) Handle(payload interface{}) {
 
 func (p *RF433ProtocolHandler) handleWT450(data *RF433Data) {
 	dec, _ := strconv.Atoi(data.DecData)
-	ser := "nb-wt450-" + strconv.Itoa(dec >> 26)
+	ser := "nb-wt450-" + strconv.Itoa(dec>>26)
 
 	dev, sensor, err := p.getDevice(ser)
 

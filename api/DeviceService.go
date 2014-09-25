@@ -13,7 +13,7 @@ type DeviceService interface {
 	RegisterDeviceType(DeviceType)
 	RegisterDevice(Device)
 	GetDevices() []Device
-	Handle(*Device, *Sensor, map[string]interface {})
+	Handle(*Device, *Sensor, map[string]interface{})
 
 	Cycle()
 	ContainerAware

@@ -16,7 +16,7 @@ const (
 
 const (
 	TRIGGER_INTERVAL uint8 = 0
-	TRIGGER_DEVICE   = 1
+	TRIGGER_DEVICE         = 1
 )
 
 type Rule struct {
@@ -48,7 +48,7 @@ type RuleThen struct {
 type RuleWhen struct {
 	Target  string
 	Trigger string
-	Sensor	string
+	Sensor  string
 }
 
 type Consequence interface {

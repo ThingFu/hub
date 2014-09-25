@@ -30,10 +30,10 @@ func (w *WebApplicationApi) Setup(r *mux.Router) {
 	r.HandleFunc("/api/device/{deviceId}/service/{name}", handleDeviceService).Methods("GET", "POST", "DELETE", "PUT")
 }
 
-func handleDeviceService(w http.ResponseWriter, req *http.Request) {}
-func handleApiGetStatus(w http.ResponseWriter, req *http.Request) {}
-func handleApiGetDevices(w http.ResponseWriter, req *http.Request) {}
-func handleApiGetDevice(w http.ResponseWriter, req *http.Request) {}
+func handleDeviceService(w http.ResponseWriter, req *http.Request)      {}
+func handleApiGetStatus(w http.ResponseWriter, req *http.Request)       {}
+func handleApiGetDevices(w http.ResponseWriter, req *http.Request)      {}
+func handleApiGetDevice(w http.ResponseWriter, req *http.Request)       {}
 func handleApiDeleteDevice(w http.ResponseWriter, req *http.Request)    {}
 func handleApiUpdateDevice(w http.ResponseWriter, req *http.Request)    {}
 func handleApiAddDevice(w http.ResponseWriter, req *http.Request)       {}

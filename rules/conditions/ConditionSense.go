@@ -10,7 +10,6 @@ import (
 
 // Executed when a Sensor senses
 type Sense struct {
-
 }
 
 func (s Sense) Evaluate(when *api.RuleWhen, facts *api.RuleFacts, rule *api.Rule) bool {
@@ -24,4 +23,3 @@ func (s Sense) Evaluate(when *api.RuleWhen, facts *api.RuleFacts, rule *api.Rule
 
 	return true
 }
-

@@ -5,22 +5,22 @@
 package source
 
 import (
+	_ "fmt"
 	"github.com/go-home/hub/api"
 	mgo "gopkg.in/mgo.v2"
 	bson "gopkg.in/mgo.v2/bson"
 	"log"
-	_ "fmt"
 )
 
 type MongoDataSource struct {
-	host      		string
-	env       		api.Environment
-	container 		api.Container
-	session			*mgo.Session
+	host      string
+	env       api.Environment
+	container api.Container
+	session   *mgo.Session
 }
 
 func NewMongoDataSource() *MongoDataSource {
-	m := new (MongoDataSource)
+	m := new(MongoDataSource)
 
 	session, err := mgo.Dial(m.host)
 	if err != nil {
@@ -101,14 +101,14 @@ func (m *MongoDataSource) PutEvent(evt *api.Event) {
 	}()
 }
 
-func (m *MongoDataSource )SaveState(dev *api.Device, state map[string] interface {}) {
+func (m *MongoDataSource) SaveState(dev *api.Device, state map[string]interface{}) {
 	go func() {
 		session := m.session.Copy()
 		defer session.Close()
 
 		c := session.DB("devices").C("devices")
 
-		var change = mgo.Change {
+		var change = mgo.Change{
 			ReturnNew: true,
 			Update: bson.M{
 				"$set": bson.M{
@@ -122,6 +122,7 @@ func (m *MongoDataSource )SaveState(dev *api.Device, state map[string] interface
 		}
 	}()
 }
+
 /*
  var change = mgo.Change{
         ReturnNew: true,
@@ -132,7 +133,7 @@ func (m *MongoDataSource )SaveState(dev *api.Device, state map[string] interface
     if changeInfo, err = collection.FindId(todo.Id).Apply(change, &todo); err != nil {
         panic(err)
     }
- */
+*/
 
 func (s *MongoDataSource) ValidateWiring() {
 	if s.env == nil {
