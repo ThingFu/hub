@@ -243,7 +243,7 @@ func (app *WebApplicationDashboard) handleSimulationService(w http.ResponseWrite
 
 func (app *WebApplicationDashboard) handleEventsView(w http.ResponseWriter, req *http.Request) {
 	model := new(webModelEvents)
-	model.Events = app.dataSource.GetThingEvents(10)
+	model.Events = app.dataSource.GetEvents(10)
 	w.Write(templateOutput("events", model))
 }
 

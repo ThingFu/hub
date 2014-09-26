@@ -78,7 +78,7 @@ func (w WebApplication) initializeRoutes() *mux.Router {
 	reg(r, "/api/things", w.getThings)
 	reg(r, "/api/things/types", w.getThingTypes)
 	reg(r, "/api/thing/{id}", w.getThing)
-	reg(r, "/api/thing/{id}/events", w.getEventsForThings)
+	reg(r, "/api/thing/{id}/events/{limit}", w.getEventsForThing)
 	reg(r, "/api/rules/{id}", w.getRule).Methods("GET")
 	reg(r, "/api/rules/{id}", w.saveRule).Methods("POST")
 	reg(r, "/api/rules/{id}", w.deleteRule).Methods("DELETE")
@@ -98,7 +98,7 @@ func (app *WebApplication) getDashboardState(w http.ResponseWriter, req *http.Re
 	runtime.ReadMemStats(&memStats)
 	ramUsed := int(((float64(memStats.Sys) / 1024 / 1024) * 100) / 100)
 	model["RAMUsed"] = fmt.Sprintf("%d MB", ramUsed)
-	model["EventsProcessed"] = app.dataSource.GetThingEventsCount()
+	model["EventsProcessed"] = app.dataSource.GetEventsCount()
 	model["Uptime"] = app.environment.GetUptime()
 
 	things := app.thingService.GetThings()
@@ -192,11 +192,15 @@ func (app *WebApplication) getThing(w http.ResponseWriter, req *http.Request) {
 	writeJsonModel(w, model)
 }
 
-// GET http://localhost:8181/api/thing/{id}/events
-func (app *WebApplication) getEventsForThings(w http.ResponseWriter, req *http.Request) {
-	model := make(map[string]interface{})
+// GET http://localhost:8181/api/thing/{id}/events/{limit}
+func (app *WebApplication) getEventsForThing(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+	id := vars["id"]
+	limit, _:= strconv.Atoi(vars["limit"])
 
-	writeJsonModel(w, model)
+	events := app.dataSource.GetThingEvents(limit, id)
+
+	writeJsonModel(w, events)
 }
 
 // GET http://localhost:8181/dashboard
@@ -257,12 +261,12 @@ func (app *WebApplication) showThingConfigure(w http.ResponseWriter, req *http.R
 
 // GET http://localhost:8181/thing/add/{type}
 func (app *WebApplication) showAddThing(w http.ResponseWriter, req *http.Request) {
-	w.Write(templateOutput("thing_add", nil))
+	w.Write(templateOutput("thing_addnew", nil))
 }
 
 // GET http://localhost:8181/things/add
 func (app *WebApplication) showThingsToAdd(w http.ResponseWriter, req *http.Request) {
-	w.Write(templateOutput("thing_addnew", nil))
+	w.Write(templateOutput("thing_add", nil))
 }
 
 // GET http://localhost:8181/sysinfo

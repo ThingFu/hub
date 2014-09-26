@@ -1,0 +1,24 @@
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs pull-right">
+        <li>
+            <a href="##{.Id}#-Chart" data-toggle="tab">Chart</a>
+        </li>
+        <li class="pull-left header"><i class="fa fa-inbox"></i> #{.Name}#</li>
+    </ul>
+    <div class="tab-content no-padding">
+        <div class="tab-pane" id="#{.Id}#-Chart" style="position:relative;">
+            <div class="panel-heading">
+                <div class="panel-title"><span class="glyphicon glyphicon-list-alt"></span> Operations
+                </div>
+            </div>
+            <div class="panel-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    Controller = function($scope, $http, $things, $thingId, $interval) {
+        $scope.model = {};
+    }
+</script>

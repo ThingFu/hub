@@ -61,7 +61,27 @@ func (m *MongoDataSource) PutThing(dev *api.Thing) {
 	}()
 }
 
-func (m *MongoDataSource) GetThingEventsCount() (count int) {
+func (m *MongoDataSource) GetThingEvents(limit int, id string) []api.Event {
+	session := m.session.Copy()
+	defer session.Close()
+
+	c := session.DB("events").C("events")
+	var results []api.Event
+	if limit > 0 {
+		c.Find(bson.M{"device": id }).Limit(limit).Sort("-ts").All(&results)
+	} else {
+		c.Find(bson.M{"device": id }).All(&results)
+	}
+
+	events := make([]api.Event, len(results))
+	for i, v := range results {
+		events[i] = v
+	}
+
+	return events
+}
+
+func (m *MongoDataSource) GetEventsCount() (count int) {
 	session := m.session.Copy()
 	defer session.Close()
 
@@ -71,7 +91,7 @@ func (m *MongoDataSource) GetThingEventsCount() (count int) {
 	return
 }
 
-func (m *MongoDataSource) GetThingEvents(limit int) []api.Event {
+func (m *MongoDataSource) GetEvents(limit int) []api.Event {
 	session := m.session.Copy()
 	defer session.Close()
 

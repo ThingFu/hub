@@ -11,8 +11,11 @@ type DataSource interface {
 	GetThingCount() int
 	GetThings() []Thing
 
-	GetThingEventsCount() int
-	GetThingEvents(int) []Event
+	GetEventsCount() int
+	GetEvents(int) []Event
+
+	GetThingEvents(int, string) []Event
+
 	SaveThing(Thing)
 	PutEvent(*Event)
 	SaveState(*Thing, map[string]interface{})
