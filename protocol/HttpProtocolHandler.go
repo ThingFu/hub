@@ -5,7 +5,7 @@ import "github.com/go-home/hub/api"
 type HttpProtocolHandler struct {
 	factory       api.Factory
 	environment   api.Environment
-	deviceService api.DeviceService
+	thingService api.ThingService
 	config        api.ProtocolConfiguration
 }
 
@@ -21,8 +21,8 @@ func (p *HttpProtocolHandler) SetFactory(o api.Factory) {
 	p.factory = o
 }
 
-func (p *HttpProtocolHandler) SetDeviceService(o api.DeviceService) {
-	p.deviceService = o
+func (p *HttpProtocolHandler) SetThingService(o api.ThingService) {
+	p.thingService = o
 }
 
 func (p *HttpProtocolHandler) SetEnvironment(o api.Environment) {

@@ -23,7 +23,7 @@ type WebApplication struct {
 	port int
 
 	rulesService  api.RulesService
-	deviceService api.DeviceService
+	thingService api.ThingService
 	dataSource    api.DataSource
 	environment   api.Environment
 	factory       api.Factory
@@ -38,7 +38,7 @@ func NewWebApplication(port int) {
 	w.container = c
 	w.rulesService = c.RulesService()
 	w.dataSource = c.DataSource()
-	w.deviceService = c.DeviceService()
+	w.thingService = c.ThingService()
 	w.environment = c.Env()
 	w.factory = c.Factory()
 
@@ -70,7 +70,6 @@ func (w WebApplication) initializeRoutes() *mux.Router {
 	reg(r, "/sysinfo", w.showSysInfo)
 	reg(r, "/about", w.showAbout)
 
-
 	// UI API
 	reg(r, "/api/ui/dashboard", w.getDashboardState)
 	reg(r, "/api/ui/thing/{id}/view", w.viewThing)
@@ -90,12 +89,6 @@ func (w WebApplication) initializeRoutes() *mux.Router {
 	return r
 }
 
-func reg(r *mux.Router, url string, fn func(http.ResponseWriter, *http.Request)) (*mux.Router) {
-	r.HandleFunc(url, fn)
-
-	return r
-}
-
 // GET http://localhost:8181/api/ui/dashboard
 func (app *WebApplication) getDashboardState(w http.ResponseWriter, req *http.Request) {
 	model := make(map[string]interface{})
@@ -105,21 +98,21 @@ func (app *WebApplication) getDashboardState(w http.ResponseWriter, req *http.Re
 	runtime.ReadMemStats(&memStats)
 	ramUsed := int(((float64(memStats.Sys) / 1024 / 1024) * 100) / 100)
 	model["RAMUsed"] = fmt.Sprintf("%d MB", ramUsed)
-	model["EventsProcessed"] = app.dataSource.GetDeviceEventsCount()
+	model["EventsProcessed"] = app.dataSource.GetThingEventsCount()
 	model["Uptime"] = app.environment.GetUptime()
 
-	devices := app.deviceService.GetDevices()
+	things := app.thingService.GetThings()
 
-	device_models := make([]*api.Device, len(devices))
+	thing_models := make([]*api.Thing, len(things))
 
-	for i := 0; i < len(devices); i++ {
-		dev := &devices[i]
+	for i := 0; i < len(things); i++ {
+		dev := &things[i]
 		dev.Content = renderStringContent(dev.Descriptor.Path + "/widget.html", dev)
-		device_models = append(device_models, dev)
+		thing_models = append(thing_models, dev)
 	}
 
-	model["DeviceCount"] = len(devices)
-	model["Devices"] = devices
+	model["ThingCount"] = len(things)
+	model["Things"] = things
 
 	writeJsonModel(w, model)
 }
@@ -128,23 +121,35 @@ func (app *WebApplication) getDashboardState(w http.ResponseWriter, req *http.Re
 func (app *WebApplication) viewThing(w http.ResponseWriter, req *http.Request) {
 	model := make(map[string]interface{})
 	vars := mux.Vars(req)
-	dev, ok := app.deviceService.GetDevice(vars["deviceId"])
+	dev, ok := app.thingService.GetThing(vars["thingId"])
 	if ok {
 		dev.Content = renderStringContent(dev.Descriptor.Path+"/view.html", dev)
-		model["Device"] = dev
+		model["Thing"] = dev
 	}
 
 	writeJsonModel(w, model)
 }
 
 // PUT http://localhost:8181/api/rules/{id}
-func (app *WebApplication) addRule(w http.ResponseWriter, req *http.Request) {}
+func (app *WebApplication) addRule(w http.ResponseWriter, req *http.Request) {
+	model := make(map[string]interface{})
+
+	writeJsonModel(w, model)
+}
 
 // POST http://localhost:8181/api/rules/{id}
-func (app *WebApplication) saveRule(w http.ResponseWriter, req *http.Request) {}
+func (app *WebApplication) saveRule(w http.ResponseWriter, req *http.Request) {
+	model := make(map[string]interface{})
+
+	writeJsonModel(w, model)
+}
 
 // DELETE http://localhost:8181/api/rules/{id}
-func (app *WebApplication) deleteRule(w http.ResponseWriter, req *http.Request) {}
+func (app *WebApplication) deleteRule(w http.ResponseWriter, req *http.Request) {
+	model := make(map[string]interface{})
+
+	writeJsonModel(w, model)
+}
 
 // GET http://localhost:8181/api/rules/{id}
 func (app *WebApplication) getRule(w http.ResponseWriter, req *http.Request) {
@@ -164,10 +169,14 @@ func (app *WebApplication) getRule(w http.ResponseWriter, req *http.Request) {
 }
 
 // GET http://localhost:8181/api/things
-func (app *WebApplication) getThings(w http.ResponseWriter, req *http.Request) {}
+func (app *WebApplication) getThings(w http.ResponseWriter, req *http.Request) {
+	writeJsonModel(w, app.thingService.GetThings())
+}
 
 // GET http://localhost:8181/api/things/types
-func (app *WebApplication) getThingTypes(w http.ResponseWriter, req *http.Request) {}
+func (app *WebApplication) getThingTypes(w http.ResponseWriter, req *http.Request) {
+	writeJsonModel(w, app.thingService.GetThingTypes())
+}
 
 // GET http://localhost:8181/api/thing/{id}
 func (app *WebApplication) getThing(w http.ResponseWriter, req *http.Request) {
@@ -175,7 +184,7 @@ func (app *WebApplication) getThing(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
 
-	dev, ok := app.deviceService.GetDevice(id)
+	dev, ok := app.thingService.GetThing(id)
 	if ok {
 		model["thing"] = dev
 	}
@@ -184,7 +193,11 @@ func (app *WebApplication) getThing(w http.ResponseWriter, req *http.Request) {
 }
 
 // GET http://localhost:8181/api/thing/{id}/events
-func (app *WebApplication) getEventsForThings(w http.ResponseWriter, req *http.Request) {}
+func (app *WebApplication) getEventsForThings(w http.ResponseWriter, req *http.Request) {
+	model := make(map[string]interface{})
+
+	writeJsonModel(w, model)
+}
 
 // GET http://localhost:8181/dashboard
 func (app *WebApplication) showDashboard(w http.ResponseWriter, req *http.Request) {
@@ -192,22 +205,30 @@ func (app *WebApplication) showDashboard(w http.ResponseWriter, req *http.Reques
 }
 
 // GET http://localhost:8181/rules
-func (app *WebApplication) showRules(w http.ResponseWriter, req *http.Request) {}
+func (app *WebApplication) showRules(w http.ResponseWriter, req *http.Request) {
+	w.Write(templateOutput("rules", nil))
+}
 
 // GET http://localhost:8181/rules/id
-func (app *WebApplication) showRule(w http.ResponseWriter, req *http.Request) {}
+func (app *WebApplication) showRule(w http.ResponseWriter, req *http.Request) {
+	w.Write(templateOutput("rule_edit", nil))
+}
 
 // GET http://localhost:8181/settings
-func (app *WebApplication) showSettings(w http.ResponseWriter, req *http.Request) {}
+func (app *WebApplication) showSettings(w http.ResponseWriter, req *http.Request) {
+	w.Write(templateOutput("settings", nil))
+}
 
 // GET http://localhost:8181/events
-func (app *WebApplication) showEvents(w http.ResponseWriter, req *http.Request) {}
+func (app *WebApplication) showEvents(w http.ResponseWriter, req *http.Request) {
+	w.Write(templateOutput("events", nil))
+}
 
 // GET http://localhost:8181/thing/{id}/view
 func (app *WebApplication) showThingView(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 
-	dev, ok := app.deviceService.GetDevice(vars["id"])
+	dev, ok := app.thingService.GetThing(vars["id"])
 	if ok {
 		// dt := dev.Descriptor
 		// path := dt.Path + "/view.html"
@@ -218,7 +239,7 @@ func (app *WebApplication) showThingView(w http.ResponseWriter, req *http.Reques
 
 		model := new(webModelWidgetView)
 		model.Content = template.HTML(renderStringContent(dev.Descriptor.Path + "/view.html", dev))
-		model.Device = dev
+		model.Thing = dev
 
 		w.Write(templateOutput("thing_view", model))
 	}
@@ -228,31 +249,39 @@ func (app *WebApplication) showThingView(w http.ResponseWriter, req *http.Reques
 func (app *WebApplication) showThingConfigure(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 
-	dev, ok := app.deviceService.GetDevice(vars["id"])
+	dev, ok := app.thingService.GetThing(vars["id"])
 	if ok {
 		w.Write(templateOutput("thing_config", dev))
 	}
 }
 
 // GET http://localhost:8181/thing/add/{type}
-func (app *WebApplication) showAddThing(w http.ResponseWriter, req *http.Request) {}
+func (app *WebApplication) showAddThing(w http.ResponseWriter, req *http.Request) {
+	w.Write(templateOutput("thing_add", nil))
+}
 
 // GET http://localhost:8181/things/add
-func (app *WebApplication) showThingsToAdd(w http.ResponseWriter, req *http.Request) {}
+func (app *WebApplication) showThingsToAdd(w http.ResponseWriter, req *http.Request) {
+	w.Write(templateOutput("thing_addnew", nil))
+}
 
 // GET http://localhost:8181/sysinfo
-func (app *WebApplication) showSysInfo(w http.ResponseWriter, req *http.Request) {}
+func (app *WebApplication) showSysInfo(w http.ResponseWriter, req *http.Request) {
+	w.Write(templateOutput("sysinfo", nil))
+}
 
 // GET http://localhost:8181/about
-func (app *WebApplication) showAbout(w http.ResponseWriter, req *http.Request) {}
+func (app *WebApplication) showAbout(w http.ResponseWriter, req *http.Request) {
+	w.Write(templateOutput("about", nil))
+}
 
 // GET http://localhost:8181/thing/{type}/resource/img/{img}}
 func (app *WebApplication) showImage(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
-	deviceType := vars["type"]
+	thingType := vars["type"]
 	img := vars["img"]
 
-	dt := app.deviceService.GetDeviceType(deviceType)
+	dt := app.thingService.GetThingType(thingType)
 
 	w.Header().Set("Content-Type", "image")
 	path := dt.Path + "/" + img
@@ -261,8 +290,14 @@ func (app *WebApplication) showImage(w http.ResponseWriter, req *http.Request) {
 	w.Write(b)
 }
 
+func reg(r *mux.Router, url string, fn func(http.ResponseWriter, *http.Request)) (*mux.Router) {
+	r.HandleFunc(url, fn)
+
+	return r
+}
+
 // PACKAGE FUNCTIONS
-func writeJsonModel(w http.ResponseWriter, model map[string]interface{}) {
+func writeJsonModel(w http.ResponseWriter, model interface{}) {
 	out, err := json.Marshal(model)
 	if err != nil {
 		log.Println(err)

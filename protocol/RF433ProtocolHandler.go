@@ -32,7 +32,7 @@ func (r *RF433Data) GetData() map[string]interface{} {
 type RF433ProtocolHandler struct {
 	factory       api.Factory
 	environment   api.Environment
-	deviceService api.DeviceService
+	thingService api.ThingService
 	config        api.ProtocolConfiguration
 }
 
@@ -96,10 +96,10 @@ func (p *RF433ProtocolHandler) handleWT450(data *RF433Data) {
 	dec, _ := strconv.Atoi(data.DecData)
 	ser := "nb-wt450-" + strconv.Itoa(dec>>26)
 
-	dev, sensor, err := p.getDevice(ser)
+	dev, sensor, err := p.getThing(ser)
 
 	if err == nil {
-		drv := p.factory.CreateDeviceAdapter("433mhz-wt450")
+		drv := p.factory.CreateThingAdapter("433mhz-wt450")
 
 		go func() {
 			state := drv.OnSense(dev, data)
@@ -108,16 +108,16 @@ func (p *RF433ProtocolHandler) handleWT450(data *RF433Data) {
 			desc := dev.Descriptor
 			if utils.TimeWithinThreshold(lastEvent, desc.EventUpdateBuffer, 5000) {
 				sensor.UpdateLastEvent(time.Now())
-				p.deviceService.SaveDevice(*dev)
+				p.thingService.SaveThing(*dev)
 
-				p.deviceService.Handle(dev, sensor, state)
+				p.thingService.Handle(dev, sensor, state)
 			}
 		}()
 	}
 }
 
 /**
-Matches and handles any RF433 code against a list of 433MHZ Device Sensors.
+Matches and handles any RF433 code against a list of 433MHZ Thing Sensors.
 */
 func (p *RF433ProtocolHandler) handleCodeMatch(data *RF433Data) {
 	ser := data.DecData
@@ -128,64 +128,64 @@ func (p *RF433ProtocolHandler) handleCodeMatch(data *RF433Data) {
 		return
 	}
 
-	dev, sensor, ok := p.getDevice(ser)
+	dev, sensor, ok := p.getThing(ser)
 
 	if ok != nil {
-		log.Println("Unknown Device ", ser)
+		log.Println("Unknown Thing ", ser)
 	} else {
-		t := p.deviceService.GetDeviceType(dev.Type)
-		drv := p.factory.CreateDeviceAdapter(t.TypeId)
+		t := p.thingService.GetThingType(dev.Type)
+		drv := p.factory.CreateThingAdapter(t.TypeId)
 		if drv == nil {
-			log.Println("No adapter for device type " + dev.Type)
+			log.Println("No adapter for thing type " + dev.Type)
 			return
 		}
 
-		// Sense and Handle Device Event
+		// Sense and Handle Thing Event
 		go func() {
 			state := drv.OnSense(dev, data)
 
 			// We don't want to run rules or fire events too frequently,
-			// so check against device descriptor's Event Update Buffer
+			// so check against thing descriptor's Event Update Buffer
 			// if we should go ahead
 			lastEvent := sensor.LastEvent
 			desc := dev.Descriptor
 			if utils.TimeWithinThreshold(lastEvent, desc.EventUpdateBuffer, 5000) {
 				sensor.UpdateLastEvent(time.Now())
-				p.deviceService.SaveDevice(*dev)
+				p.thingService.SaveThing(*dev)
 
-				p.deviceService.Handle(dev, sensor, state)
+				p.thingService.Handle(dev, sensor, state)
 			}
 		}()
 	}
 }
 
-func (p *RF433ProtocolHandler) getDevice(ser string) (*api.Device, *api.Sensor, error) {
+func (p *RF433ProtocolHandler) getThing(ser string) (*api.Thing, *api.Sensor, error) {
 
-	devices := p.deviceService.GetDevices()
-	for i, _ := range devices {
-		device := &devices[i]
-		sensors := device.Sensors
-		desc := device.Descriptor
+	things := p.thingService.GetThings()
+	for i, _ := range things {
+		thing := &things[i]
+		sensors := thing.Sensors
+		desc := thing.Descriptor
 
 		if desc.Protocol == "433MHZ" {
 			for j, _ := range sensors {
 				sensor := &sensors[j]
 
 				if sensor.Code == ser {
-					return device, sensor, nil
+					return thing, sensor, nil
 				}
 			}
 		}
 	}
-	return new(api.Device), new(api.Sensor), errors.New("Unknown Device")
+	return new(api.Thing), new(api.Sensor), errors.New("Unknown Thing")
 }
 
 func (p *RF433ProtocolHandler) SetFactory(o api.Factory) {
 	p.factory = o
 }
 
-func (p *RF433ProtocolHandler) SetDeviceService(o api.DeviceService) {
-	p.deviceService = o
+func (p *RF433ProtocolHandler) SetThingService(o api.ThingService) {
+	p.thingService = o
 }
 
 func (p *RF433ProtocolHandler) SetEnvironment(o api.Environment) {

@@ -13,7 +13,7 @@ import (
 
 type DefaultRulesService struct {
 	rules         map[string]api.Rule
-	deviceService api.DeviceService
+	thingService api.ThingService
 	factory       api.Factory
 	container     api.Container
 }
@@ -33,17 +33,17 @@ func (r DefaultRulesService) GetRule(ruleId string) api.Rule {
 
 func (r DefaultRulesService) Trigger(triggerType uint8, facts *api.RuleFacts) {
 	exec := make(map[string]api.Rule)
-	device := facts.Device
+	thing := facts.Thing
 
-	if triggerType == api.TRIGGER_DEVICE {
-		deviceDescriptor := device.Descriptor
+	if triggerType == api.TRIGGER_THING {
+		thingDescriptor := thing.Descriptor
 		target := facts.Target
 
-		deviceLastEvent := device.LastEvent
-		if utils.TimeWithinThreshold(deviceLastEvent, deviceDescriptor.EventUpdateBuffer, 5000) {
-			device.UpdateLastEvent(time.Now())
+		thingLastEvent := thing.LastEvent
+		if utils.TimeWithinThreshold(thingLastEvent, thingDescriptor.EventUpdateBuffer, 5000) {
+			thing.UpdateLastEvent(time.Now())
 
-			r.deviceService.SaveDevice(*device)
+			r.thingService.SaveThing(*thing)
 
 			for idx, rule := range r.rules {
 				targets := rule.Targets
@@ -89,9 +89,9 @@ func (r DefaultRulesService) Trigger(triggerType uint8, facts *api.RuleFacts) {
 			thens := rule.Then
 			for _, o := range thens {
 				if rule.Async {
-					go r.executeConsequence(o, device)
+					go r.executeConsequence(o, thing)
 				} else {
-					r.executeConsequence(o, device)
+					r.executeConsequence(o, thing)
 				}
 			}
 			r.rules[key_rule] = rule
@@ -105,7 +105,7 @@ func (r DefaultRulesService) evaluateWhen(when *api.RuleWhen, facts *api.RuleFac
 	return condition.Evaluate(when, facts, rule)
 }
 
-func (r DefaultRulesService) executeConsequence(t api.RuleThen, d *api.Device) {
+func (r DefaultRulesService) executeConsequence(t api.RuleThen, d *api.Thing) {
 	do := t.Do
 	config := t.Config
 
@@ -126,8 +126,8 @@ func NewDefaultRuleService(env api.Environment) DefaultRulesService {
 	return *svc
 }
 
-func (s *DefaultRulesService) SetDeviceService(svc api.DeviceService) {
-	s.deviceService = svc
+func (s *DefaultRulesService) SetThingService(svc api.ThingService) {
+	s.thingService = svc
 }
 
 func (d *DefaultRulesService) GetContainer() api.Container {
@@ -139,8 +139,8 @@ func (s *DefaultRulesService) SetContainer(c api.Container) {
 }
 
 func (s *DefaultRulesService) ValidateWiring() {
-	if s.deviceService == nil {
-		log.Fatal("deviceService not wired to DefaultRulesService")
+	if s.thingService == nil {
+		log.Fatal("thingService not wired to DefaultRulesService")
 	}
 
 	if s.factory == nil {

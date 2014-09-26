@@ -4,16 +4,18 @@
 
 package api
 
-// DataSource for Devices, States and Events
+// DataSource for Things, States and Events
 type DataSource interface {
-	GetDevices() []Device
-	PutDevice(*Device)
+	PutThing(*Thing)
 
-	GetDeviceEventsCount() int
-	GetDeviceEvents(int) []Event
-	SaveDevice(Device)
+	GetThingCount() int
+	GetThings() []Thing
+
+	GetThingEventsCount() int
+	GetThingEvents(int) []Event
+	SaveThing(Thing)
 	PutEvent(*Event)
-	SaveState(*Device, map[string]interface{})
+	SaveState(*Thing, map[string]interface{})
 	ContainerAware
 
 	SetEnvironment(Environment)

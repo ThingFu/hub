@@ -10,12 +10,12 @@ const (
 	SCHEDULE_TICKER_INTERVAL = 15 * time.Second
 )
 
-// Service for managing scheduled tasks, e.g. the Cycle for devices
+// Service for managing scheduled tasks, e.g. the Cycle for things
 type ScheduleService interface {
 	Start()
 	Stop()
 	ContainerAware
 
 	SetRulesService(RulesService)
-	SetDeviceService(DeviceService)
+	SetThingService(ThingService)
 }

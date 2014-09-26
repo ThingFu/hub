@@ -15,7 +15,7 @@ const (
 
 type Event struct {
 	Uid       string
-	Device    string
+	Thing     string
 	Sensor    string
 	Ts        time.Time
 	ShortText string

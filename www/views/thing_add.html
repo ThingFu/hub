@@ -1,15 +1,15 @@
-#{define "device_add"}#
+#{define "thing_add"}#
 #{template "header" .}#
 <!-- Right side column. Contains the navbar and content of the page -->
 <aside class="right-side">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-        <h1>Add Device</h1>
+        <h1>Add Thing</h1>
         <ol class="breadcrumb">
             <li>
                 <a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></a>
             </li>
-            <li class="active">Add Device</li>
+            <li class="active">Add Thing</li>
         </ol>
     </section>
 
@@ -19,21 +19,21 @@
             <table class="table table-striped table-bordered table-hover" id="datatable">
                 <thead>
                 <tr>
-                    <th>Device</th>
+                    <th>Thing</th>
                     <th>Protocol</th>
                     <th>Group</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                #{with .Devices}#
+                #{with .Things}#
                 #{range .}#
                 <tr>
                     <td>#{.Name}#</td>
                     <td>#{.Protocol}#</td>
                     <td>#{.Group}#</td>
                     <th>
-                        <a href="/device/add/#{.TypeId}#">
+                        <a href="/thing/add/#{.TypeId}#">
                             <button type="button" class="btn btn-info btn-gradient">
                                 <span class="glyphicons glyphicons-user"></span>
                             </button>

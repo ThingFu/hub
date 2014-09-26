@@ -9,7 +9,7 @@ import (
 type DelegatingSimulationProtocolHandler struct {
 	factory       api.Factory
 	environment   api.Environment
-	deviceService api.DeviceService
+	thingService api.ThingService
 	config        api.ProtocolConfiguration
 }
 
@@ -25,8 +25,8 @@ func (d *DelegatingSimulationProtocolHandler) SetProtocolConfiguration(config ap
 	d.config = config
 }
 
-func (d *DelegatingSimulationProtocolHandler) SetDeviceService(deviceService api.DeviceService) {
-	d.deviceService = deviceService
+func (d *DelegatingSimulationProtocolHandler) SetThingService(thingService api.ThingService) {
+	d.thingService = thingService
 }
 
 func (d *DelegatingSimulationProtocolHandler) SetFactory(factory api.Factory) {

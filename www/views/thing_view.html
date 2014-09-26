@@ -7,8 +7,8 @@
             <li>
                 <a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></a>
             </li>
-            <li>#{.Device.Name}#</li>
-            <li class="active">View Device</li>
+            <li>#{.Thing.Name}#</li>
+            <li class="active">View Thing</li>
         </ol>
     </section>
 
@@ -21,7 +21,7 @@
 </aside>
 <script>
     __APP.factory('$thingId', function() {
-        return "#{.Device.Id}#";
+        return "#{.Thing.Id}#";
     });
 
 __APP.controller("GoHomeController", Controller);

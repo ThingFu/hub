@@ -28,7 +28,7 @@ var funcMap = template.FuncMap{
 
 type WebApplicationDashboard struct {
 	rulesService  api.RulesService
-	deviceService api.DeviceService
+	thingService api.ThingService
 	dataSource    api.DataSource
 	environment   api.Environment
 	factory       api.Factory
@@ -41,13 +41,13 @@ func (app *WebApplicationDashboard) Setup(r *mux.Router) {
 	r.HandleFunc("/settings", app.handleSettingsView)
 	r.HandleFunc("/events", app.handleEventsView)
 	r.HandleFunc("/sim/event/{protocol}", app.handleSimulationService).Methods("POST")
-	// r.HandleFunc("/widget/{deviceId}/configure", app.handleWidgetConfigure).Methods("GET")
-	r.HandleFunc("/widget/{deviceId}/configure", app.handleWidgetUpdateConfiguration).Methods("POST")
-	r.HandleFunc("/widget/{deviceId}/view", app.handleWidgetView)
-	r.HandleFunc("/device/{deviceType}/resource/icon/128x", app.handleResourceIcon)
-	r.HandleFunc("/device/add", app.handleDeviceAdd)
-	r.HandleFunc("/device/add/{typeId}", app.handleDeviceAddNew).Methods("POST", "GET")
-	r.HandleFunc("/devices", app.handleDevices)
+	// r.HandleFunc("/widget/{thingId}/configure", app.handleWidgetConfigure).Methods("GET")
+	r.HandleFunc("/widget/{thingId}/configure", app.handleWidgetUpdateConfiguration).Methods("POST")
+	r.HandleFunc("/widget/{thingId}/view", app.handleWidgetView)
+	r.HandleFunc("/thing/{thingType}/resource/icon/128x", app.handleResourceIcon)
+	r.HandleFunc("/thing/add", app.handleThingAdd)
+	r.HandleFunc("/thing/add/{typeId}", app.handleThingAddNew).Methods("POST", "GET")
+	r.HandleFunc("/things", app.handleThings)
 	r.HandleFunc("/sysinfo", app.handleSysInfo)
 	r.HandleFunc("/about", app.handleAbout)
 }
@@ -68,17 +68,17 @@ func renderContent(path string, model interface{}) template.HTML {
 	return template.HTML(htmlContent)
 }
 
-func (app *WebApplicationDashboard) handleDeviceAddNew(w http.ResponseWriter, req *http.Request) {
+func (app *WebApplicationDashboard) handleThingAddNew(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	typeId := vars["typeId"]
 	if req.Method == "GET" {
-		thing := app.deviceService.GetDeviceType(typeId)
-		deviceType := app.deviceService.GetDeviceType(typeId)
+		thing := app.thingService.GetThingType(typeId)
+		thingType := app.thingService.GetThingType(typeId)
 
-		model := new(webModelDeviceAddNew)
-		model.AddNewContent = renderContent(thing.Path+"/add.html", deviceType)
+		model := new(webModelThingAddNew)
+		model.AddNewContent = renderContent(thing.Path+"/add.html", thingType)
 
-		w.Write(templateOutput("device_addnew", model))
+		w.Write(templateOutput("thing_addnew", model))
 	} else if req.Method == "POST" {
 		//
 		body, _ := ioutil.ReadAll(req.Body)
@@ -125,8 +125,8 @@ func (app *WebApplicationDashboard) handleAbout(w http.ResponseWriter, req *http
 	w.Write(templateOutput("about", nil))
 }
 
-func (app *WebApplicationDashboard) handleDevices(w http.ResponseWriter, req *http.Request) {
-	w.Write(templateOutput("devices", nil))
+func (app *WebApplicationDashboard) handleThings(w http.ResponseWriter, req *http.Request) {
+	w.Write(templateOutput("things", nil))
 }
 
 func (app *WebApplicationDashboard) handleSysInfo(w http.ResponseWriter, req *http.Request) {
@@ -144,17 +144,17 @@ func (app *WebApplicationDashboard) handleEditRules(w http.ResponseWriter, req *
 	w.Write(templateOutput("rule_edit", nil))
 }
 
-func (app *WebApplicationDashboard) handleDeviceAdd(w http.ResponseWriter, req *http.Request) {
-	var model = new(webModelDeviceAdd)
-	model.Devices = app.deviceService.GetDeviceTypes()
+func (app *WebApplicationDashboard) handleThingAdd(w http.ResponseWriter, req *http.Request) {
+	var model = new(webModelThingAdd)
+	model.Things = app.thingService.GetThingTypes()
 
-	w.Write(templateOutput("device_add", model))
+	w.Write(templateOutput("thing_add", model))
 }
 
 func (app *WebApplicationDashboard) handleResourceIcon(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 
-	dt := app.deviceService.GetDeviceType(vars["deviceType"])
+	dt := app.thingService.GetThingType(vars["thingType"])
 
 	w.Header().Set("Content-Type", "image/png")
 	path := dt.Path + "/icon_128x.png"
@@ -166,7 +166,7 @@ func (app *WebApplicationDashboard) handleResourceIcon(w http.ResponseWriter, re
 func (app *WebApplicationDashboard) handleWidgetView(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 
-	dev, ok := app.deviceService.GetDevice(vars["deviceId"])
+	dev, ok := app.thingService.GetThing(vars["thingId"])
 	if ok {
 		dt := dev.Descriptor
 		path := dt.Path + "/view.html"
@@ -183,9 +183,9 @@ func (app *WebApplicationDashboard) handleWidgetView(w http.ResponseWriter, req 
 
 		model := new(webModelWidgetView)
 		model.Content = template.HTML(buf.String())
-		model.Device = dev
+		model.Thing = dev
 
-		w.Write(templateOutput("device_view", model))
+		w.Write(templateOutput("thing_view", model))
 	}
 }
 
@@ -200,17 +200,17 @@ func (app *WebApplicationDashboard) handleWidgetUpdateConfiguration(w http.Respo
 	}
 
 	vars := mux.Vars(req)
-	dev, ok := app.deviceService.GetDevice(vars["deviceId"])
+	dev, ok := app.thingService.GetThing(vars["thingId"])
 
 	for key, value := range req.PostForm {
 		val := value[0]
 
-		if strings.HasPrefix(key, "device.") {
+		if strings.HasPrefix(key, "thing.") {
 			switch key {
-			case "device.name":
+			case "thing.name":
 				dev.Name = val
 
-			case "device.description":
+			case "thing.description":
 				dev.Description = val
 			}
 		} else if strings.HasPrefix(key, "attrib.") {
@@ -221,10 +221,10 @@ func (app *WebApplicationDashboard) handleWidgetUpdateConfiguration(w http.Respo
 		}
 	}
 
-	app.deviceService.SaveDevice(dev)
+	app.thingService.SaveThing(dev)
 
 	if ok {
-		w.Write(templateOutput("device_config", dev))
+		w.Write(templateOutput("thing_config", dev))
 	}
 }
 
@@ -243,7 +243,7 @@ func (app *WebApplicationDashboard) handleSimulationService(w http.ResponseWrite
 
 func (app *WebApplicationDashboard) handleEventsView(w http.ResponseWriter, req *http.Request) {
 	model := new(webModelEvents)
-	model.Events = app.dataSource.GetDeviceEvents(10)
+	model.Events = app.dataSource.GetThingEvents(10)
 	w.Write(templateOutput("events", model))
 }
 
@@ -265,27 +265,27 @@ type rulesEditorModel struct {
 
 type webModelWidgetView struct {
 	Content template.HTML
-	Device  api.Device
+	Thing  api.Thing
 }
 
 type webModelDashboard struct {
 	RAM_used     string
 	Events_count int
-	Device_count int
+	Thing_count int
 	Uptime       string
 	Disk_Free    string
-	Home_devices []api.Device
+	Home_things []api.Thing
 	Events       []api.Event
 }
 
-type webModelDeviceAdd struct {
-	Devices map[string]api.DeviceType
+type webModelThingAdd struct {
+	Things map[string]api.ThingType
 }
 
 type webModelEvents struct {
 	Events []api.Event
 }
 
-type webModelDeviceAddNew struct {
+type webModelThingAddNew struct {
 	AddNewContent template.HTML
 }

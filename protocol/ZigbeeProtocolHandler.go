@@ -5,7 +5,7 @@ import "github.com/go-home/hub/api"
 type ZigbeeProtocolHandler struct {
 	factory       api.Factory
 	environment   api.Environment
-	deviceService api.DeviceService
+	thingService api.ThingService
 	config        api.ProtocolConfiguration
 }
 
@@ -25,8 +25,8 @@ func (p *ZigbeeProtocolHandler) SetFactory(o api.Factory) {
 	p.factory = o
 }
 
-func (p *ZigbeeProtocolHandler) SetDeviceService(o api.DeviceService) {
-	p.deviceService = o
+func (p *ZigbeeProtocolHandler) SetThingService(o api.ThingService) {
+	p.thingService = o
 }
 
 func (p *ZigbeeProtocolHandler) SetEnvironment(o api.Environment) {

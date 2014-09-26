@@ -12,6 +12,6 @@ type RulesService interface {
 	RegisterRule(Rule)
 
 	// Injection
-	SetDeviceService(DeviceService)
+	SetThingService(ThingService)
 	SetFactory(Factory)
 }

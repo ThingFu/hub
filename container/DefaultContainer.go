@@ -7,7 +7,7 @@ package container
 import (
 	"github.com/go-home/hub/api"
 	"github.com/go-home/hub/data/source"
-	"github.com/go-home/hub/device"
+	"github.com/go-home/hub/thing"
 	"github.com/go-home/hub/env"
 	"github.com/go-home/hub/events"
 	"github.com/go-home/hub/factory"
@@ -27,7 +27,7 @@ func Initialize(home string, config api.Configuration) (api.Container, api.Envir
 	env := env.NewEnvironment(home, config)
 	CONTAINER.Register(env, "api.Environment")
 	CONTAINER.Register(rules.NewRulesService(), "api.RulesService")
-	CONTAINER.Register(device.NewDeviceService(), "api.DeviceService")
+	CONTAINER.Register(thing.NewThingService(), "api.ThingService")
 	CONTAINER.Register(new(events.DefaultScheduleService), "api.ScheduleService")
 	CONTAINER.Register(source.NewMongoDataSource(), "api.DataSource")
 	CONTAINER.Register(new(factory.DefaultFactory), "api.Factory")
@@ -47,7 +47,7 @@ func Initialize(home string, config api.Configuration) (api.Container, api.Envir
 type DefaultContainer struct {
 	dataSource       api.DataSource
 	rulesService     api.RulesService
-	deviceService    api.DeviceService
+	thingService     api.ThingService
 	scheduleService  api.ScheduleService
 	environment      api.Environment
 	factory          api.Factory
@@ -62,8 +62,8 @@ func (c *DefaultContainer) Register(svc api.ContainerAware, t string) {
 	case t == "api.RulesService":
 		c.rulesService = svc.(api.RulesService)
 
-	case t == "api.DeviceService":
-		c.deviceService = svc.(api.DeviceService)
+	case t == "api.ThingService":
+		c.thingService = svc.(api.ThingService)
 
 	case t == "api.ScheduleService":
 		c.scheduleService = svc.(api.ScheduleService)
@@ -86,29 +86,29 @@ func (c *DefaultContainer) Register(svc api.ContainerAware, t string) {
 func (c *DefaultContainer) startWire() {
 	rulesService := c.RulesService()
 	factory := c.Factory()
-	deviceService := c.DeviceService()
+	thingService := c.ThingService()
 	env := c.Env()
 	dataSource := c.DataSource()
 	scheduleServices := c.ScheduleService()
 
 	// Wire Up Services
 	// Rules Service
-	rulesService.SetDeviceService(deviceService)
+	rulesService.SetThingService(thingService)
 	rulesService.SetFactory(factory)
 
 	// Factory
 
-	// DeviceService
-	deviceService.SetRulesService(rulesService)
-	deviceService.SetFactory(factory)
-	deviceService.SetDataSource(dataSource)
+	// ThingService
+	thingService.SetRulesService(rulesService)
+	thingService.SetFactory(factory)
+	thingService.SetDataSource(dataSource)
 
 	// DataSource
 	dataSource.SetEnvironment(env)
 
 	// ScheduleService
 	scheduleServices.SetRulesService(rulesService)
-	scheduleServices.SetDeviceService(deviceService)
+	scheduleServices.SetThingService(thingService)
 
 	// Protocol Handlers
 	c.protocolHandlers = make(map[string]api.ProtocolHandler)
@@ -116,7 +116,7 @@ func (c *DefaultContainer) startWire() {
 	services := make([]api.ContainerAware, 6)
 	services[0] = rulesService
 	services[1] = factory
-	services[2] = deviceService
+	services[2] = thingService
 	services[3] = env
 	services[4] = dataSource
 	services[5] = scheduleServices
@@ -148,12 +148,12 @@ func (c *DefaultContainer) RulesService() api.RulesService {
 	return c.rulesService
 }
 
-func (c *DefaultContainer) setDeviceService(o api.DeviceService) {
-	c.deviceService = o
+func (c *DefaultContainer) setThingService(o api.ThingService) {
+	c.thingService = o
 }
 
-func (c *DefaultContainer) DeviceService() api.DeviceService {
-	return c.deviceService
+func (c *DefaultContainer) ThingService() api.ThingService {
+	return c.thingService
 }
 
 func (c *DefaultContainer) setEnvironment(o api.Environment) {

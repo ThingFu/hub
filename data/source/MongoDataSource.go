@@ -32,12 +32,22 @@ func NewMongoDataSource() *MongoDataSource {
 	return m
 }
 
-func (m *MongoDataSource) GetDevices() []api.Device {
+func (m *MongoDataSource) GetThingCount() (count int) {
 	session := m.session.Copy()
 	defer session.Close()
 
 	c := session.DB("devices").C("devices")
-	var results []api.Device
+	count, _ = c.Count()
+
+	return
+}
+
+func (m *MongoDataSource) GetThings() []api.Thing {
+	session := m.session.Copy()
+	defer session.Close()
+
+	c := session.DB("devices").C("devices")
+	var results []api.Thing
 
 	q := c.Find(bson.M{}).Sort("lbl")
 	q.All(&results)
@@ -45,13 +55,13 @@ func (m *MongoDataSource) GetDevices() []api.Device {
 	return results
 }
 
-func (m *MongoDataSource) PutDevice(dev *api.Device) {
+func (m *MongoDataSource) PutThing(dev *api.Thing) {
 	go func() {
 		// TODO Asynchronous Operation
 	}()
 }
 
-func (m *MongoDataSource) GetDeviceEventsCount() (count int) {
+func (m *MongoDataSource) GetThingEventsCount() (count int) {
 	session := m.session.Copy()
 	defer session.Close()
 
@@ -61,7 +71,7 @@ func (m *MongoDataSource) GetDeviceEventsCount() (count int) {
 	return
 }
 
-func (m *MongoDataSource) GetDeviceEvents(limit int) []api.Event {
+func (m *MongoDataSource) GetThingEvents(limit int) []api.Event {
 	session := m.session.Copy()
 	defer session.Close()
 
@@ -81,7 +91,7 @@ func (m *MongoDataSource) GetDeviceEvents(limit int) []api.Event {
 	return events
 }
 
-func (m *MongoDataSource) SaveDevice(dev api.Device) {
+func (m *MongoDataSource) SaveThing(dev api.Thing) {
 	session := m.session.Copy()
 	defer session.Close()
 
@@ -101,7 +111,7 @@ func (m *MongoDataSource) PutEvent(evt *api.Event) {
 	}()
 }
 
-func (m *MongoDataSource) SaveState(dev *api.Device, state map[string]interface{}) {
+func (m *MongoDataSource) SaveState(dev *api.Thing, state map[string]interface{}) {
 	go func() {
 		session := m.session.Copy()
 		defer session.Close()

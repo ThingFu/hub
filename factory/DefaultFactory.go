@@ -6,7 +6,7 @@ package factory
 
 import (
 	"github.com/go-home/hub/api"
-	"github.com/go-home/hub/device/adapters"
+	"github.com/go-home/hub/thing/adapters"
 	"github.com/go-home/hub/protocol"
 	"github.com/go-home/hub/rules/conditions"
 	"github.com/go-home/hub/rules/consequences"
@@ -62,15 +62,15 @@ func (d *DefaultFactory) CreateProtocolHandler(t string, cfg api.ProtocolConfigu
 	case "sim":
 		handler = new(protocol.DelegatingSimulationProtocolHandler)
 	}
-	handler.SetDeviceService(d.container.DeviceService())
+	handler.SetThingService(d.container.ThingService())
 	handler.SetProtocolConfiguration(cfg)
 	handler.SetFactory(d.container.Factory())
 
 	return handler
 }
 
-func (s *DefaultFactory) CreateDeviceAdapter(t string) api.DeviceAdapter {
-	var adapter api.DeviceAdapter
+func (s *DefaultFactory) CreateThingAdapter(t string) api.ThingAdapter {
+	var adapter api.ThingAdapter
 	switch t {
 	case "lgtv-47ls5700":
 		adapter = new(adapters.AdapterLGTV47LS5700)

@@ -8,6 +8,6 @@ type Factory interface {
 	CreateCondition(string) Condition
 	CreateConsequence(string) Consequence
 	CreateProtocolHandler(string, ProtocolConfiguration) ProtocolHandler
-	CreateDeviceAdapter(string) DeviceAdapter
+	CreateThingAdapter(string) ThingAdapter
 	ContainerAware
 }

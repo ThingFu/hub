@@ -20,8 +20,8 @@ import (
 
 func Setup(env api.Environment) {
 	// setupChan := make(chan bool, 6)
-	go loadDeviceTypes(env)
-	loadDevices(env)
+	go loadThingTypes(env)
+	loadThings(env)
 	loadRules(env)
 	go setupProtocols()
 	startScheduler()
@@ -66,38 +66,38 @@ func setupCompleted() {
 	log.Println("[INFO] Node Started")
 }
 
-func loadDevices(env api.Environment) {
+func loadThings(env api.Environment) {
 	log.Println("[INFO] Finding Waldo..")
 	dataSource := container.Instance().DataSource()
-	deviceManager := container.Instance().DeviceService()
+	thingService := container.Instance().ThingService()
 
-	devices := dataSource.GetDevices()
-	for _, device := range devices {
-		deviceManager.RegisterDevice(device)
+	things := dataSource.GetThings()
+	for _, thing := range things {
+		thingService.RegisterThing(thing)
 	}
 }
 
-func loadDeviceTypes(env api.Environment) {
+func loadThingTypes(env api.Environment) {
 	log.Println("[INFO] Pressing the Any Key...")
-	deviceService := container.Instance().DeviceService()
+	thingService := container.Instance().ThingService()
 	home := env.GetHome()
-	root := home + "/devices"
+	root := home + "/things"
 
 	filepath.Walk(root, func(path string, f os.FileInfo, err error) error {
-		if strings.HasSuffix(path, "device.json") {
+		if strings.HasSuffix(path, "descriptor.json") {
 			content, err := ioutil.ReadFile(path)
 			if err != nil {
 				panic(err)
 			}
 
-			var deviceType api.DeviceType
-			err = json.Unmarshal(content, &deviceType)
+			var thingType api.ThingType
+			err = json.Unmarshal(content, &thingType)
 
 			if err != nil {
 				log.Println("error: ", err)
 			}
-			deviceType.Path = strings.Replace(path, "/device.json", "", -1)
-			deviceService.RegisterDeviceType(deviceType)
+			thingType.Path = strings.Replace(path, "/descriptor.json", "", -1)
+			thingService.RegisterThingType(thingType)
 		}
 		return nil
 	})

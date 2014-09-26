@@ -16,7 +16,7 @@ const (
 
 const (
 	TRIGGER_INTERVAL uint8 = 0
-	TRIGGER_DEVICE         = 1
+	TRIGGER_THING         = 1
 )
 
 type Rule struct {
@@ -36,7 +36,7 @@ type Rule struct {
 
 type RuleFacts struct {
 	Target string
-	Device *Device
+	Thing *Thing
 	Sensor *Sensor
 }
 
