@@ -1,18 +1,18 @@
 <div class="nav-tabs-custom">
     <ul class="nav nav-tabs pull-right">
         <li>
-            <a href="#{{.Id}}-operations" data-toggle="tab">Operations</a>
+            <a href="##{.Id}#-operations" data-toggle="tab">Operations</a>
         </li>
         <li>
-            <a href="#{{.Id}}-status" data-toggle="tab">Status</a>
+            <a href="##{.Id}#-status" data-toggle="tab">Status</a>
         </li>
         <li class="active">
-            <a href="#{{.Id}}-feed" data-toggle="tab">Feed</a>
+            <a href="##{.Id}#-feed" data-toggle="tab">Feed</a>
         </li>
-        <li class="pull-left header"><i class="fa fa-inbox"></i> {{.Name}}</li>
+        <li class="pull-left header"><i class="fa fa-inbox"></i> #{.Name}#</li>
     </ul>
     <div class="tab-content no-padding">
-        <div class="tab-pane" id="{{.Id}}-operations" style="position:relative;">
+        <div class="tab-pane" id="#{.Id}#-operations" style="position:relative;">
             <div class="panel-heading">
                 <div class="panel-title"><span class="glyphicon glyphicon-list-alt"></span> Operations
                 </div>
@@ -51,13 +51,13 @@
                 </table>
             </div>
         </div>
-        <div class="tab-pane" id="{{.Id}}-status" style="position:relative;">
+        <div class="tab-pane" id="#{.Id}#-status" style="position:relative;">
 
         </div>
-        <div class="tab-pane active" id="{{.Id}}-feed" style="text-align: center;">
-            {{with .GetAttribute "host"}}
-            <img src="http://{{.Value}}:8080/roap/api/data?target=screen_image"/>
-            {{end}}
+        <div class="tab-pane active" id="#{.Id}#-feed" style="text-align: center;">
+            #{with .GetAttribute "host"}#
+            <img src="http://#{.Value}#:8080/roap/api/data?target=screen_image"/>
+            #{end}#
         </div>
 
     </div>

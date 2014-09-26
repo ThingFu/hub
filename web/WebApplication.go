@@ -56,48 +56,48 @@ func NewWebApplication(port int) {
 func (w WebApplication) initializeRoutes() *mux.Router {
 	r := mux.NewRouter()
 
-	// START: NEW
-	r.HandleFunc("/api/ui/dashboard", w.apiUiDashboard)
-	r.HandleFunc("/api/ui/device/{deviceId}/view", w.apiUiDeviceView)
-	// END: NEW
+	// PAGES
+	reg(r, "/dashboard", w.showDashboard)
+	reg(r, "/rules", w.showRules)
+	reg(r, "/rules/id", w.showRule)
+	reg(r, "/settings", w.showSettings)
+	reg(r, "/events", w.showEvents)
+	reg(r, "/thing/{id}/view", w.showThingView)
+	reg(r, "/thing/{id}/configure", w.showThingConfigure)
+	reg(r, "/thing/{type}/resource/img/{img}", w.showImage)
+	reg(r, "/thing/add/{type}", w.showAddThing)
+	reg(r, "/things/add", w.showThingsToAdd)
+	reg(r, "/sysinfo", w.showSysInfo)
+	reg(r, "/about", w.showAbout)
 
-	c := container.Instance()
 
-	dashboardSetup := new(WebApplicationDashboard)
-	dashboardSetup.rulesService = c.RulesService()
-	dashboardSetup.dataSource = c.DataSource()
-	dashboardSetup.deviceService = c.DeviceService()
-	dashboardSetup.environment = c.Env()
-	dashboardSetup.factory = c.Factory()
-	dashboardSetup.container = c
-	dashboardSetup.Setup(r)
+	// UI API
+	reg(r, "/api/ui/dashboard", w.getDashboardState)
+	reg(r, "/api/ui/thing/{id}/view", w.viewThing)
 
-	apiSetup := new(WebApplicationApi)
-	apiSetup.Setup(r)
+	// API
+	reg(r, "/api/things", w.getThings)
+	reg(r, "/api/things/types", w.getThingTypes)
+	reg(r, "/api/thing/{id}", w.getThing)
+	reg(r, "/api/thing/{id}/events", w.getEventsForThings)
+	reg(r, "/api/rules/{id}", w.getRule).Methods("GET")
+	reg(r, "/api/rules/{id}", w.saveRule).Methods("POST")
+	reg(r, "/api/rules/{id}", w.deleteRule).Methods("DELETE")
+	reg(r, "/api/rules/{id}", w.addRule).Methods("PUT")
 
 	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("./www/static/"))))
 
 	return r
 }
 
-func renderStringContent(path string, model interface{}) string {
-	fileContent, _ := ioutil.ReadFile(path)
-	stringContent := string(fileContent)
+func reg(r *mux.Router, url string, fn func(http.ResponseWriter, *http.Request)) (*mux.Router) {
+	r.HandleFunc(url, fn)
 
-	tmpl, err := template.New("__tpl_" + path).Parse(stringContent)
-	if err != nil {
-		log.Fatalf("execution failed: %s", err)
-	}
-
-	buf := bytes.NewBufferString("")
-	err = tmpl.Execute(buf, model)
-
-	htmlContent := buf.String()
-	return htmlContent
+	return r
 }
 
-// /api/ui/dashboard
-func (app *WebApplication) apiUiDashboard(w http.ResponseWriter, req *http.Request) {
+// GET http://localhost:8181/api/ui/dashboard
+func (app *WebApplication) getDashboardState(w http.ResponseWriter, req *http.Request) {
 	model := make(map[string]interface{})
 
 	// RAM Used
@@ -114,19 +114,18 @@ func (app *WebApplication) apiUiDashboard(w http.ResponseWriter, req *http.Reque
 
 	for i := 0; i < len(devices); i++ {
 		dev := &devices[i]
-		dev.Content = renderStringContent(dev.Descriptor.Path+"/widget.html", dev)
+		dev.Content = renderStringContent(dev.Descriptor.Path + "/widget.html", dev)
 		device_models = append(device_models, dev)
 	}
 
 	model["DeviceCount"] = len(devices)
 	model["Devices"] = devices
 
-	out, _ := json.Marshal(model)
-	w.Write(out)
+	writeJsonModel(w, model)
 }
 
-// api/ui/device/id
-func (app *WebApplication) apiUiDeviceView(w http.ResponseWriter, req *http.Request) {
+// GET http://localhost:8181/api/ui/thing/{id}/view
+func (app *WebApplication) viewThing(w http.ResponseWriter, req *http.Request) {
 	model := make(map[string]interface{})
 	vars := mux.Vars(req)
 	dev, ok := app.deviceService.GetDevice(vars["deviceId"])
@@ -135,10 +134,175 @@ func (app *WebApplication) apiUiDeviceView(w http.ResponseWriter, req *http.Requ
 		model["Device"] = dev
 	}
 
-	out, _ := json.Marshal(model)
+	writeJsonModel(w, model)
+}
+
+// PUT http://localhost:8181/api/rules/{id}
+func (app *WebApplication) addRule(w http.ResponseWriter, req *http.Request) {}
+
+// POST http://localhost:8181/api/rules/{id}
+func (app *WebApplication) saveRule(w http.ResponseWriter, req *http.Request) {}
+
+// DELETE http://localhost:8181/api/rules/{id}
+func (app *WebApplication) deleteRule(w http.ResponseWriter, req *http.Request) {}
+
+// GET http://localhost:8181/api/rules/{id}
+func (app *WebApplication) getRule(w http.ResponseWriter, req *http.Request) {
+	model := make(map[string]interface{})
+	vars := mux.Vars(req)
+	ruleId := vars["ruleId"]
+
+	rule := app.rulesService.GetRule(ruleId)
+	model["id"] = rule.Id
+
+	fileContent, _ := ioutil.ReadFile(rule.Path)
+	stringContent := string(fileContent)
+	model["content"] = stringContent
+	model["name"] = rule.Name
+
+	writeJsonModel(w, model)
+}
+
+// GET http://localhost:8181/api/things
+func (app *WebApplication) getThings(w http.ResponseWriter, req *http.Request) {}
+
+// GET http://localhost:8181/api/things/types
+func (app *WebApplication) getThingTypes(w http.ResponseWriter, req *http.Request) {}
+
+// GET http://localhost:8181/api/thing/{id}
+func (app *WebApplication) getThing(w http.ResponseWriter, req *http.Request) {
+	model := make(map[string]interface{})
+	vars := mux.Vars(req)
+	id := vars["id"]
+
+	dev, ok := app.deviceService.GetDevice(id)
+	if ok {
+		model["thing"] = dev
+	}
+
+	writeJsonModel(w, model)
+}
+
+// GET http://localhost:8181/api/thing/{id}/events
+func (app *WebApplication) getEventsForThings(w http.ResponseWriter, req *http.Request) {}
+
+// GET http://localhost:8181/dashboard
+func (app *WebApplication) showDashboard(w http.ResponseWriter, req *http.Request) {
+	w.Write(templateOutput("dashboard", nil))
+}
+
+// GET http://localhost:8181/rules
+func (app *WebApplication) showRules(w http.ResponseWriter, req *http.Request) {}
+
+// GET http://localhost:8181/rules/id
+func (app *WebApplication) showRule(w http.ResponseWriter, req *http.Request) {}
+
+// GET http://localhost:8181/settings
+func (app *WebApplication) showSettings(w http.ResponseWriter, req *http.Request) {}
+
+// GET http://localhost:8181/events
+func (app *WebApplication) showEvents(w http.ResponseWriter, req *http.Request) {}
+
+// GET http://localhost:8181/thing/{id}/view
+func (app *WebApplication) showThingView(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+
+	dev, ok := app.deviceService.GetDevice(vars["id"])
+	if ok {
+		// dt := dev.Descriptor
+		// path := dt.Path + "/view.html"
+
+		// fileContent, _ := ioutil.ReadFile(path)
+		// stringContent := string(fileContent)
+		// tmpl, _ := template.New("widgetview_" + dt.Name).Parse(stringContent)
+
+		model := new(webModelWidgetView)
+		model.Content = template.HTML(renderStringContent(dev.Descriptor.Path + "/view.html", dev))
+		model.Device = dev
+
+		w.Write(templateOutput("thing_view", model))
+	}
+}
+
+// GET http://localhost:8181/thing/{id}/configure
+func (app *WebApplication) showThingConfigure(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+
+	dev, ok := app.deviceService.GetDevice(vars["id"])
+	if ok {
+		w.Write(templateOutput("thing_config", dev))
+	}
+}
+
+// GET http://localhost:8181/thing/add/{type}
+func (app *WebApplication) showAddThing(w http.ResponseWriter, req *http.Request) {}
+
+// GET http://localhost:8181/things/add
+func (app *WebApplication) showThingsToAdd(w http.ResponseWriter, req *http.Request) {}
+
+// GET http://localhost:8181/sysinfo
+func (app *WebApplication) showSysInfo(w http.ResponseWriter, req *http.Request) {}
+
+// GET http://localhost:8181/about
+func (app *WebApplication) showAbout(w http.ResponseWriter, req *http.Request) {}
+
+// GET http://localhost:8181/thing/{type}/resource/img/{img}}
+func (app *WebApplication) showImage(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+	deviceType := vars["type"]
+	img := vars["img"]
+
+	dt := app.deviceService.GetDeviceType(deviceType)
+
+	w.Header().Set("Content-Type", "image")
+	path := dt.Path + "/" + img
+
+	b, _ := ioutil.ReadFile(path)
+	w.Write(b)
+}
+
+// PACKAGE FUNCTIONS
+func writeJsonModel(w http.ResponseWriter, model map[string]interface{}) {
+	out, err := json.Marshal(model)
+	if err != nil {
+		log.Println(err)
+	}
+
 	w.Write(out)
 }
 
-// api/events/{limit}
+func compileTemplate(name string) *template.Template {
+	t := template.New(name)
+	t = template.Must(t.Funcs(funcMap).ParseGlob("www/views/layouts/*.html"))
+	t.Delims("#{", "}#")
 
-// api/device/types
+	return template.Must(t.ParseFiles("www/views/" + name + ".html"))
+}
+
+func templateOutput(name string, model interface{}) []byte {
+	tpl := compileTemplate(name)
+
+	var buf bytes.Buffer
+	err := tpl.Execute(&buf, model)
+	if err != nil {
+		log.Fatalf("execution failed: %s", err)
+	}
+	return buf.Bytes()
+}
+
+func renderStringContent(path string, model interface{}) string {
+	fileContent, _ := ioutil.ReadFile(path)
+	stringContent := string(fileContent)
+
+	t, err := template.New("__tpl_" + path).Delims("#{", "}#").Parse(stringContent)
+	if err != nil {
+		log.Fatalf("execution failed: %s", err)
+	}
+
+
+	buf := bytes.NewBufferString("")
+	err = t.Execute(buf, model)
+
+	htmlContent := buf.String()
+	return htmlContent
+}

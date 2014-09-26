@@ -3,8 +3,13 @@
         <tr>
             <td style="text-align: center;">
                 <div ng-sparkline></div>
-                <img src="device/433mhz-1button/resource/icon/128x"/>
+                <img src="thing/433mhz-1button/resource/img/icon_128x.png" />
             </td>
         </tr>
     </table>
 </div>
+<script>
+    Controller = function($scope, $http, $things, $thingId) {
+        $scope.model = {};
+    }
+</script>

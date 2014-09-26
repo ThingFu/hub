@@ -96,15 +96,19 @@
                             <div class="box box-primary">
                                 <div class="box-header" data-toggle="tooltip" title="{{Device.Name}}">
                                     <h3 class="box-title">{{Device.Name}}</h3>
+                                    <div class="pull-right box-tools">
+                                        <button class="btn btn-info btn-sm" data-widget="remove" data-toggle="tooltip" title="Remove"><i class="fa fa-times"></i></button>
+                                    </div><!-- /. tools -->
+
                                 </div>
                                 <div class="box-body" ng-bind-html="Device.Content | htmlcontent"></div>
                                 <div class="box-footer">
                                     <div class="text-center">
-                                        <a href="/widget/{{Device.Id}}/view" class="btn btn-social-icon btn-bitbucket">
+                                        <a href="/thing/{{Device.Id}}/view" class="btn btn-social-icon btn-bitbucket">
                                             <i class="fa fa-eye"></i>
                                         </a>
 
-                                        <a href="/widget/{{Device.Id}}/configure" class="btn btn-social-icon btn-bitbucket">
+                                        <a href="/thing/{{Device.Id}}/configure" class="btn btn-social-icon btn-bitbucket">
                                             <i class="fa fa-gears"></i>
                                         </a>
                                     </div>
@@ -112,42 +116,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-                        #{with .Home_devices}#
-                        #{range . }#
-                        <!--
-                        <div class="col-md-4">
-                            <div class="box box-primary">
-                                <div class="box-header" data-toggle="tooltip" title="#{.Name}#">
-                                    <h3 class="box-title">#{.Name}#</h3>
-                                </div>
-                                <div class="box-body">
-                                    #{.RenderWidget}#
-                                </div>
-                                <div class="box-footer">
-                                    <div class="text-center">
-                                        <a href="/widget/#{.GetId}#/view" class="btn btn-social-icon btn-bitbucket">
-                                            <i class="fa fa-eye"></i>
-                                        </a>
-
-                                        <a href="/widget/#{.GetId}#/configure" class="btn btn-social-icon btn-bitbucket">
-                                            <i class="fa fa-gears"></i>
-                                        </a>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                        -->
-
-
-
-
-
-
-                        #{end}#
-                        #{end}#
                     </div>
                     <div class="tab-pane" id="dashboard-health" style="position:relative;">
 
@@ -160,5 +128,31 @@
         </div><!-- /.row (main row) -->
     </section><!-- /.content -->
 </aside><!-- /.right-side -->
+<script>
+    var __APP = angular.module("gohomeapp", [])
+
+    // Filters
+    __APP.filter("htmlcontent", function($sce){
+        return function(input) {
+            return $sce.trustAsHtml(input);
+        }
+    });
+
+    __APP.controller("ctrl-dashboard", function($scope, $http, $interval) {
+        $scope.model = {}
+
+        ReloadDashboard($http, $scope);
+        $interval(function () {
+            ReloadDashboard($http, $scope);
+        }, 10000, 0)
+    });
+
+    function ReloadDashboard($http, $scope) {
+        var resp = $http.get("/api/ui/dashboard");
+        resp.success(function(data, status, headers, config) {
+            $scope.model = data;
+        });
+    }
+</script>
 #{template "footer" .}#
 #{end}#

@@ -1,34 +1,11 @@
-var __APP = angular.module("gohomeapp", [])
-
-// Filters
-__APP.filter("htmlcontent", function($sce){
-    return function(input) {
-        return $sce.trustAsHtml(input);
+var __APP = angular.module("gohomeapp", []);
+var ThingService = function($http) {
+    this.get = function (id, cb) {
+        $http.get("/api/thing/" + id).success(cb);
     }
-});
+};
+ThingService.$inject = ["$http"];
 
-__APP.controller("ctrl-dashboard", function($scope, $http, $interval) {
-    $scope.model = {}
-
-    ReloadDashboard($http, $scope);
-    $interval(function () {
-        ReloadDashboard($http, $scope);
-    }, 10000, 0)
-});
-
-function ReloadDashboard($http, $scope) {
-    var resp = $http.get("/api/ui/dashboard");
-    resp.success(function(data, status, headers, config) {
-        $scope.model = data;
-    });
-}
-
-__APP.controller("ctrl-thingview", function($scope, $http, $interval) {
-    $scope.model = {}
-
-    var resp = $http.get("/api/ui/device/dlink-dcs930l/view");
-    resp.success(function(data, status, headers, config) {
-        console.debug (data)
-        $scope.model = data;
-    });
+__APP.service("$things", function($http){
+    return new ThingService($http)
 });

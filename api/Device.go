@@ -27,7 +27,7 @@ type Device struct {
 	LogEvents   bool          `bson:"logEvents"`
 	Descriptor  DeviceType
 	LastState   map[string]interface{} `bson:"state"`
-	Attributes  []DeviceAttribute      `bson:"attrs"`
+	Attributes	map[string]DeviceAttribute `bson:"attrs"`
 	LastEvent   time.Time
 	LastCycle   time.Time
 	Sensors     []Sensor `bson:"sub"`
@@ -71,12 +71,11 @@ func (d *Device) RenderWidget() template.HTML {
 }
 
 func (d Device) GetAttribute(name string) DeviceAttribute {
-	for _, attr := range d.Attributes {
-		if attr.Name == name {
-			return attr
-		}
+	if val, ok := d.Attributes[name]; ok {
+		return val
+	} else {
+		return DeviceAttribute{}
 	}
-	return DeviceAttribute{}
 }
 
 func (d *Device) GetSensor(name string) *Sensor {
@@ -89,15 +88,10 @@ func (d *Device) GetSensor(name string) *Sensor {
 }
 
 func (d *Device) SaveAttribute(name string, value interface{}) error {
-	found := false
-	for i, attr := range d.Attributes {
-		if attr.Name == name {
-			d.Attributes[i].Value = value
-			found = true
-		}
-	}
-
-	if !found {
+	if val, ok := d.Attributes[name]; ok {
+		val.Value = value
+		d.Attributes[name] = val
+	} else {
 		return fmt.Errorf("Attribute %s doesn't exist", name)
 	}
 	return nil
@@ -105,4 +99,19 @@ func (d *Device) SaveAttribute(name string, value interface{}) error {
 
 func (d *Device) UpdateLastEvent(t time.Time) {
 	d.LastEvent = t
+}
+
+// Devices
+type Devices []Device
+
+func (slice Devices) Len() int {
+	return len(slice)
+}
+
+func (slice Devices) Less(i, j int) bool {
+	return slice[i].Name < slice[j].Name;
+}
+
+func (slice Devices) Swap(i, j int) {
+	slice[i], slice[j] = slice[j], slice[i]
 }

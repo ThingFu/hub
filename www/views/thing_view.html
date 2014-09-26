@@ -1,0 +1,33 @@
+#{define "thing_view"}#
+#{template "header" .}#
+<aside class="right-side" ng-controller="GoHomeController">
+    <section class="content-header">
+        <h1>View Widget</h1>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></a>
+            </li>
+            <li>#{.Device.Name}#</li>
+            <li class="active">View Device</li>
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="col-md-12">
+        #{.Content}#
+        </div>
+    </section><!-- /.content -->
+</aside>
+<script>
+    __APP.factory('$thingId', function() {
+        return "#{.Device.Id}#";
+    });
+
+__APP.controller("GoHomeController", Controller);
+
+</script>
+
+#{template "footer" .}#
+#{end}#
+

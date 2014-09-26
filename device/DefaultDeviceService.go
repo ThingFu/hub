@@ -9,6 +9,7 @@ import (
 	"github.com/go-home/hub/utils"
 	"log"
 	"time"
+	"sort"
 )
 
 type DefaultDeviceService struct {
@@ -79,13 +80,16 @@ func (o *DefaultDeviceService) RegisterDevice(d api.Device) {
 }
 
 func (o *DefaultDeviceService) GetDevices() []api.Device {
-	v := make([]api.Device, len(o.devices))
+	v := make(api.Devices, len(o.devices))
 
 	idx := 0
 	for _, value := range o.devices {
 		v[idx] = value
 		idx++
 	}
+
+	sort.Sort(v)
+
 	return v
 }
 

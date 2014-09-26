@@ -26,25 +26,6 @@ var funcMap = template.FuncMap{
 	},
 }
 
-func compileTemplate(name string) *template.Template {
-	t := template.New(name)
-	t = template.Must(t.Funcs(funcMap).ParseGlob("www/views/layouts/*.html"))
-	t.Delims("#{", "}#")
-
-	return template.Must(t.ParseFiles("www/views/" + name + ".html"))
-}
-
-func templateOutput(name string, model interface{}) []byte {
-	tpl := compileTemplate(name)
-
-	var buf bytes.Buffer
-	err := tpl.Execute(&buf, model)
-	if err != nil {
-		log.Fatalf("execution failed: %s", err)
-	}
-	return buf.Bytes()
-}
-
 type WebApplicationDashboard struct {
 	rulesService  api.RulesService
 	deviceService api.DeviceService
@@ -60,11 +41,10 @@ func (app *WebApplicationDashboard) Setup(r *mux.Router) {
 	r.HandleFunc("/settings", app.handleSettingsView)
 	r.HandleFunc("/events", app.handleEventsView)
 	r.HandleFunc("/sim/event/{protocol}", app.handleSimulationService).Methods("POST")
-	r.HandleFunc("/widget/{deviceId}/configure", app.handleWidgetConfigure).Methods("GET")
+	// r.HandleFunc("/widget/{deviceId}/configure", app.handleWidgetConfigure).Methods("GET")
 	r.HandleFunc("/widget/{deviceId}/configure", app.handleWidgetUpdateConfiguration).Methods("POST")
 	r.HandleFunc("/widget/{deviceId}/view", app.handleWidgetView)
 	r.HandleFunc("/device/{deviceType}/resource/icon/128x", app.handleResourceIcon)
-	r.HandleFunc("/dashboard", app.handleDashboard)
 	r.HandleFunc("/device/add", app.handleDeviceAdd)
 	r.HandleFunc("/device/add/{typeId}", app.handleDeviceAddNew).Methods("POST", "GET")
 	r.HandleFunc("/devices", app.handleDevices)
@@ -171,28 +151,6 @@ func (app *WebApplicationDashboard) handleDeviceAdd(w http.ResponseWriter, req *
 	w.Write(templateOutput("device_add", model))
 }
 
-func (app *WebApplicationDashboard) handleDashboard(w http.ResponseWriter, req *http.Request) {
-	/*
-		var dp = new(webModelDashboard)
-
-		memStats := runtime.MemStats{}
-		runtime.ReadMemStats(&memStats)
-		ramUsed := int(((float64(memStats.Sys) / 1024 / 1024) * 100) / 100)
-		dp.RAM_used = fmt.Sprintf("%d MB", ramUsed)
-
-		dp.Events_count = app.dataSource.GetDeviceEventsCount()
-
-		dp.Disk_Free = ""
-		dp.Uptime = app.environment.GetUptime()
-		devices := app.deviceService.GetDevices()
-		dp.Home_devices = devices
-		dp.Device_count = len(devices)
-	*/
-
-	// return to client via t.Execute
-	w.Write(templateOutput("dashboard", nil))
-}
-
 func (app *WebApplicationDashboard) handleResourceIcon(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 
@@ -232,12 +190,7 @@ func (app *WebApplicationDashboard) handleWidgetView(w http.ResponseWriter, req 
 }
 
 func (app *WebApplicationDashboard) handleWidgetConfigure(w http.ResponseWriter, req *http.Request) {
-	vars := mux.Vars(req)
 
-	dev, ok := app.deviceService.GetDevice(vars["deviceId"])
-	if ok {
-		w.Write(templateOutput("device_config", dev))
-	}
 }
 
 func (app *WebApplicationDashboard) handleWidgetUpdateConfiguration(w http.ResponseWriter, req *http.Request) {
@@ -271,7 +224,7 @@ func (app *WebApplicationDashboard) handleWidgetUpdateConfiguration(w http.Respo
 	app.deviceService.SaveDevice(dev)
 
 	if ok {
-		w.Write(templateOutput("widget_config", dev))
+		w.Write(templateOutput("device_config", dev))
 	}
 }
 
