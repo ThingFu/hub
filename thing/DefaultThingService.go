@@ -115,6 +115,7 @@ func (o *DefaultThingService) Handle(thing *api.Thing, sensor *api.Sensor, state
 		evt.Sensor = sensor.Name
 		evt.ShortText, evt.LongText = drv.GetEventText(thing, sensor, state)
 		evt.Event = api.EVENT_SENSE
+		evt.Data = state
 
 		o.dataSource.PutEvent(evt)
 	}

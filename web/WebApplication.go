@@ -107,7 +107,8 @@ func (app *WebApplication) getDashboardState(w http.ResponseWriter, req *http.Re
 
 	for i := 0; i < len(things); i++ {
 		dev := &things[i]
-		dev.Content = renderStringContent(dev.Descriptor.Path + "/widget.html", dev)
+		content := renderStringContent(dev.Descriptor.Path + "/widget.html", dev)
+		dev.Content = content
 		thing_models = append(thing_models, dev)
 	}
 
@@ -234,13 +235,6 @@ func (app *WebApplication) showThingView(w http.ResponseWriter, req *http.Reques
 
 	dev, ok := app.thingService.GetThing(vars["id"])
 	if ok {
-		// dt := dev.Descriptor
-		// path := dt.Path + "/view.html"
-
-		// fileContent, _ := ioutil.ReadFile(path)
-		// stringContent := string(fileContent)
-		// tmpl, _ := template.New("widgetview_" + dt.Name).Parse(stringContent)
-
 		model := new(webModelWidgetView)
 		model.Content = template.HTML(renderStringContent(dev.Descriptor.Path + "/view.html", dev))
 		model.Thing = dev
@@ -306,7 +300,6 @@ func writeJsonModel(w http.ResponseWriter, model interface{}) {
 	if err != nil {
 		log.Println(err)
 	}
-
 	w.Write(out)
 }
 
