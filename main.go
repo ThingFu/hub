@@ -17,6 +17,8 @@ import (
 )
 
 func main() {
+	// Read -home parameter and, if specified, use that as home directory
+	// for reading thing definitions, rules and config
 	homeFlag := flag.String("home", "./home", "Home directory of node")
 	flag.Parse()
 	home := *homeFlag
@@ -25,6 +27,7 @@ func main() {
 	log.Println("[INFO] Home: " + home)
 	log.Println("[INFO] Learning Kung-Fu..")
 
+	// Read config file and parse
 	content, err := ioutil.ReadFile(string(home + "/" + api.CONFIG_FILE))
 	if err != nil {
 		log.Fatal(err)
@@ -35,9 +38,15 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// Do any validation on config, set sensible defaults or die if any
+	// faults or missing config found
 	validateConfig(&config)
+
+	// Initialize IoC container
 	_, env := container.Initialize(home, config)
 
+	// Do setup process
 	setup.Setup(env)
 }
 

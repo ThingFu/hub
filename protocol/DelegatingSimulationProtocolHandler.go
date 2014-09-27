@@ -6,6 +6,9 @@ import (
 
 // Protocol used by the Simulation URL
 // This constructs and delegates to actual Protocol Handlers
+// This is meant for debugging purposes. Not a good idea
+// to expose this live
+//
 type DelegatingSimulationProtocolHandler struct {
 	factory       api.Factory
 	environment   api.Environment

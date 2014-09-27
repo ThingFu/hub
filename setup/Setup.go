@@ -20,12 +20,28 @@ import (
 
 func Setup(env api.Environment) {
 	// setupChan := make(chan bool, 6)
+
+	// Load Thing Definitions
 	go loadThingTypes(env)
+
+	// Load Thing Instances
 	loadThings(env)
+
+	// Load Rule Defintions
 	loadRules(env)
+
+	// Register protocols. Has to be goroutines since these buggers
+	// loops forever
 	go setupProtocols()
+
+	// Start scheduler for stuff like the peroidic rule invoker
 	startScheduler()
+
+	// Setup the WebApplication (UI and REST)
 	setupWebApplication(env)
+
+	// Signal that everything's completed and we can start
+	// accepting/serving requests
 	setupCompleted()
 }
 
@@ -66,6 +82,9 @@ func setupCompleted() {
 	log.Println("[INFO] Node Started")
 }
 
+// Loads thing definitions from a DataSource
+// and registers them
+//
 func loadThings(env api.Environment) {
 	log.Println("[INFO] Finding Waldo..")
 	dataSource := container.Instance().DataSource()
@@ -77,6 +96,11 @@ func loadThings(env api.Environment) {
 	}
 }
 
+// Scans for defintions under home's /things subdirectory
+// and it walks through the path.
+// if the descriptor.json file is found, it is assumed that the
+// directory it resides in contains a thing defintion
+//
 func loadThingTypes(env api.Environment) {
 	log.Println("[INFO] Pressing the Any Key...")
 	thingService := container.Instance().ThingService()
@@ -107,6 +131,10 @@ func setupWebApplication(env api.Environment) {
 	web.NewWebApplication(env.GetConfig().ServerPort)
 }
 
+// Call each Protocol Handler's Start.
+// Each protocol handler would need its own dedicated
+// goroutine/thread to run in
+//
 func setupProtocols() {
 	log.Println("[INFO] Register Protocols")
 	c := container.Instance()

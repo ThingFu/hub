@@ -68,16 +68,15 @@ func (m *MongoDataSource) GetThingEvents(limit int, id string) []api.Event {
 	c := session.DB("events").C("events")
 	var results []api.Event
 	if limit > 0 {
-		c.Find(bson.M{"device": id }).Limit(limit).Sort("-ts").All(&results)
+		c.Find(bson.M{"thing": id }).Limit(limit).Sort("-ts").All(&results)
 	} else {
-		c.Find(bson.M{"device": id }).All(&results)
+		c.Find(bson.M{"thing": id }).All(&results)
 	}
 
 	events := make([]api.Event, len(results))
 	for i, v := range results {
 		events[i] = v
 	}
-
 	return events
 }
 

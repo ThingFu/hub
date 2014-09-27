@@ -79,6 +79,9 @@ func (w WebApplication) initializeRoutes() *mux.Router {
 	reg(r, "/api/things/types", w.getThingTypes)
 	reg(r, "/api/thing/{id}", w.getThing)
 	reg(r, "/api/thing/{id}/events/{limit}", w.getEventsForThing)
+
+	reg(r, "/api/events/{limit}", w.getEvents)
+
 	reg(r, "/api/rules/{id}", w.getRule).Methods("GET")
 	reg(r, "/api/rules/{id}", w.saveRule).Methods("POST")
 	reg(r, "/api/rules/{id}", w.deleteRule).Methods("DELETE")
@@ -117,6 +120,20 @@ func (app *WebApplication) getDashboardState(w http.ResponseWriter, req *http.Re
 
 	writeJsonModel(w, model)
 }
+
+// GET /api/events/{limit}
+func (app *WebApplication) getEvents(w http.ResponseWriter, req *http.Request) {
+	model := make(map[string]interface{})
+	vars := mux.Vars(req)
+	limit, _ := strconv.Atoi(vars["limit"])
+
+	events := app.dataSource.GetEvents(limit)
+	model["total"] = len(events)
+	model["events"] = events
+
+	writeJsonModel(w, model)
+}
+
 
 // GET http://localhost:8181/api/ui/thing/{id}/view
 func (app *WebApplication) viewThing(w http.ResponseWriter, req *http.Request) {
