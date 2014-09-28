@@ -2,8 +2,8 @@ package protocol
 
 import (
 	"errors"
-	"github.com/go-home/hub/api"
-	"github.com/go-home/hub/utils"
+	"github.com/thingfu/hub/api"
+	"github.com/thingfu/hub/utils"
 	serial "github.com/tarm/goserial"
 	"log"
 	"strconv"

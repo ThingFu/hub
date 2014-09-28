@@ -1,6 +1,6 @@
 package protocol
 
-import "github.com/go-home/hub/api"
+import "github.com/thingfu/hub/api"
 
 type EnOceanProtocolHandler struct {
 	factory      api.Factory

@@ -1,6 +1,6 @@
 package protocol
 
-import "github.com/go-home/hub/api"
+import "github.com/thingfu/hub/api"
 
 type HttpProtocolHandler struct {
 	factory      api.Factory

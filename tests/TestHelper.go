@@ -1,6 +1,6 @@
 package tests
 
-import "github.com/go-home/hub/api"
+import "github.com/thingfu/hub/api"
 
 func NewMockContainer() api.Container {
 	c := new(MockContainer)

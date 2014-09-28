@@ -5,7 +5,7 @@
 package conditions
 
 import (
-	"github.com/go-home/hub/api"
+	"github.com/thingfu/hub/api"
 	"time"
 )
 

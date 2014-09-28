@@ -2,7 +2,7 @@ package adapters
 
 import (
 	"fmt"
-	"github.com/go-home/hub/api"
+	"github.com/thingfu/hub/api"
 )
 
 type Adapter4ButtonWireless433 struct {

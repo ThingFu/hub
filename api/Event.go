@@ -5,7 +5,7 @@
 package api
 
 import (
-	"github.com/go-home/hub/utils"
+	"github.com/thingfu/hub/utils"
 	"time"
 )
 

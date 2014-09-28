@@ -6,7 +6,7 @@ package conditions
 
 import (
 	"fmt"
-	"github.com/go-home/hub/api"
+	"github.com/thingfu/hub/api"
 	"time"
 )
 

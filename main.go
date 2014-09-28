@@ -7,9 +7,9 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"github.com/go-home/hub/api"
-	"github.com/go-home/hub/container"
-	"github.com/go-home/hub/setup"
+	"github.com/thingfu/hub/api"
+	"github.com/thingfu/hub/container"
+	"github.com/thingfu/hub/setup"
 	"io/ioutil"
 	"log"
 	_ "net/http/pprof"

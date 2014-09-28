@@ -8,8 +8,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/go-home/hub/api"
-	"github.com/go-home/hub/container"
+	"github.com/thingfu/hub/api"
+	"github.com/thingfu/hub/container"
 	"github.com/gorilla/mux"
 	"html/template"
 	"io/ioutil"
@@ -80,9 +80,13 @@ func (w WebApplication) initializeRoutes() *mux.Router {
 	reg(r, "/api/things/types", w.getThingTypes)
 	reg(r, "/api/thing/{id}", w.getThing)
 	reg(r, "/api/thing/{id}/events/{limit}", w.getEventsForThing)
+	reg(r, "/api/thing/{id}/op", w.invokeThingOperation).Methods("POST")
 
+	// Events
 	reg(r, "/api/events/{limit}", w.getEvents)
+	reg(r, "/api/event", w.addEvent).Methods("PUT")
 
+	// Rules
 	reg(r, "/api/rules/{id}", w.getRule).Methods("GET")
 	reg(r, "/api/rules/{id}", w.saveRule).Methods("POST")
 	reg(r, "/api/rules/{id}", w.deleteRule).Methods("DELETE")
@@ -135,6 +139,13 @@ func (app *WebApplication) getEvents(w http.ResponseWriter, req *http.Request) {
 	writeJsonModel(w, model)
 }
 
+// PUT /api/event
+func (app *WebApplication) addEvent(w http.ResponseWriter, req *http.Request) {
+	model := make(map[string]interface{})
+
+	writeJsonModel(w, model)
+}
+
 // GET http://localhost:8181/api/ui/thing/{id}/view
 func (app *WebApplication) viewThing(w http.ResponseWriter, req *http.Request) {
 	model := make(map[string]interface{})
@@ -182,6 +193,13 @@ func (app *WebApplication) getRule(w http.ResponseWriter, req *http.Request) {
 	stringContent := string(fileContent)
 	model["content"] = stringContent
 	model["name"] = rule.Name
+
+	writeJsonModel(w, model)
+}
+
+// POST http://localhost:8181/api/thing/{id}/op
+func (app *WebApplication) invokeThingOperation(w http.ResponseWriter, req *http.Request) {
+	model := make(map[string]interface{})
 
 	writeJsonModel(w, model)
 }

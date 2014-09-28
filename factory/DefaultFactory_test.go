@@ -1,9 +1,9 @@
 package factory
 
 import (
-	"github.com/go-home/hub/api"
-	_ "github.com/go-home/hub/rules/conditions"
-	"github.com/go-home/hub/tests"
+	"github.com/thingfu/hub/api"
+	_ "github.com/thingfu/hub/rules/conditions"
+	"github.com/thingfu/hub/tests"
 	"testing"
 )
 

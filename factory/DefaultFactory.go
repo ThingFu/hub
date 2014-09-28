@@ -5,11 +5,11 @@
 package factory
 
 import (
-	"github.com/go-home/hub/api"
-	"github.com/go-home/hub/protocol"
-	"github.com/go-home/hub/rules/conditions"
-	"github.com/go-home/hub/rules/consequences"
-	"github.com/go-home/hub/thing/adapters"
+	"github.com/thingfu/hub/api"
+	"github.com/thingfu/hub/protocol"
+	"github.com/thingfu/hub/rules/conditions"
+	"github.com/thingfu/hub/rules/consequences"
+	"github.com/thingfu/hub/thing/adapters"
 )
 
 type DefaultFactory struct {

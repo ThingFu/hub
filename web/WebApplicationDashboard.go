@@ -7,8 +7,8 @@ package web
 import (
 	"bytes"
 	"fmt"
-	"github.com/go-home/hub/api"
-	"github.com/go-home/hub/utils"
+	"github.com/thingfu/hub/api"
+	"github.com/thingfu/hub/utils"
 	"github.com/gorilla/mux"
 	"html/template"
 	"io/ioutil"

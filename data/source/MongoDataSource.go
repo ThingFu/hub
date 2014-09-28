@@ -6,7 +6,7 @@ package source
 
 import (
 	"fmt"
-	"github.com/go-home/hub/api"
+	"github.com/thingfu/hub/api"
 	mgo "gopkg.in/mgo.v2"
 	bson "gopkg.in/mgo.v2/bson"
 	"log"

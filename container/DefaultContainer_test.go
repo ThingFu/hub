@@ -1,8 +1,8 @@
 package container
 
 import (
-	"github.com/go-home/hub/api"
-	"github.com/go-home/hub/data/source"
+	"github.com/thingfu/hub/api"
+	"github.com/thingfu/hub/data/source"
 	"testing"
 )
 

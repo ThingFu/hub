@@ -1,7 +1,7 @@
 package protocol
 
 import (
-	"github.com/go-home/hub/api"
+	"github.com/thingfu/hub/api"
 )
 
 // Protocol used by the Simulation URL

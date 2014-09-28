@@ -5,7 +5,7 @@
 package adapters
 
 import (
-	"github.com/go-home/hub/api"
+	"github.com/thingfu/hub/api"
 )
 
 type AdapterIPCamera struct {
