@@ -6,10 +6,10 @@ package factory
 
 import (
 	"github.com/go-home/hub/api"
-	"github.com/go-home/hub/thing/adapters"
 	"github.com/go-home/hub/protocol"
 	"github.com/go-home/hub/rules/conditions"
 	"github.com/go-home/hub/rules/consequences"
+	"github.com/go-home/hub/thing/adapters"
 )
 
 type DefaultFactory struct {

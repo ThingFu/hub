@@ -22,12 +22,12 @@ import (
 type WebApplication struct {
 	port int
 
-	rulesService  api.RulesService
+	rulesService api.RulesService
 	thingService api.ThingService
-	dataSource    api.DataSource
-	environment   api.Environment
-	factory       api.Factory
-	container     api.Container
+	dataSource   api.DataSource
+	environment  api.Environment
+	factory      api.Factory
+	container    api.Container
 }
 
 func NewWebApplication(port int) {
@@ -110,7 +110,7 @@ func (app *WebApplication) getDashboardState(w http.ResponseWriter, req *http.Re
 
 	for i := 0; i < len(things); i++ {
 		dev := &things[i]
-		content := renderStringContent(dev.Descriptor.Path + "/widget.html", dev)
+		content := renderStringContent(dev.Descriptor.Path+"/widget.html", dev)
 		dev.Content = content
 		thing_models = append(thing_models, dev)
 	}
@@ -133,7 +133,6 @@ func (app *WebApplication) getEvents(w http.ResponseWriter, req *http.Request) {
 
 	writeJsonModel(w, model)
 }
-
 
 // GET http://localhost:8181/api/ui/thing/{id}/view
 func (app *WebApplication) viewThing(w http.ResponseWriter, req *http.Request) {
@@ -214,7 +213,7 @@ func (app *WebApplication) getThing(w http.ResponseWriter, req *http.Request) {
 func (app *WebApplication) getEventsForThing(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
-	limit, _:= strconv.Atoi(vars["limit"])
+	limit, _ := strconv.Atoi(vars["limit"])
 
 	events := app.dataSource.GetThingEvents(limit, id)
 
@@ -253,7 +252,7 @@ func (app *WebApplication) showThingView(w http.ResponseWriter, req *http.Reques
 	dev, ok := app.thingService.GetThing(vars["id"])
 	if ok {
 		model := new(webModelWidgetView)
-		model.Content = template.HTML(renderStringContent(dev.Descriptor.Path + "/view.html", dev))
+		model.Content = template.HTML(renderStringContent(dev.Descriptor.Path+"/view.html", dev))
 		model.Thing = dev
 
 		w.Write(templateOutput("thing_view", model))
@@ -305,7 +304,7 @@ func (app *WebApplication) showImage(w http.ResponseWriter, req *http.Request) {
 	w.Write(b)
 }
 
-func reg(r *mux.Router, url string, fn func(http.ResponseWriter, *http.Request)) (*mux.Router) {
+func reg(r *mux.Router, url string, fn func(http.ResponseWriter, *http.Request)) *mux.Router {
 	r.HandleFunc(url, fn)
 
 	return r
@@ -343,11 +342,10 @@ func renderStringContent(path string, model interface{}) string {
 	fileContent, _ := ioutil.ReadFile(path)
 	stringContent := string(fileContent)
 
-	t, err := template.New("__tpl_" + path).Delims("#{", "}#").Parse(stringContent)
+	t, err := template.New("__tpl_"+path).Delims("#{", "}#").Parse(stringContent)
 	if err != nil {
 		log.Fatalf("execution failed: %s", err)
 	}
-
 
 	buf := bytes.NewBufferString("")
 	err = t.Execute(buf, model)

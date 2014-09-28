@@ -10,10 +10,10 @@ import (
 // to expose this live
 //
 type DelegatingSimulationProtocolHandler struct {
-	factory       api.Factory
-	environment   api.Environment
+	factory      api.Factory
+	environment  api.Environment
 	thingService api.ThingService
-	config        api.ProtocolConfiguration
+	config       api.ProtocolConfiguration
 }
 
 func (d *DelegatingSimulationProtocolHandler) Start() {

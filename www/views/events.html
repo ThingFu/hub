@@ -1,6 +1,6 @@
 #{define "events"}#
 #{template "header" .}#
-<aside class="right-side">
+<aside class="right-side" ng-app="app" ng-controller="controller">
     <section class="content-header">
         <h1>Events</h1>
         <ol class="breadcrumb">
@@ -18,7 +18,6 @@
                 <li class="time-label">
                     <span class="bg-red">13th Sep 2014</span>
                 </li>
-
 
                 #{with .Events}#
                 #{range . }#
@@ -42,5 +41,18 @@
         </div>
     </section><!-- /.content -->
 </aside><!-- /.right-side -->
+<script>
+    var app = angular.module("app", []);
+    app.controller("controller", function($scope, $http, $interval) {
+        $scope.model = {};
+
+        function loadFeed() {
+            $http.get("/api/events/100").success(function(data, status, headers, config){
+                console.debug (data);
+            });
+        }
+        loadFeed();
+    });
+</script>
 #{template "footer" .}#
 #{end}#

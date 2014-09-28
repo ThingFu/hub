@@ -7,11 +7,11 @@ package container
 import (
 	"github.com/go-home/hub/api"
 	"github.com/go-home/hub/data/source"
-	"github.com/go-home/hub/thing"
 	"github.com/go-home/hub/env"
 	"github.com/go-home/hub/events"
 	"github.com/go-home/hub/factory"
 	"github.com/go-home/hub/rules"
+	"github.com/go-home/hub/thing"
 	"log"
 )
 

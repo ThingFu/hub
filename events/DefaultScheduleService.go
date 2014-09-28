@@ -11,10 +11,10 @@ import (
 )
 
 type DefaultScheduleService struct {
-	ruleTicker    *time.Ticker
-	rulesService  api.RulesService
+	ruleTicker   *time.Ticker
+	rulesService api.RulesService
 	thingService api.ThingService
-	container     api.Container
+	container    api.Container
 }
 
 func (d *DefaultScheduleService) GetContainer() api.Container {

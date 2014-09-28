@@ -26,8 +26,8 @@ type Thing struct {
 	Description string        `bson:"desc"`
 	LogEvents   bool          `bson:"logEvents"`
 	Descriptor  ThingType
-	LastState   map[string]interface{} `bson:"state"`
-	Attributes	map[string]ThingAttribute `bson:"attrs"`
+	LastState   map[string]interface{}    `bson:"state"`
+	Attributes  map[string]ThingAttribute `bson:"attrs"`
 	LastEvent   time.Time
 	LastCycle   time.Time
 	Sensors     []Sensor `bson:"sub"`
@@ -109,7 +109,7 @@ func (slice Things) Len() int {
 }
 
 func (slice Things) Less(i, j int) bool {
-	return slice[i].Name < slice[j].Name;
+	return slice[i].Name < slice[j].Name
 }
 
 func (slice Things) Swap(i, j int) {

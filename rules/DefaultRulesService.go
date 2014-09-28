@@ -12,10 +12,10 @@ import (
 )
 
 type DefaultRulesService struct {
-	rules         map[string]api.Rule
+	rules        map[string]api.Rule
 	thingService api.ThingService
-	factory       api.Factory
-	container     api.Container
+	factory      api.Factory
+	container    api.Container
 }
 
 func (r *DefaultRulesService) SetFactory(factory api.Factory) {
@@ -29,7 +29,6 @@ func (r DefaultRulesService) GetRules() map[string]api.Rule {
 func (r DefaultRulesService) GetRule(ruleId string) api.Rule {
 	return r.rules[ruleId]
 }
-
 
 func (r DefaultRulesService) Trigger(triggerType uint8, facts *api.RuleFacts) {
 	exec := make(map[string]api.Rule)

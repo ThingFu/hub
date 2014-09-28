@@ -5,6 +5,7 @@
 package source
 
 import (
+	"fmt"
 	_ "fmt"
 	"github.com/go-home/hub/api"
 	mgo "gopkg.in/mgo.v2"
@@ -39,6 +40,8 @@ func (m *MongoDataSource) GetThingCount() (count int) {
 	c := session.DB("devices").C("devices")
 	count, _ = c.Count()
 
+	fmt.Println(count)
+
 	return
 }
 
@@ -68,9 +71,9 @@ func (m *MongoDataSource) GetThingEvents(limit int, id string) []api.Event {
 	c := session.DB("events").C("events")
 	var results []api.Event
 	if limit > 0 {
-		c.Find(bson.M{"thing": id }).Limit(limit).Sort("-ts").All(&results)
+		c.Find(bson.M{"thing": id}).Limit(limit).Sort("-ts").All(&results)
 	} else {
-		c.Find(bson.M{"thing": id }).All(&results)
+		c.Find(bson.M{"thing": id}).All(&results)
 	}
 
 	events := make([]api.Event, len(results))
@@ -151,18 +154,6 @@ func (m *MongoDataSource) SaveState(dev *api.Thing, state map[string]interface{}
 		}
 	}()
 }
-
-/*
- var change = mgo.Change{
-        ReturnNew: true,
-        Update: bson.M{
-            "$set": bson.M{
-                "cp": time.Now(),
-            }}}
-    if changeInfo, err = collection.FindId(todo.Id).Apply(change, &todo); err != nil {
-        panic(err)
-    }
-*/
 
 func (s *MongoDataSource) ValidateWiring() {
 	if s.env == nil {

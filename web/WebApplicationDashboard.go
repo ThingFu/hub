@@ -27,12 +27,12 @@ var funcMap = template.FuncMap{
 }
 
 type WebApplicationDashboard struct {
-	rulesService  api.RulesService
+	rulesService api.RulesService
 	thingService api.ThingService
-	dataSource    api.DataSource
-	environment   api.Environment
-	factory       api.Factory
-	container     api.Container
+	dataSource   api.DataSource
+	environment  api.Environment
+	factory      api.Factory
+	container    api.Container
 }
 
 func (app *WebApplicationDashboard) Setup(r *mux.Router) {
@@ -265,16 +265,16 @@ type rulesEditorModel struct {
 
 type webModelWidgetView struct {
 	Content template.HTML
-	Thing  api.Thing
+	Thing   api.Thing
 }
 
 type webModelDashboard struct {
 	RAM_used     string
 	Events_count int
-	Thing_count int
+	Thing_count  int
 	Uptime       string
 	Disk_Free    string
-	Home_things []api.Thing
+	Home_things  []api.Thing
 	Events       []api.Event
 }
 

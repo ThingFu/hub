@@ -3,10 +3,10 @@ package protocol
 import "github.com/go-home/hub/api"
 
 type ZigbeeProtocolHandler struct {
-	factory       api.Factory
-	environment   api.Environment
+	factory      api.Factory
+	environment  api.Environment
 	thingService api.ThingService
-	config        api.ProtocolConfiguration
+	config       api.ProtocolConfiguration
 }
 
 func (p *ZigbeeProtocolHandler) IsEnabled() bool {

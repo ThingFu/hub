@@ -30,10 +30,10 @@ func (r *RF433Data) GetData() map[string]interface{} {
 
 // Handles 433MHZ signals via Serial
 type RF433ProtocolHandler struct {
-	factory       api.Factory
-	environment   api.Environment
+	factory      api.Factory
+	environment  api.Environment
 	thingService api.ThingService
-	config        api.ProtocolConfiguration
+	config       api.ProtocolConfiguration
 }
 
 func (p *RF433ProtocolHandler) Stop() {
