@@ -6,7 +6,6 @@ package source
 
 import (
 	"fmt"
-	_ "fmt"
 	"github.com/go-home/hub/api"
 	mgo "gopkg.in/mgo.v2"
 	bson "gopkg.in/mgo.v2/bson"
