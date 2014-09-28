@@ -38,7 +38,7 @@ func TimeWithinThreshold(last time.Time, threshold int, defaultThreshold int) bo
 	return true
 }
 
-func SendEmail(host string, port int, userName string, password string, to []string, subject string, message string) (err error) {
+func SendEmail(host string, port uint16, userName string, password string, to []string, subject string, message string) (err error) {
 	parameters := struct {
 		From    string
 		To      string

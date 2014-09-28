@@ -43,7 +43,7 @@ func (p *RF433ProtocolHandler) Stop() {
 func (p *RF433ProtocolHandler) Start() {
 	log.Println("[INFO] Starting Serial for RF433 ..")
 
-	c := &serial.Config{Name: p.config.Port, Baud: p.config.Baud}
+	c := &serial.Config{Name: p.config.Port, Baud: int(p.config.Baud)}
 	s, err := serial.OpenPort(c)
 	if err == nil {
 		buf := ""

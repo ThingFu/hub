@@ -7,6 +7,6 @@ package api
 type ProtocolConfiguration struct {
 	Enabled bool
 	Port    string
-	Baud    int
+	Baud    uint32
 	Conn    string
 }
