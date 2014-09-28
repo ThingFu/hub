@@ -46,16 +46,13 @@
                         </div>
 
                         <h4 class="panel-body-title">Attributes</h4>
-                #{with .Attributes }#
-                    #{range .}#
-                        #{if .IsStringType}#
+
+                    #{range $index, $element := .Attributes }#
                         <div class="form-group">
-                            <label>#{.Name}#</label>
-                            <input type="text" class="form-control" name="attrib.#{.Name}#" value="#{.Value}#" type="text" />
+                            <label>#{$element.Name}#</label>
+                            <input type="text" class="form-control" name="attrib.#{$element.Name}#" value="#{$element.Value}#" type="text" />
                         </div>
-                        #{end}#
                     #{end}#
-                #{end}#
                     </div><!-- /.box-body -->
 
                     <div class="box-footer">
