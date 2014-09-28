@@ -11,6 +11,11 @@
         </ol>
     </section>
 
+    <!--
+        Since
+        Icon        Description                     [Date/Time]
+    -->
+
     <section class="content">
         <div class="col-md-12">
 
@@ -19,36 +24,34 @@
                     <span class="bg-red">13th Sep 2014</span>
                 </li>
 
-                #{with .Events}#
-                #{range . }#
-                <li>
+                <li ng-repeat="Event in model.Events">
                     <i class="fa fa-envelope bg-blue"></i>
                     <div class="timeline-item">
-                        <span class="time"><i class="fa fa-clock-o"></i> #{Ago .Ts}#</span>
-                        #{.LongText}#
+                        <span class="time"><i class="fa fa-clock-o"></i> <span am-time-ago="message.time" am-preprocess="unix">{{Event.Ts|amDateFormat:'h:mm:ss a, Do MMMM'}}</span></span>
+                        {{Event.LongText}}
                     </div>
                 </li>
-                #{end}#
-                #{end}#
 
                 <li>
                     <i class="fa fa-clock-o"></i>
                 </li>
             </ul>
 
-
-
         </div>
     </section><!-- /.content -->
 </aside><!-- /.right-side -->
+<script src="/public/js/moment.min.js"></script>
+<script src="/public/js/angular/angular-moment.min.js"></script>
 <script>
-    var app = angular.module("app", []);
+    var app = angular.module("app", ['angularMoment']);
     app.controller("controller", function($scope, $http, $interval) {
         $scope.model = {};
 
         function loadFeed() {
             $http.get("/api/events/100").success(function(data, status, headers, config){
-                console.debug (data);
+                $scope.model.Events = data.events
+                var firstEvent = data.events[0]
+                console.debug (firstEvent);
             });
         }
         loadFeed();

@@ -20,7 +20,7 @@ import (
 )
 
 type WebApplication struct {
-	port int
+	port uint16
 
 	rulesService api.RulesService
 	thingService api.ThingService
@@ -30,7 +30,7 @@ type WebApplication struct {
 	container    api.Container
 }
 
-func NewWebApplication(port int) {
+func NewWebApplication(port uint16) {
 	w := new(WebApplication)
 	w.port = port
 
@@ -43,7 +43,8 @@ func NewWebApplication(port int) {
 	w.factory = c.Factory()
 
 	r := w.initializeRoutes()
-	portStr := strconv.Itoa(w.port)
+	portStr := fmt.Sprintf("%d", w.port)
+	// portStr := strconv.Itoa(w.port)
 
 	http.Handle("/", r)
 	log.Println("[INFO] Start Node WebServer @ " + portStr)
