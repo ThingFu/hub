@@ -1,5 +1,6 @@
 package tests
 
+/*
 import (
 	"fmt"
 	"gohome/node/api"
@@ -21,6 +22,7 @@ func TestRegisterDevices(t *testing.T) {
 		t.Fail()
 	}
 }
+*/
 
 /*
 func NewDefaultDeviceService(env api.Environment, ds api.DataSource) *DefaultDeviceService {

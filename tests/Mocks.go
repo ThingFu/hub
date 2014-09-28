@@ -1,5 +1,6 @@
 package tests
 
+/*
 import (
 	"gohome/node/api"
 )
@@ -48,3 +49,5 @@ func (e *MockEnvironment) GetHome() string {
 func (e *MockEnvironment) IsStartedUp() bool {
 	return true
 }
+
+*/
