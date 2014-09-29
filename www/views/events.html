@@ -11,17 +11,12 @@
         </ol>
     </section>
 
-    <!--
-        Since
-        Icon        Description                     [Date/Time]
-    -->
-
     <section class="content">
         <div class="col-md-12">
 
             <ul class="timeline">
                 <li class="time-label">
-                    <span class="bg-red">13th Sep 2014</span>
+                    <span class="bg-red">Since <span am-time-ago="message.time" am-preprocess="unix">{{model.eventsSince|amDateFormat:'h:mm:ss a, Do MMMM'}}</span></span>
                 </li>
 
                 <li ng-repeat="Event in model.Events">
@@ -49,8 +44,9 @@
         function loadFeed() {
             $http.get("/api/events/100").success(function(data, status, headers, config){
                 $scope.model.Events = data.events
+                
                 var firstEvent = data.events[0]
-                console.debug (firstEvent);
+                $scope.model.eventsSince = firstEvent.Ts
             });
         }
         loadFeed();
