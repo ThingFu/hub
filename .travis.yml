@@ -1,5 +1,5 @@
 language: go
 services:
-  - mongodb --dbpath=$TRAVIS_BUILD_DIR/tests/mongo
+  - mongodb
 before_script:
   - sleep 15
