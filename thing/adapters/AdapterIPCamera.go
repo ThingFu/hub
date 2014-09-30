@@ -11,6 +11,10 @@ import (
 type AdapterIPCamera struct {
 }
 
+func (d *AdapterIPCamera) OnActuate(t *api.Thing, op string, params map[string]interface{}, db api.AppDB) {
+
+}
+
 func (d *AdapterIPCamera) Cycle(dev *api.Thing) {
 
 }

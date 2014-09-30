@@ -2,9 +2,9 @@ package protocol
 
 import (
 	"errors"
+	serial "github.com/tarm/goserial"
 	"github.com/thingfu/hub/api"
 	"github.com/thingfu/hub/utils"
-	serial "github.com/tarm/goserial"
 	"log"
 	"strconv"
 	"strings"

@@ -13,6 +13,10 @@ import (
 type AdapterDigitalHumidityTemperature433 struct {
 }
 
+func (d *AdapterDigitalHumidityTemperature433) OnActuate(t *api.Thing, op string, params map[string]interface{}, db api.AppDB) {
+
+}
+
 func (d *AdapterDigitalHumidityTemperature433) Cycle(dev *api.Thing) {
 
 }

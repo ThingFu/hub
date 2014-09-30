@@ -15,6 +15,10 @@ func (o *AdapterKnockSensor433) Cycle(dev *api.Thing) {
 
 }
 
+func (d *AdapterKnockSensor433) OnActuate(t *api.Thing, op string, params map[string]interface{}, db api.AppDB) {
+
+}
+
 func (o *AdapterKnockSensor433) OnSense(dev *api.Thing, data api.ThingData) (state map[string]interface{}) {
 	return nil
 }

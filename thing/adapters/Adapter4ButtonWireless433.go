@@ -8,6 +8,10 @@ import (
 type Adapter4ButtonWireless433 struct {
 }
 
+func (d *Adapter4ButtonWireless433) OnActuate(t *api.Thing, op string, params map[string]interface{}, db api.AppDB) {
+
+}
+
 func (d *Adapter4ButtonWireless433) Cycle(dev *api.Thing) {
 
 }

@@ -120,8 +120,15 @@ func (o *DefaultThingService) Handle(thing *api.Thing, sensor *api.Sensor, state
 		o.dataSource.PutEvent(evt)
 	}
 
-	// TODO: Publish Event to Cloud
+	// Run Rules for this thing
 	o.rulesService.Trigger(api.TRIGGER_THING, facts)
+}
+
+func (o *DefaultThingService) Actuate(t *api.Thing, op string, params map[string]interface{}) {
+	drv := o.factory.CreateThingAdapter(t.Type)
+
+	appDB := o.dataSource.CreateAppDB(t)
+	drv.OnActuate(t, op, params, appDB)
 }
 
 func (o *DefaultThingService) Cycle() {

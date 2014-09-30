@@ -16,6 +16,10 @@ import (
 type AdapterWeather struct {
 }
 
+func (d *AdapterWeather) OnActuate(t *api.Thing, op string, params map[string]interface{}, db api.AppDB) {
+
+}
+
 func (d *AdapterWeather) Cycle(dev *api.Thing) {
 	/*
 		city := dev.GetAttribute("city").Value.(string)

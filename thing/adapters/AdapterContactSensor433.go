@@ -16,6 +16,10 @@ func (s *AdapterContactSensor433) Cycle(dev *api.Thing) {
 
 }
 
+func (d *AdapterContactSensor433) OnActuate(t *api.Thing, op string, params map[string]interface{}, db api.AppDB) {
+
+}
+
 func (sensor *AdapterContactSensor433) OnSense(dev *api.Thing, data api.ThingData) (state map[string]interface{}) {
 	return nil
 }

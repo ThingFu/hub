@@ -14,6 +14,10 @@ import (
 type AdapterLGTV47LS5700 struct {
 }
 
+func (d *AdapterLGTV47LS5700) OnActuate(t *api.Thing, op string, params map[string]interface{}, db api.AppDB) {
+
+}
+
 func (tv *AdapterLGTV47LS5700) Cycle(dev *api.Thing) {
 	tv.initSession(dev)
 }
