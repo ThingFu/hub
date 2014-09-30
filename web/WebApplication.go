@@ -23,7 +23,7 @@ type WebApplication struct {
 	port uint16
 
 	rulesService api.RulesService
-	thingService api.ThingService
+	thingManager api.ThingManager
 	dataSource   api.DataSource
 	environment  api.Environment
 	factory      api.Factory
@@ -38,7 +38,7 @@ func NewWebApplication(port uint16) {
 	w.container = c
 	w.rulesService = c.RulesService()
 	w.dataSource = c.DataSource()
-	w.thingService = c.ThingService()
+	w.thingManager = c.ThingManager()
 	w.environment = c.Env()
 	w.factory = c.Factory()
 
@@ -82,6 +82,7 @@ func (w WebApplication) initializeRoutes() *mux.Router {
 	reg(r, "/api/thing/{id}/event/{event}", w.triggerEventForThing).Methods("POST")
 	reg(r, "/api/thing/{id}/events/{limit}", w.getEventsForThing).Methods("POST")
 	reg(r, "/api/thing/{id}/op", w.invokeThingOperation).Methods("POST")
+	reg(r, "/api/settings", w.getSettings)
 
 	// Events
 	reg(r, "/api/events/{limit}", w.getEvents)
@@ -110,7 +111,7 @@ func (app *WebApplication) getDashboardState(w http.ResponseWriter, req *http.Re
 	model["EventsProcessed"] = app.dataSource.GetEventsCount()
 	model["Uptime"] = app.environment.GetUptime()
 
-	things := app.thingService.GetThings()
+	things := app.thingManager.GetThings()
 
 	thing_models := make([]*api.Thing, len(things))
 
@@ -151,7 +152,7 @@ func (app *WebApplication) addEvent(w http.ResponseWriter, req *http.Request) {
 func (app *WebApplication) viewThing(w http.ResponseWriter, req *http.Request) {
 	model := make(map[string]interface{})
 	vars := mux.Vars(req)
-	dev, ok := app.thingService.GetThing(vars["thingId"])
+	dev, ok := app.thingManager.GetThing(vars["thingId"])
 	if ok {
 		dev.Content = renderStringContent(dev.Descriptor.Path+"/view.html", dev)
 		model["Thing"] = dev
@@ -204,13 +205,13 @@ func (app *WebApplication) invokeThingOperation(w http.ResponseWriter, req *http
 	id := vars["id"]
 	op := vars["op"]
 
-	thing, ok := app.thingService.GetThing(id)
+	thing, ok := app.thingManager.GetThing(id)
 	if !ok {
 		http.Error(w, "Not Found", 404)
 	}
 
 	params := make(map[string]interface{})
-	app.thingService.Actuate(&thing, op, params)
+	app.thingManager.Actuate(&thing, op, params)
 
 	model := make(map[string]interface{})
 
@@ -219,12 +220,12 @@ func (app *WebApplication) invokeThingOperation(w http.ResponseWriter, req *http
 
 // GET http://localhost:8181/api/things
 func (app *WebApplication) getThings(w http.ResponseWriter, req *http.Request) {
-	writeJsonModel(w, app.thingService.GetThings())
+	writeJsonModel(w, app.thingManager.GetThings())
 }
 
 // GET http://localhost:8181/api/things/types
 func (app *WebApplication) getThingTypes(w http.ResponseWriter, req *http.Request) {
-	writeJsonModel(w, app.thingService.GetThingTypes())
+	writeJsonModel(w, app.thingManager.GetThingTypes())
 }
 
 // GET http://localhost:8181/api/thing/{id}
@@ -233,7 +234,7 @@ func (app *WebApplication) getThing(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
 
-	dev, ok := app.thingService.GetThing(id)
+	dev, ok := app.thingManager.GetThing(id)
 	if ok {
 		model["thing"] = dev
 	}
@@ -264,14 +265,20 @@ func (app *WebApplication) triggerEventForThing(w http.ResponseWriter, req *http
 	}
 
 	// content := string(body)
-	thing, _ := app.thingService.GetThing(id)
+	thing, _ := app.thingManager.GetThing(id)
 	var state map[string] interface {}
 	json.Unmarshal(body, &state)
 
-	app.thingService.Handle(thing, sensor, state)
+	app.thingManager.Handle(thing, sensor, state)
 	*/
 }
 
+// GET http://localhost:8181/api/settings
+func (app *WebApplication) getSettings(w http.ResponseWriter, req *http.Request) {
+	writeJsonModel(w, app.environment.GetConfig())
+}
+
+// VIEWS
 // GET http://localhost:8181/dashboard
 func (app *WebApplication) showDashboard(w http.ResponseWriter, req *http.Request) {
 	w.Write(templateOutput("dashboard", nil))
@@ -301,7 +308,7 @@ func (app *WebApplication) showEvents(w http.ResponseWriter, req *http.Request) 
 func (app *WebApplication) showThingView(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 
-	dev, ok := app.thingService.GetThing(vars["id"])
+	dev, ok := app.thingManager.GetThing(vars["id"])
 	if ok {
 		model := new(webModelWidgetView)
 		model.Content = template.HTML(renderStringContent(dev.Descriptor.Path+"/view.html", dev))
@@ -315,7 +322,7 @@ func (app *WebApplication) showThingView(w http.ResponseWriter, req *http.Reques
 func (app *WebApplication) showThingConfigure(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 
-	dev, ok := app.thingService.GetThing(vars["id"])
+	dev, ok := app.thingManager.GetThing(vars["id"])
 	if ok {
 		w.Write(templateOutput("thing_config", dev))
 	}
@@ -347,7 +354,7 @@ func (app *WebApplication) showImage(w http.ResponseWriter, req *http.Request) {
 	thingType := vars["type"]
 	img := vars["img"]
 
-	dt := app.thingService.GetThingType(thingType)
+	dt := app.thingManager.GetThingType(thingType)
 
 	w.Header().Set("Content-Type", "image")
 	path := dt.Path + "/" + img

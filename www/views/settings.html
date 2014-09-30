@@ -1,7 +1,7 @@
 #{define "settings"}#
 #{template "header" .}#
 <!-- Right side column. Contains the navbar and content of the page -->
-<aside class="right-side">
+<aside class="right-side" ng-app="app" ng-controller="controller">
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>Settings</h1>
@@ -34,47 +34,45 @@
                         <div class="tab-pane active" id="Settings-General" style="position: relative; padding: 10px;">
                             <div class="form-group">
                                 <label>Hub ID</label>
-                                <input type="text" class="form-control" name="config.NodeID" value="#{.NodeID}#" type="text" />
+                                <input type="text" class="form-control" name="config.NodeID" value="{{model.NodeID}}" type="text" />
                             </div>
 
                             <div class="form-group">
                                 <label>Port</label>
-                                <input type="text" class="form-control" name="config.ServerPort" value="#{.ServerPort}#" type="text" />
+                                <input type="text" class="form-control" name="config.ServerPort" value="{{model.ServerPort}}" type="text" />
                             </div>
 
                             <div class="form-group">
                                 <label>Max Processors</label>
-                                <input type="text" class="form-control" name="config.MaxProcs" value="#{.MaxProcs}#" type="text" />
+                                <input type="text" class="form-control" name="config.MaxProcs" value="{{model.MaxProcs}}" type="text" />
                             </div>
 
                             <div class="form-group">
                                 <label>Database Host</label>
-                                <input type="text" class="form-control" name="config.DB" value="#{.Db}#" type="text" />
+                                <input type="text" class="form-control" name="config.DB" value="{{model.Db}}" type="text" />
                             </div>
                         </div>
-                        #{with .Mail}#
                         <div class="tab-pane" id="Settings-Mail" style="position: relative; padding: 10px;">
                             <div class="form-group">
                                 <label>Host</label>
-                                <input type="text" class="form-control" name="config.DB" value="#{.Host}#" type="text" />
+                                <input type="text" class="form-control" name="config.DB" value="{{model.Mail.Host}}" type="text" />
                             </div>
 
                             <div class="form-group">
                                 <label>Port</label>
-                                <input type="text" class="form-control" name="config.DB" value="#{.Port}#" type="text" />
+                                <input type="text" class="form-control" name="config.DB" value="{{model.Mail.Port}}" type="text" />
                             </div>
 
                             <div class="form-group">
                                 <label>User</label>
-                                <input type="text" class="form-control" name="config.DB" value="#{.User}#" type="text" />
+                                <input type="text" class="form-control" name="config.DB" value="{{model.Mail.User}}" type="text" />
                             </div>
 
                             <div class="form-group">
                                 <label>Password</label>
-                                <input type="password" class="form-control" name="config.DB" value="#{.Pass}#" type="password" />
+                                <input type="password" class="form-control" name="config.DB" value="{{model.Mail.Pass}}" type="password" />
                             </div>
                         </div>
-                        #{end}#
                         <div class="tab-pane" id="Settings-Protocols" style="position: relative; padding: 10px;">
 
                         </div>
@@ -85,7 +83,19 @@
                 </div>
             </form>
         </div>
-    </section><!-- /.content -->
-</aside><!-- /.right-side -->
+    </section>
+</aside>
+<script>
+    var app = angular.module("app", []);
+    app.controller("controller", function($scope, $http) {
+        $scope.model = {};
+
+        $http.get("/api/settings").success(function(data, status, headers, config) {
+            $scope.model.NodeID = "abc";
+
+            $scope.model = data
+        });
+    });
+</script>
 #{template "footer" .}#
 #{end}#
