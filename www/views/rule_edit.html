@@ -4,7 +4,7 @@
 <style>
     .ace_editor { height: 200px; }
 </style>
-<aside class="right-side" ng-controller="ctrl-rules-edit">
+<aside class="right-side" ng-app="app" ng-controller="controller">
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>Edit <span ng-bind="model.name"></span></h1>
@@ -42,30 +42,29 @@
             }" style="height: 500px;" ng-model="model.content">
         </div>
 
-    </section><!-- /.content -->
+    </section>
 </aside>
 <script src="/public/js/ace/ace.js"></script>
 <script src="/public/js/ace/ui-ace.js"></script>
 <script>
-var __APP = angular.module("gohomeapp", ['ui.ace']);
-__APP.controller("ctrl-rules-edit", function($scope, $http, $location) {
-    absUrl = $location.absUrl()
-    ruleId = absUrl.substring(absUrl.lastIndexOf("/")+1, absUrl.length);
-    $scope.model = {}
-    var resp = $http.get("/api/rules/" + ruleId);
-    resp.success(function(data, status, headers, config) {
-        $scope.model = data
+    var app = angular.module("app", ['ui.ace']);
+    app.controller("controller", function($scope, $http, $interval, $location) {
+        $scope.model = {};
+
+        absUrl = $location.absUrl()
+        ruleId = absUrl.substring(absUrl.lastIndexOf("/")+1, absUrl.length);
+        $scope.aceLoaded = function(_editor) {
+            // Options
+            _editor.setReadOnly(true);
+        };
+
+        $scope.aceChanged = function(e) {
+            //
+        };
+        $http.get("/api/rule/" + ruleId).success(function(data, status, headers, config){
+            $scope.model.data = data
+        });
     });
-
-    $scope.aceLoaded = function(_editor) {
-        // Options
-        _editor.setReadOnly(true);
-    };
-
-    $scope.aceChanged = function(e) {
-        //
-    };
-});
 </script>
 #{template "footer" .}#
 #{end}#

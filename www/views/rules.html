@@ -1,8 +1,6 @@
 #{define "rules"}#
 #{template "header" .}#
-<!-- Right side column. Contains the navbar and content of the page -->
-<aside class="right-side">
-    <!-- Content Header (Page header) -->
+<aside class="right-side" ng-app="app" ng-controller="controller">
     <section class="content-header">
         <h1>Rules</h1>
         <ol class="breadcrumb">
@@ -13,7 +11,6 @@
         </ol>
     </section>
 
-    <!-- Main content -->
     <section class="content">
         <div class="col-md-12">
             <table class="table table-condensed">
@@ -24,47 +21,35 @@
                 </tr>
                 </thead>
                 <tbody>
-                #{with .Rules}#
-                #{range .}#
-                <tr>
-                    <td>#{.Name}#</td>
-                    <td class="hidden-xs text-center">
-                        <div class="btn-group">
-                            <a href="/rule/#{.Id}#">
-                                <button type="button" nunchi-op="session" class="nunchi-op btn btn-success btn-gradient"> <span class="glyphicon glyphicon-earphone"></span> </button>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                #{end}#
-                #{end}#
+
+                    <tr ng-repeat="Rule in model.Rules">
+                        <td>{{Rule.Name}}</td>
+                        <td class="hidden-xs text-center">
+                            <div class="btn-group">
+                                <a href="/rule/{{Rule.Id}}">
+                                    <button type="button" nunchi-op="session" class="nunchi-op btn btn-success btn-gradient"> <span class="glyphicon glyphicon-earphone"></span> </button>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+
                 </tbody>
             </table>
         </div>
     </section><!-- /.content -->
 </aside><!-- /.right-side -->
 <script>
-    var app = angular.module("app", ['angularMoment']);
+    var app = angular.module("app", []);
     app.controller("controller", function($scope, $http, $interval) {
         $scope.model = {};
 
-        function loadFeed() {
-            $http.get("/api/events/100").success(function(data, status, headers, config){
-                $scope.model.Events = data.events
-
-                var firstEvent = data.events[0]
-                $scope.model.eventsSince = firstEvent.Ts
-
-                /*
-                 TODO: Group by
-                 Today
-                 Yesterday
-                 Older
-
-                 */
-            });
-        }
-        loadFeed();
+        rules = []
+        $http.get("/api/rules").success(function(data, status, headers, config){
+            for (var r in data) {
+                rules.push(data[r])
+            }
+            $scope.model.Rules = rules
+        });
     });
 </script>
 #{template "footer" .}#
