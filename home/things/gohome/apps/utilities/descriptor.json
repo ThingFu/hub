@@ -1,15 +1,11 @@
 {
-    "tid": "utilities-app",
+    "tid": "utilities-webapp",
     "name": "Utilities App",
     "description": "",
     "cycletime": 1800000,
     "vendor": "thingfu",
     "model": "utilities-app-v1",
     "logEvents": false,
-    "attributes": [
-
-    ],
-    "operations": [
-
-    ]
+    "attributes": [],
+    "operations": []
 }

@@ -99,6 +99,9 @@ func (s *DefaultFactory) CreateThingAdapter(t string) api.ThingAdapter {
 	case "weather":
 		adapter = new(adapters.AdapterWeather)
 
+	case "utilities-webapp":
+		adapter = new(adapters.AdapterWebAppUtilities)
+
 	default:
 		return nil
 	}

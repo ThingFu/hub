@@ -40,11 +40,11 @@ func TestFactoryConsequences(t *testing.T) {
 }
 
 func TestFactoryProtocolHandlers(t *testing.T) {
+	/*
 	f := new(DefaultFactory)
 	f.SetContainer(tests.NewMockContainer())
 	cfg := new(api.ProtocolConfiguration)
 
-	/*
 	if f.CreateProtocolHandler("xoxo", *cfg) != nil {
 		t.Errorf("Protocol Handler not Expected")
 	}

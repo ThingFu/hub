@@ -154,6 +154,12 @@ func (m *MongoDataSource) SaveState(dev *api.Thing, state map[string]interface{}
 	}()
 }
 
+func (s *MongoDataSource) CreateAppDB(t *api.Thing) api.AppDB {
+	db := NewAppDB(t.Id)
+
+	return db
+}
+
 func (s *MongoDataSource) ValidateWiring() {
 	if s.env == nil {
 		log.Fatal("Environment not wired to MongoDataSource")
