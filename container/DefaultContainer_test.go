@@ -43,7 +43,7 @@ func TestInitializeContainer(t *testing.T) {
 		t.Fail()
 	}
 
-	if container.RulesService() == nil {
+	if container.RulesManager() == nil {
 		t.Fail()
 	}
 
@@ -71,8 +71,8 @@ func TestWiringContainer(t *testing.T) {
 		case t == "api.Environment":
 			c.environment = svc.(api.Environment)
 
-		case t == "api.RulesService":
-			c.rulesService = svc.(api.RulesService)
+		case t == "api.RulesManager":
+			c.rulesService = svc.(api.RulesManager)
 
 		case t == "api.ThingManager":
 			c.thingManager = svc.(api.ThingManager)
@@ -92,7 +92,7 @@ func TestWiringContainer(t *testing.T) {
 	*/
 
 	/*
-		rulesService := c.RulesService()
+		rulesService := c.RulesManager()
 			factory := c.Factory()
 			thingManager := c.ThingManager()
 			env := c.Env()
@@ -107,7 +107,7 @@ func TestWiringContainer(t *testing.T) {
 			// Factory
 
 			// ThingManager
-			thingManager.SetRulesService(rulesService)
+			thingManager.SetRulesManager(rulesService)
 			thingManager.SetFactory(factory)
 			thingManager.SetDataSource(dataSource)
 
@@ -115,7 +115,7 @@ func TestWiringContainer(t *testing.T) {
 			dataSource.SetEnvironment(env)
 
 			// ScheduleService
-			scheduleServices.SetRulesService(rulesService)
+			scheduleServices.SetRulesManager(rulesService)
 			scheduleServices.SetThingManager(thingManager)
 
 			// Protocol Handlers

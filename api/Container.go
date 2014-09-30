@@ -6,7 +6,7 @@ package api
 
 // Container handles all the services used as well as any cross-dependencies
 type Container interface {
-	RulesService() RulesService
+	RulesManager() RulesManager
 	ThingManager() ThingManager
 	Env() Environment
 	ScheduleService() ScheduleService

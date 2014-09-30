@@ -22,7 +22,7 @@ import (
 type WebApplication struct {
 	port uint16
 
-	rulesService api.RulesService
+	rulesService api.RulesManager
 	thingManager api.ThingManager
 	dataSource   api.DataSource
 	environment  api.Environment
@@ -36,7 +36,7 @@ func NewWebApplication(port uint16) {
 
 	c := container.Instance()
 	w.container = c
-	w.rulesService = c.RulesService()
+	w.rulesService = c.RulesManager()
 	w.dataSource = c.DataSource()
 	w.thingManager = c.ThingManager()
 	w.environment = c.Env()

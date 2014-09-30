@@ -16,6 +16,6 @@ type ScheduleService interface {
 	Stop()
 	ContainerAware
 
-	SetRulesService(RulesService)
+	SetRulesManager(RulesManager)
 	SetThingManager(ThingManager)
 }

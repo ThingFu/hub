@@ -26,7 +26,7 @@ func Initialize(home string, config api.Configuration) (api.Container, api.Envir
 
 	env := env.NewEnvironment(home, config)
 	CONTAINER.Register(env, "api.Environment")
-	CONTAINER.Register(rules.NewRulesService(), "api.RulesService")
+	CONTAINER.Register(rules.NewRulesManager(), "api.RulesManager")
 	CONTAINER.Register(thing.NewThingManager(), "api.ThingManager")
 	CONTAINER.Register(new(events.DefaultScheduleService), "api.ScheduleService")
 	CONTAINER.Register(source.NewMongoDataSource(), "api.DataSource")
@@ -46,7 +46,7 @@ func Initialize(home string, config api.Configuration) (api.Container, api.Envir
 
 type DefaultContainer struct {
 	dataSource       api.DataSource
-	rulesService     api.RulesService
+	rulesService     api.RulesManager
 	thingManager     api.ThingManager
 	scheduleService  api.ScheduleService
 	environment      api.Environment
@@ -59,8 +59,8 @@ func (c *DefaultContainer) Register(svc api.ContainerAware, t string) {
 	case t == "api.Environment":
 		c.environment = svc.(api.Environment)
 
-	case t == "api.RulesService":
-		c.rulesService = svc.(api.RulesService)
+	case t == "api.RulesManager":
+		c.rulesService = svc.(api.RulesManager)
 
 	case t == "api.ThingManager":
 		c.thingManager = svc.(api.ThingManager)
@@ -84,7 +84,7 @@ func (c *DefaultContainer) Register(svc api.ContainerAware, t string) {
 }
 
 func (c *DefaultContainer) startWire() {
-	rulesService := c.RulesService()
+	rulesService := c.RulesManager()
 	factory := c.Factory()
 	thingManager := c.ThingManager()
 	env := c.Env()
@@ -99,7 +99,7 @@ func (c *DefaultContainer) startWire() {
 	// Factory
 
 	// ThingManager
-	thingManager.SetRulesService(rulesService)
+	thingManager.SetRulesManager(rulesService)
 	thingManager.SetFactory(factory)
 	thingManager.SetDataSource(dataSource)
 
@@ -107,7 +107,7 @@ func (c *DefaultContainer) startWire() {
 	dataSource.SetEnvironment(env)
 
 	// ScheduleService
-	scheduleServices.SetRulesService(rulesService)
+	scheduleServices.SetRulesManager(rulesService)
 	scheduleServices.SetThingManager(thingManager)
 
 	// Protocol Handlers
@@ -140,11 +140,11 @@ func (c *DefaultContainer) DataSource() api.DataSource {
 	return c.dataSource
 }
 
-func (c *DefaultContainer) setRulesService(o api.RulesService) {
+func (c *DefaultContainer) setRulesManager(o api.RulesManager) {
 	c.rulesService = o
 }
 
-func (c *DefaultContainer) RulesService() api.RulesService {
+func (c *DefaultContainer) RulesManager() api.RulesManager {
 	return c.rulesService
 }
 

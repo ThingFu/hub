@@ -27,7 +27,7 @@ var funcMap = template.FuncMap{
 }
 
 type WebApplicationDashboard struct {
-	rulesService api.RulesService
+	rulesService api.RulesManager
 	thingManager api.ThingManager
 	dataSource   api.DataSource
 	environment  api.Environment

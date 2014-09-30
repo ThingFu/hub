@@ -12,7 +12,7 @@ import (
 
 type DefaultScheduleService struct {
 	ruleTicker   *time.Ticker
-	rulesService api.RulesService
+	rulesService api.RulesManager
 	thingManager api.ThingManager
 	container    api.Container
 }
@@ -58,7 +58,7 @@ func (d *DefaultScheduleService) ValidateWiring() {
 	}
 }
 
-func (d *DefaultScheduleService) SetRulesService(s api.RulesService) {
+func (d *DefaultScheduleService) SetRulesManager(s api.RulesManager) {
 	d.rulesService = s
 }
 

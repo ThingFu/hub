@@ -19,7 +19,7 @@ type ThingManager interface {
 	Actuate(t *Thing, op string, params map[string]interface{})
 
 	ContainerAware
-	SetRulesService(RulesService)
+	SetRulesManager(RulesManager)
 	SetFactory(Factory)
 	SetDataSource(DataSource)
 }

@@ -16,7 +16,7 @@ type DefaultThingManager struct {
 	thingTypes map[string]api.ThingType
 	things     map[string]api.Thing
 
-	rulesService api.RulesService
+	rulesService api.RulesManager
 	container    api.Container
 	factory      api.Factory
 	dataSource   api.DataSource
@@ -34,7 +34,7 @@ func (s *DefaultThingManager) SetDataSource(svc api.DataSource) {
 	s.dataSource = svc
 }
 
-func (s *DefaultThingManager) SetRulesService(svc api.RulesService) {
+func (s *DefaultThingManager) SetRulesManager(svc api.RulesManager) {
 	s.rulesService = svc
 }
 

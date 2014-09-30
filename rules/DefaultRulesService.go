@@ -11,26 +11,26 @@ import (
 	"time"
 )
 
-type DefaultRulesService struct {
+type DefaultRulesManager struct {
 	rules        map[string]api.Rule
 	thingManager api.ThingManager
 	factory      api.Factory
 	container    api.Container
 }
 
-func (r *DefaultRulesService) SetFactory(factory api.Factory) {
+func (r *DefaultRulesManager) SetFactory(factory api.Factory) {
 	r.factory = factory
 }
 
-func (r DefaultRulesService) GetRules() map[string]api.Rule {
+func (r DefaultRulesManager) GetRules() map[string]api.Rule {
 	return r.rules
 }
 
-func (r DefaultRulesService) GetRule(ruleId string) api.Rule {
+func (r DefaultRulesManager) GetRule(ruleId string) api.Rule {
 	return r.rules[ruleId]
 }
 
-func (r DefaultRulesService) Trigger(triggerType uint8, facts *api.RuleFacts) {
+func (r DefaultRulesManager) Trigger(triggerType uint8, facts *api.RuleFacts) {
 	exec := make(map[string]api.Rule)
 	thing := facts.Thing
 
@@ -98,13 +98,13 @@ func (r DefaultRulesService) Trigger(triggerType uint8, facts *api.RuleFacts) {
 	}
 }
 
-func (r DefaultRulesService) evaluateWhen(when *api.RuleWhen, facts *api.RuleFacts, rule *api.Rule) bool {
+func (r DefaultRulesManager) evaluateWhen(when *api.RuleWhen, facts *api.RuleFacts, rule *api.Rule) bool {
 	condition := r.factory.CreateCondition(when.Trigger)
 
 	return condition.Evaluate(when, facts, rule)
 }
 
-func (r DefaultRulesService) executeConsequence(t api.RuleThen, d *api.Thing) {
+func (r DefaultRulesManager) executeConsequence(t api.RuleThen, d *api.Thing) {
 	do := t.Do
 	config := t.Config
 
@@ -115,40 +115,40 @@ func (r DefaultRulesService) executeConsequence(t api.RuleThen, d *api.Thing) {
 	}
 }
 
-func (r *DefaultRulesService) RegisterRule(rule api.Rule) {
+func (r *DefaultRulesManager) RegisterRule(rule api.Rule) {
 	r.rules[rule.Id] = rule
 }
 
-func NewDefaultRuleService(env api.Environment) DefaultRulesService {
-	svc := new(DefaultRulesService)
+func NewDefaultRuleService(env api.Environment) DefaultRulesManager {
+	svc := new(DefaultRulesManager)
 
 	return *svc
 }
 
-func (s *DefaultRulesService) SetThingManager(svc api.ThingManager) {
+func (s *DefaultRulesManager) SetThingManager(svc api.ThingManager) {
 	s.thingManager = svc
 }
 
-func (d *DefaultRulesService) GetContainer() api.Container {
+func (d *DefaultRulesManager) GetContainer() api.Container {
 	return d.container
 }
 
-func (s *DefaultRulesService) SetContainer(c api.Container) {
+func (s *DefaultRulesManager) SetContainer(c api.Container) {
 	s.container = c
 }
 
-func (s *DefaultRulesService) ValidateWiring() {
+func (s *DefaultRulesManager) ValidateWiring() {
 	if s.thingManager == nil {
-		log.Fatal("thingManager not wired to DefaultRulesService")
+		log.Fatal("thingManager not wired to DefaultRulesManager")
 	}
 
 	if s.factory == nil {
-		log.Fatal("factory not wired to DefaultRulesService")
+		log.Fatal("factory not wired to DefaultRulesManager")
 	}
 }
 
-func NewRulesService() *DefaultRulesService {
-	svc := new(DefaultRulesService)
+func NewRulesManager() *DefaultRulesManager {
+	svc := new(DefaultRulesManager)
 	svc.rules = make(map[string]api.Rule)
 
 	return svc

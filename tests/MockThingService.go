@@ -6,7 +6,7 @@ type MockThingManager struct {
 	thingTypes map[string]api.ThingType
 	things     map[string]api.Thing
 
-	rulesService api.RulesService
+	rulesService api.RulesManager
 	container    api.Container
 	factory      api.Factory
 	dataSource   api.DataSource
@@ -16,7 +16,7 @@ func (s *MockThingManager) SetDataSource(svc api.DataSource) {
 	s.dataSource = svc
 }
 
-func (s *MockThingManager) SetRulesService(svc api.RulesService) {
+func (s *MockThingManager) SetRulesManager(svc api.RulesManager) {
 	s.rulesService = svc
 }
 

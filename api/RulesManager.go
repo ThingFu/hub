@@ -4,7 +4,7 @@
 
 package api
 
-type RulesService interface {
+type RulesManager interface {
 	GetRule(string) Rule
 	GetRules() map[string]Rule
 	Trigger(triggerType uint8, facts *RuleFacts)
