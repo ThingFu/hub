@@ -24,7 +24,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label>File Name</label>
-                <input type="text" class="form-control" type="text" />
+                <input type="text" class="form-control" type="text" value="{{model.path}}" />
             </div>
             <div class="box-footer">
                 <button type="submit" class="btn btn-primary">Save Rule</button>
@@ -54,15 +54,17 @@
         absUrl = $location.absUrl()
         ruleId = absUrl.substring(absUrl.lastIndexOf("/")+1, absUrl.length);
         $scope.aceLoaded = function(_editor) {
-            // Options
             _editor.setReadOnly(true);
         };
 
         $scope.aceChanged = function(e) {
-            //
+
         };
+
         $http.get("/api/rule/" + ruleId).success(function(data, status, headers, config){
-            $scope.model.data = data
+            $scope.model.content = data.content
+            $scope.model.name = data.name
+            $scope.model.path = data.path
         });
     });
 </script>

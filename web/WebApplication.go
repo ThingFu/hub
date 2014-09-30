@@ -192,7 +192,7 @@ func (app *WebApplication) deleteRule(w http.ResponseWriter, req *http.Request) 
 func (app *WebApplication) getRule(w http.ResponseWriter, req *http.Request) {
 	model := make(map[string]interface{})
 	vars := mux.Vars(req)
-	ruleId := vars["ruleId"]
+	ruleId := vars["id"]
 
 	rule := app.rulesService.GetRule(ruleId)
 	model["id"] = rule.Id
@@ -201,6 +201,7 @@ func (app *WebApplication) getRule(w http.ResponseWriter, req *http.Request) {
 	stringContent := string(fileContent)
 	model["content"] = stringContent
 	model["name"] = rule.Name
+	model["path"] = rule.Path
 
 	writeJsonModel(w, model)
 }
