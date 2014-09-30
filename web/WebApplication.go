@@ -269,7 +269,7 @@ func (app *WebApplication) triggerEventForThing(w http.ResponseWriter, req *http
 	var state map[string] interface {}
 	json.Unmarshal(body, &state)
 
-	app.thingManager.Handle(thing, sensor, state)
+	app.thingManager.Handle(thing, service, state)
 	*/
 }
 

@@ -43,6 +43,6 @@ func (tv *AdapterLGTV47LS5700) initSession(dev *api.Thing) {
 	}
 }
 
-func (d *AdapterLGTV47LS5700) GetEventText(thing *api.Thing, sensor *api.Sensor, state map[string]interface{}) (shortText string, longText string) {
+func (d *AdapterLGTV47LS5700) GetEventText(thing *api.Thing, sensor *api.ThingService, state map[string]interface{}) (shortText string, longText string) {
 	return "", ""
 }

@@ -64,7 +64,7 @@ func (o *MockThingManager) GetThings() []api.Thing {
 	return v
 }
 
-func (o *MockThingManager) Handle(thing *api.Thing, sensor *api.Sensor, state map[string]interface{}) {
+func (o *MockThingManager) Handle(thing *api.Thing, service *api.ThingService, state map[string]interface{}) {
 
 }
 

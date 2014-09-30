@@ -93,10 +93,10 @@ func (o *DefaultThingManager) GetThings() []api.Thing {
 	return v
 }
 
-func (o *DefaultThingManager) Handle(thing *api.Thing, sensor *api.Sensor, state map[string]interface{}) {
+func (o *DefaultThingManager) Handle(thing *api.Thing, service *api.ThingService, state map[string]interface{}) {
 	facts := new(api.RuleFacts)
 	facts.Thing = thing
-	facts.Sensor = sensor
+	facts.Service = service
 	facts.Target = thing.GetId()
 
 	drv := o.factory.CreateThingAdapter(thing.Descriptor.TypeId)
@@ -112,8 +112,8 @@ func (o *DefaultThingManager) Handle(thing *api.Thing, sensor *api.Sensor, state
 	if desc.LogEvents {
 		evt := api.NewEvent()
 		evt.Thing = thing.Id
-		evt.Sensor = sensor.Name
-		evt.ShortText, evt.LongText = drv.GetEventText(thing, sensor, state)
+		evt.Service = service.Name
+		evt.ShortText, evt.LongText = drv.GetEventText(thing, service, state)
 		evt.Event = api.EVENT_SENSE
 		evt.Data = state
 

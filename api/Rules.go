@@ -37,7 +37,7 @@ type Rule struct {
 type RuleFacts struct {
 	Target string
 	Thing  *Thing
-	Sensor *Sensor
+	Service *ThingService
 }
 
 type RuleThen struct {
@@ -48,7 +48,7 @@ type RuleThen struct {
 type RuleWhen struct {
 	Target  string
 	Trigger string
-	Sensor  string
+	Service  string
 }
 
 type Consequence interface {

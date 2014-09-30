@@ -96,7 +96,7 @@ func (p *RF433ProtocolHandler) handleWT450(data *RF433Data) {
 	dec, _ := strconv.Atoi(data.DecData)
 	ser := "nb-wt450-" + strconv.Itoa(dec>>26)
 
-	dev, sensor, err := p.getThing(ser)
+	dev, service, err := p.getThing(ser)
 
 	if err == nil {
 		drv := p.factory.CreateThingAdapter("433mhz-wt450")
@@ -104,13 +104,13 @@ func (p *RF433ProtocolHandler) handleWT450(data *RF433Data) {
 		go func() {
 			state := drv.OnSense(dev, data)
 
-			lastEvent := sensor.LastEvent
+			lastEvent := service.LastEvent
 			desc := dev.Descriptor
 			if utils.TimeWithinThreshold(lastEvent, desc.EventUpdateBuffer, 5000) {
-				sensor.UpdateLastEvent(time.Now())
+				service.UpdateLastEvent(time.Now())
 				p.thingManager.SaveThing(*dev)
 
-				p.thingManager.Handle(dev, sensor, state)
+				p.thingManager.Handle(dev, service, state)
 			}
 		}()
 	}
@@ -124,11 +124,11 @@ func (p *RF433ProtocolHandler) handleCodeMatch(data *RF433Data) {
 
 	// If serial data gets messed up
 	if ser == "" {
-		log.Println("Something is wrong. Code from RF 433 sensor is nil. Skipping..")
+		log.Println("Something is wrong. Code from RF 433 service is nil. Skipping..")
 		return
 	}
 
-	dev, sensor, ok := p.getThing(ser)
+	dev, service, ok := p.getThing(ser)
 
 	if ok != nil {
 		log.Println("Unknown Thing ", ser)
@@ -147,37 +147,37 @@ func (p *RF433ProtocolHandler) handleCodeMatch(data *RF433Data) {
 			// We don't want to run rules or fire events too frequently,
 			// so check against thing descriptor's Event Update Buffer
 			// if we should go ahead
-			lastEvent := sensor.LastEvent
+			lastEvent := service.LastEvent
 			desc := dev.Descriptor
 			if utils.TimeWithinThreshold(lastEvent, desc.EventUpdateBuffer, 5000) {
-				sensor.UpdateLastEvent(time.Now())
+				service.UpdateLastEvent(time.Now())
 				p.thingManager.SaveThing(*dev)
 
-				p.thingManager.Handle(dev, sensor, state)
+				p.thingManager.Handle(dev, service, state)
 			}
 		}()
 	}
 }
 
-func (p *RF433ProtocolHandler) getThing(ser string) (*api.Thing, *api.Sensor, error) {
+func (p *RF433ProtocolHandler) getThing(ser string) (*api.Thing, *api.ThingService, error) {
 
 	things := p.thingManager.GetThings()
 	for i, _ := range things {
 		thing := &things[i]
-		sensors := thing.Sensors
+		services := thing.Services
 		desc := thing.Descriptor
 
 		if desc.Protocol == "433MHZ" {
-			for j, _ := range sensors {
-				sensor := &sensors[j]
+			for j, _ := range services {
+				service := &services[j]
 
-				if sensor.Code == ser {
-					return thing, sensor, nil
+				if service.Code == ser {
+					return thing, service, nil
 				}
 			}
 		}
 	}
-	return new(api.Thing), new(api.Sensor), errors.New("Unknown Thing")
+	return new(api.Thing), new(api.ThingService), errors.New("Unknown Thing")
 }
 
 func (p *RF433ProtocolHandler) SetFactory(o api.Factory) {

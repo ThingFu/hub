@@ -17,7 +17,7 @@ func (s Sense) Evaluate(when *api.RuleWhen, facts *api.RuleFacts, rule *api.Rule
 		return false
 	}
 
-	if when.Sensor != facts.Sensor.Name {
+	if when.Service != facts.Service.Name {
 		return false
 	}
 

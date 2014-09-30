@@ -54,6 +54,6 @@ func (d *AdapterWeather) OnSense(dev *api.Thing, data api.ThingData) (state map[
 	return nil
 }
 
-func (d *AdapterWeather) GetEventText(dev *api.Thing, sensor *api.Sensor, state map[string]interface{}) (shortText string, longText string) {
+func (d *AdapterWeather) GetEventText(dev *api.Thing, sensor *api.ThingService, state map[string]interface{}) (shortText string, longText string) {
 	return
 }

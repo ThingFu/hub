@@ -27,7 +27,7 @@ func (d *Adapter1ButtonWireless433) OnActuate(t *api.Thing, op string, params ma
 
 }
 
-func (d *Adapter1ButtonWireless433) GetEventText(dev *api.Thing, sensor *api.Sensor, state map[string]interface{}) (shortText string, longText string) {
+func (d *Adapter1ButtonWireless433) GetEventText(dev *api.Thing, service *api.ThingService, state map[string]interface{}) (shortText string, longText string) {
 	txt := fmt.Sprintf("Button %s pressed", dev.Name)
 	shortText, longText = txt, txt
 

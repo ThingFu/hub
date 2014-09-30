@@ -39,7 +39,7 @@ func (d *AdapterDigitalHumidityTemperature433) OnSense(dev *api.Thing, data api.
 	return
 }
 
-func (d *AdapterDigitalHumidityTemperature433) GetEventText(thing *api.Thing, sensor *api.Sensor, state map[string]interface{}) (shortText string, longText string) {
+func (d *AdapterDigitalHumidityTemperature433) GetEventText(thing *api.Thing, service *api.ThingService, state map[string]interface{}) (shortText string, longText string) {
 	humidity := state["h"]
 	tH := state["tH"]
 	tL := state["tL"]

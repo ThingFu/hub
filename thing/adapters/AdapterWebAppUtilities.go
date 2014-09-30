@@ -26,6 +26,6 @@ func (d *AdapterWebAppUtilities) OnSense(dev *api.Thing, data api.ThingData) (st
 	return nil
 }
 
-func (d *AdapterWebAppUtilities) GetEventText(dev *api.Thing, sensor *api.Sensor, state map[string]interface{}) (shortText string, longText string) {
+func (d *AdapterWebAppUtilities) GetEventText(dev *api.Thing, sensor *api.ThingService, state map[string]interface{}) (shortText string, longText string) {
 	return
 }

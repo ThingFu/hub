@@ -30,7 +30,7 @@ type Thing struct {
 	Attributes  map[string]ThingAttribute `bson:"attrs"`
 	LastEvent   time.Time
 	LastCycle   time.Time
-	Sensors     []Sensor `bson:"sub"`
+	Services     []ThingService `bson:"sub"`
 	Content     string
 }
 
@@ -78,10 +78,10 @@ func (d Thing) GetAttribute(name string) ThingAttribute {
 	}
 }
 
-func (d *Thing) GetSensor(name string) *Sensor {
-	for i, s := range d.Sensors {
+func (d *Thing) GetService(name string) *ThingService {
+	for i, s := range d.Services {
 		if s.Name == name {
-			return &d.Sensors[i]
+			return &d.Services[i]
 		}
 	}
 	return nil

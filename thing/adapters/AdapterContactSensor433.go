@@ -24,7 +24,7 @@ func (sensor *AdapterContactSensor433) OnSense(dev *api.Thing, data api.ThingDat
 	return nil
 }
 
-func (d *AdapterContactSensor433) GetEventText(dev *api.Thing, sensor *api.Sensor, state map[string]interface{}) (shortText string, longText string) {
+func (d *AdapterContactSensor433) GetEventText(dev *api.Thing, service *api.ThingService, state map[string]interface{}) (shortText string, longText string) {
 	txt := fmt.Sprintf("%s opened", dev.Name)
 	shortText, longText = txt, txt
 

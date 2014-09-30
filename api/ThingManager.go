@@ -13,7 +13,7 @@ type ThingManager interface {
 	RegisterThingType(ThingType)
 	RegisterThing(Thing)
 	GetThings() []Thing
-	Handle(*Thing, *Sensor, map[string]interface{})
+	Handle(*Thing, *ThingService, map[string]interface{})
 
 	Cycle()
 	Actuate(t *Thing, op string, params map[string]interface{})

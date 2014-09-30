@@ -16,7 +16,7 @@ const (
 type Event struct {
 	Uid       string
 	Thing     string
-	Sensor    string
+	Service   string
 	Ts        time.Time
 	ShortText string
 	LongText  string

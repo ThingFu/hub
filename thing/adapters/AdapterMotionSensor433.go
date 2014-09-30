@@ -24,7 +24,7 @@ func (d *AdapterMotionSensor433) OnSense(dev *api.Thing, data api.ThingData) (st
 	return nil
 }
 
-func (d *AdapterMotionSensor433) GetEventText(dev *api.Thing, sensor *api.Sensor, state map[string]interface{}) (shortText string, longText string) {
+func (d *AdapterMotionSensor433) GetEventText(dev *api.Thing, sensor *api.ThingService, state map[string]interface{}) (shortText string, longText string) {
 	txt := fmt.Sprintf("Motion by %s detected", dev.Name)
 	shortText, longText = txt, txt
 
