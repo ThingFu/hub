@@ -16,6 +16,8 @@ type DataSource interface {
 
 	GetThingEvents(int, string) []Event
 
+	CreateAppDB(*Thing) AppDB
+
 	SaveThing(Thing)
 	PutEvent(*Event)
 	SaveState(*Thing, map[string]interface{})

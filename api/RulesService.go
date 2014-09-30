@@ -8,10 +8,9 @@ type RulesService interface {
 	GetRule(string) Rule
 	GetRules() map[string]Rule
 	Trigger(triggerType uint8, facts *RuleFacts)
-	ContainerAware
 	RegisterRule(Rule)
 
-	// Injection
+	ContainerAware
 	SetThingService(ThingService)
 	SetFactory(Factory)
 }

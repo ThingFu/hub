@@ -16,8 +16,9 @@ type ThingService interface {
 	Handle(*Thing, *Sensor, map[string]interface{})
 
 	Cycle()
-	ContainerAware
+	Actuate(t *Thing, op string, params map[string]interface{})
 
+	ContainerAware
 	SetRulesService(RulesService)
 	SetFactory(Factory)
 	SetDataSource(DataSource)
