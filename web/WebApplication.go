@@ -79,7 +79,7 @@ func (w WebApplication) initializeRoutes() *mux.Router {
 	reg(r, "/api/things", w.getThings)
 	reg(r, "/api/things/types", w.getThingTypes)
 	reg(r, "/api/thing/{id}", w.getThing)
-	reg(r, "/api/thing/{id}/event/{event}", w.triggerEventForThing).Methods("POST")
+	reg(r, "/api/thing/{id}/event/{svc}", w.triggerEventForThing).Methods("POST")
 	reg(r, "/api/thing/{id}/events/{limit}", w.getEventsForThing).Methods("POST")
 	reg(r, "/api/thing/{id}/op", w.invokeThingOperation).Methods("POST")
 	reg(r, "/api/settings", w.getSettings)
@@ -259,12 +259,11 @@ func (app *WebApplication) getEventsForThing(w http.ResponseWriter, req *http.Re
 	writeJsonModel(w, events)
 }
 
-// POST http://localhost:8181/api/thing/{id}/event/{event}
+// POST http://localhost:8181/api/thing/{id}/event/{svc}
 func (app *WebApplication) triggerEventForThing(w http.ResponseWriter, req *http.Request) {
-	/*
 	vars := mux.Vars(req)
 	id := vars["id"]
-	event := vars["event"]
+	svc := vars["svc"]
 	body, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		log.Println(err)
@@ -272,11 +271,11 @@ func (app *WebApplication) triggerEventForThing(w http.ResponseWriter, req *http
 
 	// content := string(body)
 	thing, _ := app.thingManager.GetThing(id)
+	service := thing.GetService(svc)
 	var state map[string] interface {}
 	json.Unmarshal(body, &state)
 
-	app.thingManager.Handle(thing, service, state)
-	*/
+	app.thingManager.Handle(&thing, service, state)
 }
 
 // GET http://localhost:8181/api/settings
