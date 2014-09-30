@@ -60,7 +60,7 @@ func (w WebApplication) initializeRoutes() *mux.Router {
 	// PAGES
 	reg(r, "/dashboard", w.showDashboard)
 	reg(r, "/rules", w.showRules)
-	reg(r, "/rules/id", w.showRule)
+	reg(r, "/rule/{id}", w.showRule)
 	reg(r, "/settings", w.showSettings)
 	reg(r, "/events", w.showEvents)
 	reg(r, "/thing/{id}/view", w.showThingView)
@@ -89,10 +89,11 @@ func (w WebApplication) initializeRoutes() *mux.Router {
 	reg(r, "/api/event", w.addEvent).Methods("PUT")
 
 	// Rules
-	reg(r, "/api/rules/{id}", w.getRule).Methods("GET")
-	reg(r, "/api/rules/{id}", w.saveRule).Methods("POST")
-	reg(r, "/api/rules/{id}", w.deleteRule).Methods("DELETE")
-	reg(r, "/api/rules/{id}", w.addRule).Methods("PUT")
+	reg(r, "/api/rules", w.getRules)
+	reg(r, "/api/rule/{id}", w.getRule).Methods("GET")
+	reg(r, "/api/rule/{id}", w.saveRule).Methods("POST")
+	reg(r, "/api/rule/{id}", w.deleteRule).Methods("DELETE")
+	reg(r, "/api/rule/{id}", w.addRule).Methods("PUT")
 
 	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("./www/static/"))))
 
@@ -161,28 +162,33 @@ func (app *WebApplication) viewThing(w http.ResponseWriter, req *http.Request) {
 	writeJsonModel(w, model)
 }
 
-// PUT http://localhost:8181/api/rules/{id}
+// GET http://localhost:8181/api/rules
+func (app *WebApplication) getRules(w http.ResponseWriter, req *http.Request) {
+	writeJsonModel(w, app.rulesService.GetRules())
+}
+
+// PUT http://localhost:8181/api/rule/{id}
 func (app *WebApplication) addRule(w http.ResponseWriter, req *http.Request) {
 	model := make(map[string]interface{})
 
 	writeJsonModel(w, model)
 }
 
-// POST http://localhost:8181/api/rules/{id}
+// POST http://localhost:8181/api/rule/{id}
 func (app *WebApplication) saveRule(w http.ResponseWriter, req *http.Request) {
 	model := make(map[string]interface{})
 
 	writeJsonModel(w, model)
 }
 
-// DELETE http://localhost:8181/api/rules/{id}
+// DELETE http://localhost:8181/api/rule/{id}
 func (app *WebApplication) deleteRule(w http.ResponseWriter, req *http.Request) {
 	model := make(map[string]interface{})
 
 	writeJsonModel(w, model)
 }
 
-// GET http://localhost:8181/api/rules/{id}
+// GET http://localhost:8181/api/rule/{id}
 func (app *WebApplication) getRule(w http.ResponseWriter, req *http.Request) {
 	model := make(map[string]interface{})
 	vars := mux.Vars(req)
@@ -289,7 +295,7 @@ func (app *WebApplication) showRules(w http.ResponseWriter, req *http.Request) {
 	w.Write(templateOutput("rules", nil))
 }
 
-// GET http://localhost:8181/rules/id
+// GET http://localhost:8181/rule/{id}
 func (app *WebApplication) showRule(w http.ResponseWriter, req *http.Request) {
 	w.Write(templateOutput("rule_edit", nil))
 }
