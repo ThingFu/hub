@@ -72,7 +72,7 @@ func (o *MockThingManager) Cycle() {
 
 }
 
-func Actuate(t *Thing, op string, params map[string]interface{}) {
+func Actuate(t *api.Thing, op string, params map[string]interface{}) {
 
 }
 
