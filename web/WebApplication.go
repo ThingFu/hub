@@ -8,9 +8,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
 	"github.com/thingfu/hub/api"
 	"github.com/thingfu/hub/container"
-	"github.com/gorilla/mux"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -79,7 +79,8 @@ func (w WebApplication) initializeRoutes() *mux.Router {
 	reg(r, "/api/things", w.getThings)
 	reg(r, "/api/things/types", w.getThingTypes)
 	reg(r, "/api/thing/{id}", w.getThing)
-	reg(r, "/api/thing/{id}/events/{limit}", w.getEventsForThing)
+	reg(r, "/api/thing/{id}/event/{event}", w.triggerEventForThing).Methods("POST")
+	reg(r, "/api/thing/{id}/events/{limit}", w.getEventsForThing).Methods("POST")
 	reg(r, "/api/thing/{id}/op", w.invokeThingOperation).Methods("POST")
 
 	// Events
@@ -197,8 +198,20 @@ func (app *WebApplication) getRule(w http.ResponseWriter, req *http.Request) {
 	writeJsonModel(w, model)
 }
 
-// POST http://localhost:8181/api/thing/{id}/op
+// POST http://localhost:8181/api/thing/{id}/op/{op}
 func (app *WebApplication) invokeThingOperation(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+	id := vars["id"]
+	op := vars["op"]
+
+	thing, ok := app.thingService.GetThing(id)
+	if !ok {
+		http.Error(w, "Not Found", 404)
+	}
+
+	params := make(map[string]interface{})
+	app.thingService.Actuate(&thing, op, params)
+
 	model := make(map[string]interface{})
 
 	writeJsonModel(w, model)
@@ -237,6 +250,26 @@ func (app *WebApplication) getEventsForThing(w http.ResponseWriter, req *http.Re
 	events := app.dataSource.GetThingEvents(limit, id)
 
 	writeJsonModel(w, events)
+}
+
+// POST http://localhost:8181/api/thing/{id}/event/{event}
+func (app *WebApplication) triggerEventForThing(w http.ResponseWriter, req *http.Request) {
+	/*
+	vars := mux.Vars(req)
+	id := vars["id"]
+	event := vars["event"]
+	body, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		log.Println(err)
+	}
+
+	// content := string(body)
+	thing, _ := app.thingService.GetThing(id)
+	var state map[string] interface {}
+	json.Unmarshal(body, &state)
+
+	app.thingService.Handle(thing, sensor, state)
+	*/
 }
 
 // GET http://localhost:8181/dashboard
