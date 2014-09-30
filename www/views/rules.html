@@ -43,5 +43,29 @@
         </div>
     </section><!-- /.content -->
 </aside><!-- /.right-side -->
+<script>
+    var app = angular.module("app", ['angularMoment']);
+    app.controller("controller", function($scope, $http, $interval) {
+        $scope.model = {};
+
+        function loadFeed() {
+            $http.get("/api/events/100").success(function(data, status, headers, config){
+                $scope.model.Events = data.events
+
+                var firstEvent = data.events[0]
+                $scope.model.eventsSince = firstEvent.Ts
+
+                /*
+                 TODO: Group by
+                 Today
+                 Yesterday
+                 Older
+
+                 */
+            });
+        }
+        loadFeed();
+    });
+</script>
 #{template "footer" .}#
 #{end}#

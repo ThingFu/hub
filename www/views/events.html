@@ -44,9 +44,17 @@
         function loadFeed() {
             $http.get("/api/events/100").success(function(data, status, headers, config){
                 $scope.model.Events = data.events
-                
+
                 var firstEvent = data.events[0]
                 $scope.model.eventsSince = firstEvent.Ts
+
+                /*
+                TODO: Group by
+                    Today
+                    Yesterday
+                    Older
+
+                 */
             });
         }
         loadFeed();
