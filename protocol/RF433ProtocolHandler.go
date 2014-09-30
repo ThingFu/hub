@@ -32,7 +32,7 @@ func (r *RF433Data) GetData() map[string]interface{} {
 type RF433ProtocolHandler struct {
 	factory      api.Factory
 	environment  api.Environment
-	thingService api.ThingService
+	thingManager api.ThingManager
 	config       api.ProtocolConfiguration
 }
 
@@ -108,9 +108,9 @@ func (p *RF433ProtocolHandler) handleWT450(data *RF433Data) {
 			desc := dev.Descriptor
 			if utils.TimeWithinThreshold(lastEvent, desc.EventUpdateBuffer, 5000) {
 				sensor.UpdateLastEvent(time.Now())
-				p.thingService.SaveThing(*dev)
+				p.thingManager.SaveThing(*dev)
 
-				p.thingService.Handle(dev, sensor, state)
+				p.thingManager.Handle(dev, sensor, state)
 			}
 		}()
 	}
@@ -133,7 +133,7 @@ func (p *RF433ProtocolHandler) handleCodeMatch(data *RF433Data) {
 	if ok != nil {
 		log.Println("Unknown Thing ", ser)
 	} else {
-		t := p.thingService.GetThingType(dev.Type)
+		t := p.thingManager.GetThingType(dev.Type)
 		drv := p.factory.CreateThingAdapter(t.TypeId)
 		if drv == nil {
 			log.Println("No adapter for thing type " + dev.Type)
@@ -151,9 +151,9 @@ func (p *RF433ProtocolHandler) handleCodeMatch(data *RF433Data) {
 			desc := dev.Descriptor
 			if utils.TimeWithinThreshold(lastEvent, desc.EventUpdateBuffer, 5000) {
 				sensor.UpdateLastEvent(time.Now())
-				p.thingService.SaveThing(*dev)
+				p.thingManager.SaveThing(*dev)
 
-				p.thingService.Handle(dev, sensor, state)
+				p.thingManager.Handle(dev, sensor, state)
 			}
 		}()
 	}
@@ -161,7 +161,7 @@ func (p *RF433ProtocolHandler) handleCodeMatch(data *RF433Data) {
 
 func (p *RF433ProtocolHandler) getThing(ser string) (*api.Thing, *api.Sensor, error) {
 
-	things := p.thingService.GetThings()
+	things := p.thingManager.GetThings()
 	for i, _ := range things {
 		thing := &things[i]
 		sensors := thing.Sensors
@@ -184,8 +184,8 @@ func (p *RF433ProtocolHandler) SetFactory(o api.Factory) {
 	p.factory = o
 }
 
-func (p *RF433ProtocolHandler) SetThingService(o api.ThingService) {
-	p.thingService = o
+func (p *RF433ProtocolHandler) SetThingManager(o api.ThingManager) {
+	p.thingManager = o
 }
 
 func (p *RF433ProtocolHandler) SetEnvironment(o api.Environment) {

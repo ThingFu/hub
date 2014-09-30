@@ -13,7 +13,7 @@ type ProtocolHandler interface {
 	Handle(data interface{})
 
 	SetProtocolConfiguration(ProtocolConfiguration)
-	SetThingService(ThingService)
+	SetThingManager(ThingManager)
 	SetFactory(Factory)
 	SetEnvironment(Environment)
 }

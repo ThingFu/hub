@@ -88,11 +88,11 @@ func setupCompleted() {
 func loadThings(env api.Environment) {
 	log.Println("[INFO] Finding Waldo..")
 	dataSource := container.Instance().DataSource()
-	thingService := container.Instance().ThingService()
+	thingManager := container.Instance().ThingManager()
 
 	things := dataSource.GetThings()
 	for _, thing := range things {
-		thingService.RegisterThing(thing)
+		thingManager.RegisterThing(thing)
 	}
 }
 
@@ -103,7 +103,7 @@ func loadThings(env api.Environment) {
 //
 func loadThingTypes(env api.Environment) {
 	log.Println("[INFO] Pressing the Any Key...")
-	thingService := container.Instance().ThingService()
+	thingManager := container.Instance().ThingManager()
 	home := env.GetHome()
 	root := home + "/things"
 
@@ -121,7 +121,7 @@ func loadThingTypes(env api.Environment) {
 				log.Println("error: ", err)
 			}
 			thingType.Path = strings.Replace(path, "/descriptor.json", "", -1)
-			thingService.RegisterThingType(thingType)
+			thingManager.RegisterThingType(thingType)
 		}
 		return nil
 	})

@@ -5,7 +5,7 @@ import "github.com/thingfu/hub/api"
 type ZWaveProtocolHandler struct {
 	factory      api.Factory
 	environment  api.Environment
-	thingService api.ThingService
+	thingManager api.ThingManager
 	config       api.ProtocolConfiguration
 }
 
@@ -25,8 +25,8 @@ func (p *ZWaveProtocolHandler) SetFactory(o api.Factory) {
 	p.factory = o
 }
 
-func (p *ZWaveProtocolHandler) SetThingService(o api.ThingService) {
-	p.thingService = o
+func (p *ZWaveProtocolHandler) SetThingManager(o api.ThingManager) {
+	p.thingManager = o
 }
 
 func (p *ZWaveProtocolHandler) SetEnvironment(o api.Environment) {

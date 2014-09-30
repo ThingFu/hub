@@ -5,7 +5,7 @@ import "github.com/thingfu/hub/api"
 type HttpProtocolHandler struct {
 	factory      api.Factory
 	environment  api.Environment
-	thingService api.ThingService
+	thingManager api.ThingManager
 	config       api.ProtocolConfiguration
 }
 
@@ -21,8 +21,8 @@ func (p *HttpProtocolHandler) SetFactory(o api.Factory) {
 	p.factory = o
 }
 
-func (p *HttpProtocolHandler) SetThingService(o api.ThingService) {
-	p.thingService = o
+func (p *HttpProtocolHandler) SetThingManager(o api.ThingManager) {
+	p.thingManager = o
 }
 
 func (p *HttpProtocolHandler) SetEnvironment(o api.Environment) {

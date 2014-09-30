@@ -13,7 +13,7 @@ import (
 
 type DefaultRulesService struct {
 	rules        map[string]api.Rule
-	thingService api.ThingService
+	thingManager api.ThingManager
 	factory      api.Factory
 	container    api.Container
 }
@@ -42,7 +42,7 @@ func (r DefaultRulesService) Trigger(triggerType uint8, facts *api.RuleFacts) {
 		if utils.TimeWithinThreshold(thingLastEvent, thingDescriptor.EventUpdateBuffer, 5000) {
 			thing.UpdateLastEvent(time.Now())
 
-			r.thingService.SaveThing(*thing)
+			r.thingManager.SaveThing(*thing)
 
 			for idx, rule := range r.rules {
 				targets := rule.Targets
@@ -125,8 +125,8 @@ func NewDefaultRuleService(env api.Environment) DefaultRulesService {
 	return *svc
 }
 
-func (s *DefaultRulesService) SetThingService(svc api.ThingService) {
-	s.thingService = svc
+func (s *DefaultRulesService) SetThingManager(svc api.ThingManager) {
+	s.thingManager = svc
 }
 
 func (d *DefaultRulesService) GetContainer() api.Container {
@@ -138,8 +138,8 @@ func (s *DefaultRulesService) SetContainer(c api.Container) {
 }
 
 func (s *DefaultRulesService) ValidateWiring() {
-	if s.thingService == nil {
-		log.Fatal("thingService not wired to DefaultRulesService")
+	if s.thingManager == nil {
+		log.Fatal("thingManager not wired to DefaultRulesService")
 	}
 
 	if s.factory == nil {

@@ -62,7 +62,7 @@ func (d *DefaultFactory) CreateProtocolHandler(t string, cfg api.ProtocolConfigu
 	case "sim":
 		handler = new(protocol.DelegatingSimulationProtocolHandler)
 	}
-	handler.SetThingService(d.container.ThingService())
+	handler.SetThingManager(d.container.ThingManager())
 	handler.SetProtocolConfiguration(cfg)
 	handler.SetFactory(d.container.Factory())
 

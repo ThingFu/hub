@@ -5,7 +5,7 @@ import "github.com/thingfu/hub/api"
 type EnOceanProtocolHandler struct {
 	factory      api.Factory
 	environment  api.Environment
-	thingService api.ThingService
+	thingManager api.ThingManager
 	config       api.ProtocolConfiguration
 }
 
@@ -25,8 +25,8 @@ func (p *EnOceanProtocolHandler) SetFactory(o api.Factory) {
 	p.factory = o
 }
 
-func (p *EnOceanProtocolHandler) SetThingService(o api.ThingService) {
-	p.thingService = o
+func (p *EnOceanProtocolHandler) SetThingManager(o api.ThingManager) {
+	p.thingManager = o
 }
 
 func (p *EnOceanProtocolHandler) SetEnvironment(o api.Environment) {

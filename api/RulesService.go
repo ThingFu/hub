@@ -11,6 +11,6 @@ type RulesService interface {
 	RegisterRule(Rule)
 
 	ContainerAware
-	SetThingService(ThingService)
+	SetThingManager(ThingManager)
 	SetFactory(Factory)
 }

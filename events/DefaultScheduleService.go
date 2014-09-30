@@ -13,7 +13,7 @@ import (
 type DefaultScheduleService struct {
 	ruleTicker   *time.Ticker
 	rulesService api.RulesService
-	thingService api.ThingService
+	thingManager api.ThingManager
 	container    api.Container
 }
 
@@ -34,7 +34,7 @@ func (s DefaultScheduleService) Start() {
 			select {
 			case <-s.ruleTicker.C:
 				s.rulesService.Trigger(api.TRIGGER_INTERVAL, new(api.RuleFacts))
-				s.thingService.Cycle()
+				s.thingManager.Cycle()
 
 			case <-quit:
 				s.ruleTicker.Stop()
@@ -53,8 +53,8 @@ func (d *DefaultScheduleService) ValidateWiring() {
 		log.Fatal("rulesService not wired to DefaultScheduleService")
 	}
 
-	if d.thingService == nil {
-		log.Fatal("thingService not wired to DefaultScheduleService")
+	if d.thingManager == nil {
+		log.Fatal("thingManager not wired to DefaultScheduleService")
 	}
 }
 
@@ -62,6 +62,6 @@ func (d *DefaultScheduleService) SetRulesService(s api.RulesService) {
 	d.rulesService = s
 }
 
-func (d *DefaultScheduleService) SetThingService(s api.ThingService) {
-	d.thingService = s
+func (d *DefaultScheduleService) SetThingManager(s api.ThingManager) {
+	d.thingManager = s
 }

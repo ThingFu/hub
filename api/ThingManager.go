@@ -5,7 +5,7 @@
 package api
 
 // Service for handling Things
-type ThingService interface {
+type ThingManager interface {
 	GetThing(string) (Thing, bool)
 	SaveThing(Thing)
 	GetThingType(string) ThingType

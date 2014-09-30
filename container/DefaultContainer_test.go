@@ -51,7 +51,7 @@ func TestInitializeContainer(t *testing.T) {
 		t.Fail()
 	}
 
-	if container.ThingService() == nil {
+	if container.ThingManager() == nil {
 		t.Fail()
 	}
 
@@ -74,8 +74,8 @@ func TestWiringContainer(t *testing.T) {
 		case t == "api.RulesService":
 			c.rulesService = svc.(api.RulesService)
 
-		case t == "api.ThingService":
-			c.thingService = svc.(api.ThingService)
+		case t == "api.ThingManager":
+			c.thingManager = svc.(api.ThingManager)
 
 		case t == "api.ScheduleService":
 			c.scheduleService = svc.(api.ScheduleService)
@@ -94,29 +94,29 @@ func TestWiringContainer(t *testing.T) {
 	/*
 		rulesService := c.RulesService()
 			factory := c.Factory()
-			thingService := c.ThingService()
+			thingManager := c.ThingManager()
 			env := c.Env()
 			dataSource := c.DataSource()
 			scheduleServices := c.ScheduleService()
 
 			// Wire Up Services
 			// Rules Service
-			rulesService.SetThingService(thingService)
+			rulesService.SetThingManager(thingManager)
 			rulesService.SetFactory(factory)
 
 			// Factory
 
-			// ThingService
-			thingService.SetRulesService(rulesService)
-			thingService.SetFactory(factory)
-			thingService.SetDataSource(dataSource)
+			// ThingManager
+			thingManager.SetRulesService(rulesService)
+			thingManager.SetFactory(factory)
+			thingManager.SetDataSource(dataSource)
 
 			// DataSource
 			dataSource.SetEnvironment(env)
 
 			// ScheduleService
 			scheduleServices.SetRulesService(rulesService)
-			scheduleServices.SetThingService(thingService)
+			scheduleServices.SetThingManager(thingManager)
 
 			// Protocol Handlers
 			c.protocolHandlers = make(map[string]api.ProtocolHandler)
@@ -124,7 +124,7 @@ func TestWiringContainer(t *testing.T) {
 			services := make([]api.ContainerAware, 6)
 			services[0] = rulesService
 			services[1] = factory
-			services[2] = thingService
+			services[2] = thingManager
 			services[3] = env
 			services[4] = dataSource
 			services[5] = scheduleServices

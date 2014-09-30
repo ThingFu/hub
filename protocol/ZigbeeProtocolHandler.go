@@ -5,7 +5,7 @@ import "github.com/thingfu/hub/api"
 type ZigbeeProtocolHandler struct {
 	factory      api.Factory
 	environment  api.Environment
-	thingService api.ThingService
+	thingManager api.ThingManager
 	config       api.ProtocolConfiguration
 }
 
@@ -25,8 +25,8 @@ func (p *ZigbeeProtocolHandler) SetFactory(o api.Factory) {
 	p.factory = o
 }
 
-func (p *ZigbeeProtocolHandler) SetThingService(o api.ThingService) {
-	p.thingService = o
+func (p *ZigbeeProtocolHandler) SetThingManager(o api.ThingManager) {
+	p.thingManager = o
 }
 
 func (p *ZigbeeProtocolHandler) SetEnvironment(o api.Environment) {

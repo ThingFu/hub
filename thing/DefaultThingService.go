@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-type DefaultThingService struct {
+type DefaultThingManager struct {
 	thingTypes map[string]api.ThingType
 	things     map[string]api.Thing
 
@@ -22,64 +22,64 @@ type DefaultThingService struct {
 	dataSource   api.DataSource
 }
 
-func NewThingService() *DefaultThingService {
-	svc := new(DefaultThingService)
+func NewThingManager() *DefaultThingManager {
+	svc := new(DefaultThingManager)
 	svc.thingTypes = make(map[string]api.ThingType)
 	svc.things = make(map[string]api.Thing)
 
 	return svc
 }
 
-func (s *DefaultThingService) SetDataSource(svc api.DataSource) {
+func (s *DefaultThingManager) SetDataSource(svc api.DataSource) {
 	s.dataSource = svc
 }
 
-func (s *DefaultThingService) SetRulesService(svc api.RulesService) {
+func (s *DefaultThingManager) SetRulesService(svc api.RulesService) {
 	s.rulesService = svc
 }
 
-func (s *DefaultThingService) SetFactory(o api.Factory) {
+func (s *DefaultThingManager) SetFactory(o api.Factory) {
 	s.factory = o
 }
 
-func (d *DefaultThingService) GetContainer() api.Container {
+func (d *DefaultThingManager) GetContainer() api.Container {
 	return d.container
 }
 
-func (d *DefaultThingService) SetContainer(c api.Container) {
+func (d *DefaultThingManager) SetContainer(c api.Container) {
 	d.container = c
 }
 
-func (o *DefaultThingService) GetThing(id string) (dev api.Thing, ok bool) {
+func (o *DefaultThingManager) GetThing(id string) (dev api.Thing, ok bool) {
 	dev, ok = o.things[id]
 
 	return
 }
 
-func (o *DefaultThingService) SaveThing(d api.Thing) {
+func (o *DefaultThingManager) SaveThing(d api.Thing) {
 	go o.dataSource.SaveThing(d)
 	o.things[d.GetId()] = d
 }
 
-func (o *DefaultThingService) GetThingType(id string) api.ThingType {
+func (o *DefaultThingManager) GetThingType(id string) api.ThingType {
 	return o.thingTypes[id]
 }
 
-func (o *DefaultThingService) GetThingTypes() map[string]api.ThingType {
+func (o *DefaultThingManager) GetThingTypes() map[string]api.ThingType {
 	return o.thingTypes
 }
 
-func (o *DefaultThingService) RegisterThingType(d api.ThingType) {
+func (o *DefaultThingManager) RegisterThingType(d api.ThingType) {
 	o.thingTypes[d.TypeId] = d
 }
 
-func (o *DefaultThingService) RegisterThing(d api.Thing) {
+func (o *DefaultThingManager) RegisterThing(d api.Thing) {
 	descriptor := o.GetThingType(d.Type)
 	d.Descriptor = descriptor
 	o.things[d.GetId()] = d
 }
 
-func (o *DefaultThingService) GetThings() []api.Thing {
+func (o *DefaultThingManager) GetThings() []api.Thing {
 	v := make(api.Things, len(o.things))
 
 	idx := 0
@@ -93,7 +93,7 @@ func (o *DefaultThingService) GetThings() []api.Thing {
 	return v
 }
 
-func (o *DefaultThingService) Handle(thing *api.Thing, sensor *api.Sensor, state map[string]interface{}) {
+func (o *DefaultThingManager) Handle(thing *api.Thing, sensor *api.Sensor, state map[string]interface{}) {
 	facts := new(api.RuleFacts)
 	facts.Thing = thing
 	facts.Sensor = sensor
@@ -124,14 +124,14 @@ func (o *DefaultThingService) Handle(thing *api.Thing, sensor *api.Sensor, state
 	o.rulesService.Trigger(api.TRIGGER_THING, facts)
 }
 
-func (o *DefaultThingService) Actuate(t *api.Thing, op string, params map[string]interface{}) {
+func (o *DefaultThingManager) Actuate(t *api.Thing, op string, params map[string]interface{}) {
 	drv := o.factory.CreateThingAdapter(t.Type)
 
 	appDB := o.dataSource.CreateAppDB(t)
 	drv.OnActuate(t, op, params, appDB)
 }
 
-func (o *DefaultThingService) Cycle() {
+func (o *DefaultThingManager) Cycle() {
 	for _, dev := range o.things {
 		thingType := dev.Type
 		descriptor := dev.Descriptor
@@ -150,16 +150,16 @@ func (o *DefaultThingService) Cycle() {
 	}
 }
 
-func (s *DefaultThingService) ValidateWiring() {
+func (s *DefaultThingManager) ValidateWiring() {
 	if s.rulesService == nil {
-		log.Fatal("[ERROR] rulesService not wired to DefaultThingService")
+		log.Fatal("[ERROR] rulesService not wired to DefaultThingManager")
 	}
 
 	if s.dataSource == nil {
-		log.Fatal("[ERROR] dataSource not wired to DefaultThingService")
+		log.Fatal("[ERROR] dataSource not wired to DefaultThingManager")
 	}
 
 	if s.factory == nil {
-		log.Fatal("[ERROR] factory not wired to DefaultThingService")
+		log.Fatal("[ERROR] factory not wired to DefaultThingManager")
 	}
 }

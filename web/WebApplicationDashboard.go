@@ -28,7 +28,7 @@ var funcMap = template.FuncMap{
 
 type WebApplicationDashboard struct {
 	rulesService api.RulesService
-	thingService api.ThingService
+	thingManager api.ThingManager
 	dataSource   api.DataSource
 	environment  api.Environment
 	factory      api.Factory
@@ -72,8 +72,8 @@ func (app *WebApplicationDashboard) handleThingAddNew(w http.ResponseWriter, req
 	vars := mux.Vars(req)
 	typeId := vars["typeId"]
 	if req.Method == "GET" {
-		thing := app.thingService.GetThingType(typeId)
-		thingType := app.thingService.GetThingType(typeId)
+		thing := app.thingManager.GetThingType(typeId)
+		thingType := app.thingManager.GetThingType(typeId)
 
 		model := new(webModelThingAddNew)
 		model.AddNewContent = renderContent(thing.Path+"/add.html", thingType)
@@ -146,7 +146,7 @@ func (app *WebApplicationDashboard) handleEditRules(w http.ResponseWriter, req *
 
 func (app *WebApplicationDashboard) handleThingAdd(w http.ResponseWriter, req *http.Request) {
 	var model = new(webModelThingAdd)
-	model.Things = app.thingService.GetThingTypes()
+	model.Things = app.thingManager.GetThingTypes()
 
 	w.Write(templateOutput("thing_add", model))
 }
@@ -154,7 +154,7 @@ func (app *WebApplicationDashboard) handleThingAdd(w http.ResponseWriter, req *h
 func (app *WebApplicationDashboard) handleResourceIcon(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 
-	dt := app.thingService.GetThingType(vars["thingType"])
+	dt := app.thingManager.GetThingType(vars["thingType"])
 
 	w.Header().Set("Content-Type", "image/png")
 	path := dt.Path + "/icon_128x.png"
@@ -166,7 +166,7 @@ func (app *WebApplicationDashboard) handleResourceIcon(w http.ResponseWriter, re
 func (app *WebApplicationDashboard) handleWidgetView(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 
-	dev, ok := app.thingService.GetThing(vars["thingId"])
+	dev, ok := app.thingManager.GetThing(vars["thingId"])
 	if ok {
 		dt := dev.Descriptor
 		path := dt.Path + "/view.html"
@@ -200,7 +200,7 @@ func (app *WebApplicationDashboard) handleWidgetUpdateConfiguration(w http.Respo
 	}
 
 	vars := mux.Vars(req)
-	dev, ok := app.thingService.GetThing(vars["thingId"])
+	dev, ok := app.thingManager.GetThing(vars["thingId"])
 
 	for key, value := range req.PostForm {
 		val := value[0]
@@ -221,7 +221,7 @@ func (app *WebApplicationDashboard) handleWidgetUpdateConfiguration(w http.Respo
 		}
 	}
 
-	app.thingService.SaveThing(dev)
+	app.thingManager.SaveThing(dev)
 
 	if ok {
 		w.Write(templateOutput("thing_config", dev))

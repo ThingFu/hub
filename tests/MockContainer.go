@@ -5,7 +5,7 @@ import "github.com/thingfu/hub/api"
 type MockContainer struct {
 	dataSource       api.DataSource
 	rulesService     api.RulesService
-	thingService     api.ThingService
+	thingManager     api.ThingManager
 	scheduleService  api.ScheduleService
 	environment      api.Environment
 	factory          api.Factory
@@ -28,12 +28,12 @@ func (c *MockContainer) RulesService() api.RulesService {
 	return c.rulesService
 }
 
-func (c *MockContainer) setThingService(o api.ThingService) {
-	c.thingService = o
+func (c *MockContainer) setThingManager(o api.ThingManager) {
+	c.thingManager = o
 }
 
-func (c *MockContainer) ThingService() api.ThingService {
-	return c.thingService
+func (c *MockContainer) ThingManager() api.ThingManager {
+	return c.thingManager
 }
 
 func (c *MockContainer) setEnvironment(o api.Environment) {
