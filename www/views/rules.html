@@ -44,10 +44,7 @@
         $scope.model = {};
 
         rules = []
-        $http.get("/api/rules").success(function(data, status, headers, config){
-            for (var r in data) {
-                rules.push(data[r])
-            }
+        $http.get("/api/things").success(function(data, status, headers, config){
             $scope.model.Rules = rules
         });
     });
