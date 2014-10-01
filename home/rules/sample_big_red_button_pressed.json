@@ -1,5 +1,5 @@
 {
-    "name": "Sample Rule",
+    "name": "Big Red Button Pressed",
     "description": "Sample Rule",
     "enabled": true,
     "priority": 1,
