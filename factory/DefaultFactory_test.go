@@ -1,9 +1,7 @@
 package factory
 
 import (
-	"github.com/thingfu/hub/api"
 	_ "github.com/thingfu/hub/rules/conditions"
-	"github.com/thingfu/hub/tests"
 	"testing"
 )
 
