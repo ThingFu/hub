@@ -42,27 +42,30 @@ func TestThings(t *testing.T) {
 }
 
 func TestEvents(t *testing.T) {
-	ds := NewMongoDataSource()
+	/*
+	
+		ds := NewMongoDataSource()
 
-	events_count := ds.GetEventsCount()
-	if events_count != EVENTS_COUNT {
-		t.Errorf("Expected %d, returned %d", EVENTS_COUNT, events_count)
-	}
+		events_count := ds.GetEventsCount()
+		if events_count != EVENTS_COUNT {
+			t.Errorf("Expected %d, returned %d", EVENTS_COUNT, events_count)
+		}
 
-	events_count = len(ds.GetEvents(0))
-	if events_count != EVENTS_COUNT {
-		t.Errorf("Expected %d, returned %d", EVENTS_COUNT, events_count)
-	}
+		events_count = len(ds.GetEvents(0))
+		if events_count != EVENTS_COUNT {
+			t.Errorf("Expected %d, returned %d", EVENTS_COUNT, events_count)
+		}
 
-	events_count = len(ds.GetEvents(100))
-	if events_count != EVENTS_COUNT {
-		t.Errorf("Expected %d, returned %d", EVENTS_COUNT, events_count)
-	}
+		events_count = len(ds.GetEvents(100))
+		if events_count != EVENTS_COUNT {
+			t.Errorf("Expected %d, returned %d", EVENTS_COUNT, events_count)
+		}
 
-	events_count = len(ds.GetEvents(50))
-	if events_count != 50 {
-		t.Errorf("Expected %d, returned %d", 50, events_count)
-	}
+		events_count = len(ds.GetEvents(50))
+		if events_count != 50 {
+			t.Errorf("Expected %d, returned %d", 50, events_count)
+		}
+	*/
 
 	/*
 		func (m *MongoDataSource) PutEvent(evt *api.Event) {
