@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	EVENTS_COUNT = 92
+	EVENTS_COUNT = 91
 	THINGS_COUNT = 10
 
 	THING_EVENTS_COUNT = 52
