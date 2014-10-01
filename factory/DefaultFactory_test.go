@@ -39,8 +39,9 @@ func TestFactoryConsequences(t *testing.T) {
 	}
 }
 
+/*
 func TestFactoryProtocolHandlers(t *testing.T) {
-	/*
+
 	f := new(DefaultFactory)
 	f.SetContainer(tests.NewMockContainer())
 	cfg := new(api.ProtocolConfiguration)
@@ -64,8 +65,8 @@ func TestFactoryProtocolHandlers(t *testing.T) {
 	if f.CreateConsequence("sim") == nil {
 		t.Errorf("'Simulating' Protocol Handler Expected")
 	}
-	*/
 }
+*/
 
 func TestFactoryThingAdapters(t *testing.T) {
 	f := new(DefaultFactory)
