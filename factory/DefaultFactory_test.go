@@ -66,6 +66,7 @@ func TestFactoryProtocolHandlers(t *testing.T) {
 }
 */
 
+/*
 func TestFactoryThingAdapters(t *testing.T) {
 	f := new(DefaultFactory)
 
@@ -109,3 +110,4 @@ func TestFactoryThingAdapters(t *testing.T) {
 
 	}
 }
+*/
