@@ -1,4 +1,4 @@
 language: go
 before_script:
-  - mongod --dbpath=$TRAVIS_BUILD_DIR/tests/mongo
+  - nohup mongod --dbpath=$TRAVIS_BUILD_DIR/tests/mongo &
   - sleep 15
