@@ -197,7 +197,7 @@ func (app *WebApplication) getRule(w http.ResponseWriter, req *http.Request) {
 	rule := app.rulesService.GetRule(ruleId)
 	model["id"] = rule.Id
 
-	fileContent, _ := ioutil.ReadFile(rule.Path)
+	fileContent, _ := ioutil.ReadFile(app.environment.GetHome() + "/rules/" + rule.Path)
 	stringContent := string(fileContent)
 	model["content"] = stringContent
 	model["name"] = rule.Name
