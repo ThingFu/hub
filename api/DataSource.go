@@ -6,7 +6,7 @@ package api
 
 // DataSource for Things, States and Events
 type DataSource interface {
-	PutThing(*Thing)
+	PutThing(*Thing) (Thing)
 
 	GetThingCount() int
 	GetThings() []Thing
@@ -19,6 +19,8 @@ type DataSource interface {
 	CreateAppDB(*Thing) AppDB
 
 	SaveThing(Thing)
+	DeleteThing(Thing)
+
 	PutEvent(*Event)
 	SaveState(*Thing, map[string]interface{})
 	ContainerAware

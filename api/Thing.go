@@ -16,21 +16,21 @@ import (
 
 // Representing a thing
 type Thing struct {
-	DatabaseId  bson.ObjectId `bson:"_id"`
-	Id          string        `bson:"uid"`
-	Name        string        `bson:"lbl"`
-	Group       string        `bson:"grp"`
-	Class       string        `bson:"c"`
-	Type        string        `bson:"tid"`
-	Enabled     bool          `bson:"en"`
-	Description string        `bson:"desc"`
-	LogEvents   bool          `bson:"logEvents"`
-	Descriptor  ThingType
-	LastState   map[string]interface{}    `bson:"state"`
-	Attributes  map[string]ThingAttribute `bson:"attrs"`
+	DatabaseId  bson.ObjectId 				`bson:"_id"`
+	Id          string        				`bson:"uid"`
+	Name        string        				`bson:"lbl"`
+	Group       string        				`bson:"grp"`
+	Class       string        				`bson:"c"`
+	Type        string        				`bson:"tid"`
+	Enabled     bool          				`bson:"en"`
+	Description string        				`bson:"desc"`
+	LogEvents   bool          				`bson:"logEvents"`
+	Descriptor  ThingType					`bson:",omitempty"`
+	LastState   map[string]interface{}    	`bson:"state"`
+	Attributes  map[string]ThingAttribute 	`bson:"attrs"`
 	LastEvent   time.Time
 	LastCycle   time.Time
-	Services     []ThingService `bson:"sub"`
+	Data 		map[string]interface {} 	`bson:"data"`
 	Content     string
 }
 
@@ -78,14 +78,14 @@ func (d Thing) GetAttribute(name string) ThingAttribute {
 	}
 }
 
-func (d *Thing) GetService(name string) *ThingService {
-	for i, s := range d.Services {
-		if s.Name == name {
-			return &d.Services[i]
-		}
-	}
-	return nil
-}
+//func (d *Thing) GetService(name string) *ThingService {
+//	for i, s := range d.Services {
+//		if s.Name == name {
+//			return &d.Services[i]
+//		}
+//	}
+//	return nil
+//}
 
 func (d *Thing) SaveAttribute(name string, value interface{}) error {
 	if val, ok := d.Attributes[name]; ok {

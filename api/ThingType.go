@@ -18,4 +18,14 @@ type ThingType struct {
 	Group             string
 	Operations        []ThingOperation
 	CycleTime         int
+	Services     	  []ThingService
+}
+
+func (d *ThingType) GetService(name string) *ThingService {
+	for i, s := range d.Services {
+		if s.Name == name {
+			return &d.Services[i]
+		}
+	}
+	return nil
 }

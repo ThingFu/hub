@@ -8,12 +8,16 @@ package api
 type ThingManager interface {
 	GetThing(string) (Thing, bool)
 	SaveThing(Thing)
-	GetThingType(string) ThingType
+	GetThingType(string) (ThingType, error)
 	GetThingTypes() map[string]ThingType
 	RegisterThingType(ThingType)
 	RegisterThing(Thing)
 	GetThings() []Thing
 	Handle(*Thing, *ThingService, map[string]interface{})
+	CreateThing(*Thing)
+	RemoveThing(Thing)
+
+	LoadThings()
 
 	Cycle()
 	Actuate(t *Thing, op string, params map[string]interface{})

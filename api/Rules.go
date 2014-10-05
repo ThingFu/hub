@@ -26,12 +26,12 @@ type Rule struct {
 	Description string
 	Enabled     bool
 	Priority    byte
+	Async       bool
+	Buffer      int
+	LastRun     time.Time
 	Targets     []string
 	When        []RuleWhen
 	Then        []RuleThen
-	LastRun     time.Time
-	Async       bool
-	Buffer      int
 }
 
 type RuleFacts struct {
@@ -46,9 +46,9 @@ type RuleThen struct {
 }
 
 type RuleWhen struct {
-	Target  string
-	Trigger string
-	Service  string
+	Target	string
+	Service	string
+	Event	string
 }
 
 type Consequence interface {
