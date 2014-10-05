@@ -8,7 +8,10 @@
     </table>
 </div>
 <script>
-    Controller = function($scope, $http, $things, $thingId) {
-        $scope.model = {};
-    }
+    var app = angular.module("app", []);
+    app.controller("controller", function($scope, $http) {
+        $scope.model = {
+            "type": {{.TypeId}}
+        };
+    });
 </script>

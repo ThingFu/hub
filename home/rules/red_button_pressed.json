@@ -3,16 +3,17 @@
     "description": "Sample Rule",
     "enabled": true,
     "priority": 1,
+    "async": true,
     "targets": [
-        "7820592"
+        "redBtn"
     ],
     "when": [
         {
-            "target": "7820592",
-            "trigger": "sense"
+            "target": "redBtn",
+            "service": "press",
+            "event": "triggered"
         }
     ],
-    "async": true,
     "then": [
         {
             "do": "sendmail",

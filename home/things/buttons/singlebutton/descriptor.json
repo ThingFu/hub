@@ -8,20 +8,7 @@
     "vendor": "unknown",
     "model": "unknown",
     "logEvents": true,
-    "attributes": [
-        {
-            "name": "code",
-            "type": "string",
-            "config": true,
-            "required": true,
-            "default": ""
-        },
-        {
-            "name": "host",
-            "type": "string",
-            "config": true,
-            "required": true,
-            "default": "http://localhost"
-        }
+    "services": [
+        { "name": "press", "label": "Red Button" }
     ]
 }

@@ -7,5 +7,14 @@
     "event_update_buffer": 3000,
     "vendor": "unknown",
     "model": "unknown",
-    "logEvents": true
+    "logEvents": true,
+    "services": [
+        { "name" : "press_a", "lbl" : "Button A" },
+        { "name" : "press_b", "lbl" : "Button B" },
+        { "name" : "press_c", "lbl" : "Button C" },
+        { "name" : "press_d", "lbl" : "Button D" }
+    ]
 }
+
+
+
