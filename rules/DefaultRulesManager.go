@@ -46,6 +46,7 @@ func (r DefaultRulesManager) Trigger(triggerType uint8, facts *api.RuleFacts) {
 
 			for idx, rule := range r.rules {
 				targets := rule.Targets
+
 				if len(targets) > 0 {
 					contains := false
 					for _, t := range targets {
@@ -99,7 +100,7 @@ func (r DefaultRulesManager) Trigger(triggerType uint8, facts *api.RuleFacts) {
 }
 
 func (r DefaultRulesManager) evaluateWhen(when *api.RuleWhen, facts *api.RuleFacts, rule *api.Rule) bool {
-	condition := r.factory.CreateCondition(when.Trigger)
+	condition := r.factory.CreateCondition(when.Event)
 
 	return condition.Evaluate(when, facts, rule)
 }

@@ -88,13 +88,9 @@ func setupCompleted() {
 //
 func loadThings(env api.Environment) {
 	log.Println("[INFO] Finding Waldo..")
-	dataSource := container.Instance().DataSource()
-	thingManager := container.Instance().ThingManager()
 
-	things := dataSource.GetThings()
-	for _, thing := range things {
-		thingManager.RegisterThing(thing)
-	}
+	thingManager := container.Instance().ThingManager()
+	thingManager.LoadThings()
 }
 
 // Scans for defintions under home's /things subdirectory

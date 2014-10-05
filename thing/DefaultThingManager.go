@@ -10,6 +10,7 @@ import (
 	"log"
 	"sort"
 	"time"
+	"fmt"
 )
 
 type DefaultThingManager struct {
@@ -61,8 +62,18 @@ func (o *DefaultThingManager) SaveThing(d api.Thing) {
 	o.things[d.GetId()] = d
 }
 
-func (o *DefaultThingManager) GetThingType(id string) api.ThingType {
-	return o.thingTypes[id]
+func (o *DefaultThingManager) RemoveThing(t api.Thing) {
+	o.dataSource.DeleteThing(t)
+	delete(o.things, t.Id)
+}
+
+func (o *DefaultThingManager) GetThingType(id string) (t api.ThingType, e error) {
+	t = o.thingTypes[id]
+
+	if &t == nil {
+		e = fmt.Errorf("Unknown type %s", id)
+	}
+	return
 }
 
 func (o *DefaultThingManager) GetThingTypes() map[string]api.ThingType {
@@ -74,7 +85,11 @@ func (o *DefaultThingManager) RegisterThingType(d api.ThingType) {
 }
 
 func (o *DefaultThingManager) RegisterThing(d api.Thing) {
-	descriptor := o.GetThingType(d.Type)
+	descriptor, err := o.GetThingType(d.Type)
+	if err != nil {
+		log.Println(err)
+	}
+
 	d.Descriptor = descriptor
 	o.things[d.GetId()] = d
 }
@@ -91,6 +106,19 @@ func (o *DefaultThingManager) GetThings() []api.Thing {
 	sort.Sort(v)
 
 	return v
+}
+
+func (o *DefaultThingManager) CreateThing(t *api.Thing) {
+	n := o.dataSource.PutThing(t)
+	n.Descriptor, _ = o.GetThingType(t.Type)
+	o.things[n.Id] = n
+}
+
+func (o *DefaultThingManager) LoadThings() {
+	things := o.dataSource.GetThings()
+	for _, thing := range things {
+		o.RegisterThing(thing)
+	}
 }
 
 func (o *DefaultThingManager) Handle(thing *api.Thing, service *api.ThingService, state map[string]interface{}) {

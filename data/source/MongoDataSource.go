@@ -57,10 +57,19 @@ func (m *MongoDataSource) GetThings() []api.Thing {
 	return results
 }
 
-func (m *MongoDataSource) PutThing(dev *api.Thing) {
-	go func() {
-		// TODO Asynchronous Operation
-	}()
+func (m *MongoDataSource) PutThing(t *api.Thing) (api.Thing){
+	session := m.session.Copy()
+	defer session.Close()
+
+	c := session.DB("devices").C("devices")
+	t.DatabaseId = bson.NewObjectId()
+	t.Descriptor = api.ThingType{}
+	err := c.Insert(&t)
+	if err != nil {
+		log.Println(err)
+	}
+
+	return *t
 }
 
 func (m *MongoDataSource) GetThingEvents(limit int, id string) []api.Event {
@@ -119,6 +128,20 @@ func (m *MongoDataSource) SaveThing(dev api.Thing) {
 	c := session.DB("devices").C("devices")
 
 	c.UpdateId(dev.GetDatabaseId(), &dev)
+}
+
+func (m *MongoDataSource) DeleteThing(dev api.Thing) {
+	fmt.Println("Delete Thing")
+	session := m.session.Copy()
+	defer session.Close()
+
+	c := session.DB("devices").C("devices")
+	fmt.Println(dev)
+	err := c.RemoveId(dev.DatabaseId)
+	if err != nil {
+		fmt.Println("error deleting: ")
+		fmt.Println(err)
+	}
 }
 
 func (m *MongoDataSource) PutEvent(evt *api.Event) {

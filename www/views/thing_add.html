@@ -13,10 +13,13 @@
 
     <section class="content">
         <div class="col-md-12">
-            <div class="form-group">
-                <label>Filter Things</label>
-                <input type="text" ng-model="query" class="form-control" type="text" />
+            <div class="callout callout-info">
+                <div class="form-group">
+                    <label>Filter Things</label>
+                    <input type="text" ng-model="query" class="form-control" type="text" />
+                </div>
             </div>
+
             <table class="table table-striped table-bordered table-hover" id="datatable">
                 <thead>
                     <tr>
@@ -34,7 +37,7 @@
                         <th>
                             <a href="/thing/add/{{Thing.tid}}">
                                 <button type="button" class="btn btn-info btn-gradient">
-                                    <span class="glyphicons glyphicons-user"></span>
+                                    <span class="fa fa-plus-circle"></span>
                                 </button>
                             </a>
                         </th>
@@ -46,7 +49,7 @@
 </aside>
 <script>
     var app = angular.module("app", []);
-    app.controller("controller", function($scope, $http, $interval) {
+    app.controller("controller", function($scope, $http) {
         $scope.model = {};
 
         things = []

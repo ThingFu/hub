@@ -1,8 +1,8 @@
 #{define "thing_addnew"}#
 #{template "header" .}#
-<aside class="right-side" ng-controller="ctrlmain">
+<aside class="right-side">
     <section class="content-header">
-        <h1>Add #{frm.thing_name}#</h1>
+        <h1>Add #{.type.Name}#</h1>
         <ol class="breadcrumb">
             <li>
                 <a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></a>
@@ -12,15 +12,16 @@
         </ol>
     </section>
 
-    <section class="content">
+    <section class="content" ng-app="app">
+        <script>
+            var app = angular.module("app", []);
+            app.factory("HttpProxy", ["$http", HttpProxy])
+            app.factory("ThingManager", ["$http", ThingManager])
+        </script>
         <div class="col-md-12">
             <div class="box box-primary">
-                <div class="box-header">
-                    <h3 class="box-title">Configure Name - (Type)</h3>
-                </div>
-                #{.AddNewContent}#
+                #{.content}#
             </div>
-
         </div>
     </section>
 </aside>

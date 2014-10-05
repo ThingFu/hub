@@ -1,11 +1,9 @@
 #{define "rule_edit"}#
 #{template "header" .}#
-<!-- Right side column. Contains the navbar and content of the page -->
 <style>
     .ace_editor { height: 200px; }
 </style>
 <aside class="right-side" ng-app="app" ng-controller="controller">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>Edit <span ng-bind="model.name"></span></h1>
         <ol class="breadcrumb">
@@ -27,7 +25,7 @@
                 <input type="text" class="form-control" type="text" value="{{model.path}}" />
             </div>
             <div class="box-footer">
-                <button type="submit" class="btn btn-primary">Save Rule</button>
+                <button type="submit" class="btn btn-primary" ng-click="saveRule()">Save Rule</button>
             </div>
         </div>
         <div class="col-md-8">
@@ -54,12 +52,16 @@
         absUrl = $location.absUrl()
         ruleId = absUrl.substring(absUrl.lastIndexOf("/")+1, absUrl.length);
         $scope.aceLoaded = function(_editor) {
-            _editor.setReadOnly(true);
+            _editor.setReadOnly(false);
         };
 
         $scope.aceChanged = function(e) {
 
         };
+
+        $scope.saveRule = function() {
+            alert("Save Rule")
+        }
 
         $http.get("/api/rule/" + ruleId).success(function(data, status, headers, config){
             $scope.model.content = data.content

@@ -44,10 +44,10 @@ func (app *WebApplicationDashboard) Setup(r *mux.Router) {
 	// r.HandleFunc("/widget/{thingId}/configure", app.handleWidgetConfigure).Methods("GET")
 	r.HandleFunc("/widget/{thingId}/configure", app.handleWidgetUpdateConfiguration).Methods("POST")
 	r.HandleFunc("/widget/{thingId}/view", app.handleWidgetView)
-	r.HandleFunc("/thing/{thingType}/resource/icon/128x", app.handleResourceIcon)
+//	r.HandleFunc("/thing/{thingType}/resource/icon/128x", app.handleResourceIcon)
 	r.HandleFunc("/thing/add", app.handleThingAdd)
-	r.HandleFunc("/thing/add/{typeId}", app.handleThingAddNew).Methods("POST", "GET")
-	r.HandleFunc("/things", app.handleThings)
+//	r.HandleFunc("/thing/add/{typeId}", app.handleThingAddNew).Methods("POST", "GET")
+//	r.HandleFunc("/things", app.handleThings)
 	r.HandleFunc("/sysinfo", app.handleSysInfo)
 	r.HandleFunc("/about", app.handleAbout)
 }
@@ -68,58 +68,58 @@ func renderContent(path string, model interface{}) template.HTML {
 	return template.HTML(htmlContent)
 }
 
-func (app *WebApplicationDashboard) handleThingAddNew(w http.ResponseWriter, req *http.Request) {
-	vars := mux.Vars(req)
-	typeId := vars["typeId"]
-	if req.Method == "GET" {
-		thing := app.thingManager.GetThingType(typeId)
-		thingType := app.thingManager.GetThingType(typeId)
-
-		model := new(webModelThingAddNew)
-		model.AddNewContent = renderContent(thing.Path+"/add.html", thingType)
-
-		w.Write(templateOutput("thing_addnew", model))
-	} else if req.Method == "POST" {
-		//
-		body, _ := ioutil.ReadAll(req.Body)
-		content := string(body)
-
-		/*
-			{
-				"_id" : ObjectId("540f33e9ffe79223bcb81706"),
-				"uid" : "d3cc6575",
-				"c" : "motion",
-				"tid" : "433mhz-motion",
-				"lbl" : "Motion@Main Door",
-				"grp" : "home",
-				"prot" : "433MHZ",
-				"sub" : [
-					{ "n" : "Sensor", "lbl" : "s", "code" : "5592405" }
-				]
-			}
-
-			{
-				"_id" : ObjectId("5410894f11b9eeb306b151fa"),
-				"uid" : "b7d51d00",
-				"c" : "button",
-				"tid" : "433mhz-4buttons",
-				"lbl" : "Test Button",
-				"grp" : "home",
-				"prot" : "433MHZ",
-				"sub" : [
-					{ "n" : "button_a", "lbl" : "Button A", "code" : "5592512" },
-					{ "n" : "button_b", "lbl" : "Button B", "code" : "5592368" },
-					{ "n" : "button_c", "lbl" : "Button C", "code" : "5592332" },
-					{ "n" : "button_d", "lbl" : "Button D", "code" : "5592323" }
-				]
-			}
-		*/
-
-		fmt.Println(content)
-		fmt.Println("POST!!")
-	}
-
-}
+//func (app *WebApplicationDashboard) handleThingAddNew(w http.ResponseWriter, req *http.Request) {
+//	vars := mux.Vars(req)
+//	typeId := vars["typeId"]
+//	if req.Method == "GET" {
+//		thing := app.thingManager.GetThingType(typeId)
+//		thingType := app.thingManager.GetThingType(typeId)
+//
+//		model := new(webModelThingAddNew)
+//		model.AddNewContent = renderContent(thing.Path+"/add.html", thingType)
+//
+//		w.Write(templateOutput("thing_addnew", model))
+//	} else if req.Method == "POST" {
+//		//
+//		body, _ := ioutil.ReadAll(req.Body)
+//		content := string(body)
+//
+//		/*
+//			{
+//				"_id" : ObjectId("540f33e9ffe79223bcb81706"),
+//				"uid" : "d3cc6575",
+//				"c" : "motion",
+//				"tid" : "433mhz-motion",
+//				"lbl" : "Motion@Main Door",
+//				"grp" : "home",
+//				"prot" : "433MHZ",
+//				"sub" : [
+//					{ "n" : "Sensor", "lbl" : "s", "code" : "5592405" }
+//				]
+//			}
+//
+//			{
+//				"_id" : ObjectId("5410894f11b9eeb306b151fa"),
+//				"uid" : "b7d51d00",
+//				"c" : "button",
+//				"tid" : "433mhz-4buttons",
+//				"lbl" : "Test Button",
+//				"grp" : "home",
+//				"prot" : "433MHZ",
+//				"sub" : [
+//					{ "n" : "button_a", "lbl" : "Button A", "code" : "5592512" },
+//					{ "n" : "button_b", "lbl" : "Button B", "code" : "5592368" },
+//					{ "n" : "button_c", "lbl" : "Button C", "code" : "5592332" },
+//					{ "n" : "button_d", "lbl" : "Button D", "code" : "5592323" }
+//				]
+//			}
+//		*/
+//
+//		fmt.Println(content)
+//		fmt.Println("POST!!")
+//	}
+//
+//}
 
 func (app *WebApplicationDashboard) handleAbout(w http.ResponseWriter, req *http.Request) {
 	w.Write(templateOutput("about", nil))
@@ -151,17 +151,17 @@ func (app *WebApplicationDashboard) handleThingAdd(w http.ResponseWriter, req *h
 	w.Write(templateOutput("thing_add", model))
 }
 
-func (app *WebApplicationDashboard) handleResourceIcon(w http.ResponseWriter, req *http.Request) {
-	vars := mux.Vars(req)
-
-	dt := app.thingManager.GetThingType(vars["thingType"])
-
-	w.Header().Set("Content-Type", "image/png")
-	path := dt.Path + "/icon_128x.png"
-
-	b, _ := ioutil.ReadFile(path)
-	w.Write(b)
-}
+//func (app *WebApplicationDashboard) handleResourceIcon(w http.ResponseWriter, req *http.Request) {
+//	vars := mux.Vars(req)
+//
+//	dt := app.thingManager.GetThingType(vars["thingType"])
+//
+//	w.Header().Set("Content-Type", "image/png")
+//	path := dt.Path + "/icon_128x.png"
+//
+//	b, _ := ioutil.ReadFile(path)
+//	w.Write(b)
+//}
 
 func (app *WebApplicationDashboard) handleWidgetView(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)

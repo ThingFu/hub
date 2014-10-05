@@ -17,6 +17,8 @@ import (
 	"net/http"
 	"runtime"
 	"strconv"
+	"strings"
+	"github.com/thingfu/hub/utils"
 )
 
 type WebApplication struct {
@@ -44,7 +46,6 @@ func NewWebApplication(port uint16) {
 
 	r := w.initializeRoutes()
 	portStr := fmt.Sprintf("%d", w.port)
-	// portStr := strconv.Itoa(w.port)
 
 	http.Handle("/", r)
 	log.Println("[INFO] Start Node WebServer @ " + portStr)
@@ -57,47 +58,100 @@ func NewWebApplication(port uint16) {
 func (w WebApplication) initializeRoutes() *mux.Router {
 	r := mux.NewRouter()
 
+	// Services
+	r.HandleFunc("/api/ui/proxy", w.getProxyHttp).Methods("POST")
+	r.HandleFunc("/api/sim/event/{prot}", w.simulateProtocol).Methods("POST")
+
 	// PAGES
-	reg(r, "/dashboard", w.showDashboard)
-	reg(r, "/rules", w.showRules)
-	reg(r, "/rule/{id}", w.showRule)
-	reg(r, "/settings", w.showSettings)
-	reg(r, "/events", w.showEvents)
-	reg(r, "/thing/{id}/view", w.showThingView)
-	reg(r, "/thing/{id}/configure", w.showThingConfigure)
-	reg(r, "/thing/{type}/resource/img/{img}", w.showImage)
-	reg(r, "/thing/add/{type}", w.showAddThing)
-	reg(r, "/things/add", w.showThingsToAdd)
-	reg(r, "/sysinfo", w.showSysInfo)
-	reg(r, "/about", w.showAbout)
+	r.HandleFunc("/dashboard", w.showDashboard)
+	r.HandleFunc("/rules", w.showRules)
+	r.HandleFunc("/rule/{id}", w.showRule)
+	r.HandleFunc("/settings", w.showSettings)
+	r.HandleFunc("/events", w.showEvents)
+	r.HandleFunc("/thing/{id}/view", w.showThingView)
+	r.HandleFunc("/thing/{id}/configure", w.showThingConfigure)
+	r.HandleFunc("/thing/{type}/resource/img/{img}", w.showImage)
+	r.HandleFunc("/thing/add/{type}", w.showAddThing)
+	r.HandleFunc("/things/add", w.showThingsToAdd)
+	r.HandleFunc("/sysinfo", w.showSysInfo)
+	r.HandleFunc("/about", w.showAbout)
 
 	// UI API
-	reg(r, "/api/ui/dashboard", w.getDashboardState)
-	reg(r, "/api/ui/thing/{id}/view", w.viewThing)
+	r.HandleFunc("/api/ui/dashboard", w.getDashboardState)
+	r.HandleFunc("/api/ui/thing/{id}/view", w.viewThing)
 
 	// API
-	reg(r, "/api/things", w.getThings)
-	reg(r, "/api/things/types", w.getThingTypes)
-	reg(r, "/api/thing/{id}", w.getThing)
-	reg(r, "/api/thing/{id}/event/{svc}", w.triggerEventForThing).Methods("POST")
-	reg(r, "/api/thing/{id}/events/{limit}", w.getEventsForThing).Methods("POST")
-	reg(r, "/api/thing/{id}/op", w.invokeThingOperation).Methods("POST")
-	reg(r, "/api/settings", w.getSettings)
+	r.HandleFunc("/api/thing", w.addThing).Methods("POST")
+	r.HandleFunc("/api/thing/{id}", w.getThing).Methods("GET")
+	r.HandleFunc("/api/thing/{id}", w.deleteThing).Methods("DELETE")
+
+	r.HandleFunc("/api/thing/{id}/event/{svc}", w.triggerEventForThing).Methods("POST")
+	r.HandleFunc("/api/thing/{id}/events/{limit}", w.getEventsForThing).Methods("POST")
+	r.HandleFunc("/api/thing/{id}/op", w.invokeThingOperation).Methods("POST")
+
+	r.HandleFunc("/api/things", w.getThings).Methods("GET")
+	r.HandleFunc("/api/things/types", w.getThingTypes).Methods("GET")
+	r.HandleFunc("/api/settings", w.getSettings).Methods("GET")
 
 	// Events
-	reg(r, "/api/events/{limit}", w.getEvents)
-	reg(r, "/api/event", w.addEvent).Methods("PUT")
+	r.HandleFunc("/api/events/{limit}", w.getEvents).Methods("GET")
+	r.HandleFunc("/api/event", w.addEvent).Methods("PUT")
 
 	// Rules
-	reg(r, "/api/rules", w.getRules)
-	reg(r, "/api/rule/{id}", w.getRule).Methods("GET")
-	reg(r, "/api/rule/{id}", w.saveRule).Methods("POST")
-	reg(r, "/api/rule/{id}", w.deleteRule).Methods("DELETE")
-	reg(r, "/api/rule/{id}", w.addRule).Methods("PUT")
+	r.HandleFunc("/api/rule/{id}", w.saveRule).Methods("POST")
+	r.HandleFunc("/api/rule/{id}", w.deleteRule).Methods("DELETE")
+	r.HandleFunc("/api/rule/{id}", w.addRule).Methods("PUT")
+	r.HandleFunc("/api/rule/{id}", w.getRule).Methods("GET")
+	r.HandleFunc("/api/rules", w.getRules).Methods("GET")
 
 	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("./www/static/"))))
 
 	return r
+}
+
+
+// POST /api/sim/event/{prot}
+func (app *WebApplication) simulateProtocol(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+	protocol := vars["prot"]
+	body, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		log.Println(err)
+	}
+
+	content := string(body)
+	handler := app.container.ProtocolHandler(protocol)
+
+	handler.Handle(content)
+}
+
+// POST http://localhost:8181/services/proxyhttp
+func (app *WebApplication) getProxyHttp(w http.ResponseWriter, req *http.Request) {
+	body, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		log.Println(err)
+	}
+	var payload map[string]interface{}
+	if err := json.Unmarshal(body, &payload); err != nil {
+		panic(err)
+	}
+
+	url := payload["url"].(string)
+	method := payload["method"]
+
+	model := make(map[string]interface{})
+	if method == "GET" {
+		resp, err := http.Get(url)
+		if err != nil {
+			// handle error
+		}
+		defer resp.Body.Close()
+		body, err := ioutil.ReadAll(resp.Body)
+
+		model["content"] = string(body)
+
+		writeJsonModel(w, model)
+	}
 }
 
 // GET http://localhost:8181/api/ui/dashboard
@@ -230,6 +284,64 @@ func (app *WebApplication) getThings(w http.ResponseWriter, req *http.Request) {
 	writeJsonModel(w, app.thingManager.GetThings())
 }
 
+// POST http://localhost:8181/api/thing
+func (app *WebApplication) addThing(w http.ResponseWriter, req *http.Request) {
+	body, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		log.Println(err)
+	}
+	var payload map[string]interface{}
+	if err := json.Unmarshal(body, &payload); err != nil {
+		panic(err)
+	}
+
+	// Create Thing Instance
+	t := new (api.Thing)
+
+	// Create ID if not assigned
+	if payload["Id"] != nil {
+		t.Id = payload["Id"].(string)
+	} else {
+		t.Id = utils.RandomString(7)
+	}
+
+	t.Name = payload["name"].(string)
+	t.Description = payload["description"].(string)
+	t.Group = "home"
+	t.Type = payload["type"].(string)
+	t.LogEvents = true
+	t.Enabled = true
+
+	data := make(map[string]interface {})
+	codes := make([]map[string]interface {}, 0)
+	for k, v := range payload {
+		if strings.HasPrefix(k, "svc_") {
+			c := make(map[string]interface {})
+			c["n"] = strings.Replace(k, "svc_code_", "", -1)
+			c["code"] = v
+
+			codes = append(codes, c)
+		}
+	}
+	data["codes"] = codes
+
+	t.Data = data
+
+	app.thingManager.CreateThing(t)
+	/*
+	DatabaseId
+	Descriptor  <Auto>
+	Attributes  <attrib:name>
+
+	 */
+
+	// Check with Protocol Handler if
+	// this instance already exists and return
+	// error if exists
+
+	//
+}
+
 // GET http://localhost:8181/api/things/types
 func (app *WebApplication) getThingTypes(w http.ResponseWriter, req *http.Request) {
 	writeJsonModel(w, app.thingManager.GetThingTypes())
@@ -247,6 +359,17 @@ func (app *WebApplication) getThing(w http.ResponseWriter, req *http.Request) {
 	}
 
 	writeJsonModel(w, model)
+}
+
+// DELETE http://localhost:8181/api/thing/{id}
+func (app *WebApplication) deleteThing(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+	id := vars["id"]
+
+	t, _ := app.thingManager.GetThing(id)
+	app.thingManager.RemoveThing(t)
+
+	writeJsonModel(w, nil)
 }
 
 // GET http://localhost:8181/api/thing/{id}/events/{limit}
@@ -272,7 +395,10 @@ func (app *WebApplication) triggerEventForThing(w http.ResponseWriter, req *http
 
 	// content := string(body)
 	thing, _ := app.thingManager.GetThing(id)
-	service := thing.GetService(svc)
+	// service := thing.GetService(svc)
+	thingType, _ := app.thingManager.GetThingType(thing.Type)
+	service := thingType.GetService(svc)
+
 	var state map[string] interface {}
 	json.Unmarshal(body, &state)
 
@@ -336,11 +462,28 @@ func (app *WebApplication) showThingConfigure(w http.ResponseWriter, req *http.R
 
 // GET http://localhost:8181/thing/add/{type}
 func (app *WebApplication) showAddThing(w http.ResponseWriter, req *http.Request) {
-	w.Write(templateOutput("thing_addnew", nil))
+	vars := mux.Vars(req)
+	thingType := vars["type"]
+
+	t, err := app.thingManager.GetThingType(thingType)
+	if err != nil {
+		log.Println(err)
+	}
+
+	model := make(map[string] interface {})
+	model["type"] = t
+	model["content"] = renderContent(t.Path + "/add.html", t)
+
+	w.Write(templateOutput("thing_addnew", model))
 }
 
 // GET http://localhost:8181/things/add
 func (app *WebApplication) showThingsToAdd(w http.ResponseWriter, req *http.Request) {
+	_, err := app.thingManager.GetThingType("bleh")
+	if err != nil {
+		log.Println(err)
+	}
+
 	w.Write(templateOutput("thing_add", nil))
 }
 
@@ -360,19 +503,16 @@ func (app *WebApplication) showImage(w http.ResponseWriter, req *http.Request) {
 	thingType := vars["type"]
 	img := vars["img"]
 
-	dt := app.thingManager.GetThingType(thingType)
+	dt, err := app.thingManager.GetThingType(thingType)
+	if err != nil {
+		log.Println(err)
+	}
 
 	w.Header().Set("Content-Type", "image")
 	path := dt.Path + "/" + img
 
 	b, _ := ioutil.ReadFile(path)
 	w.Write(b)
-}
-
-func reg(r *mux.Router, url string, fn func(http.ResponseWriter, *http.Request)) *mux.Router {
-	r.HandleFunc(url, fn)
-
-	return r
 }
 
 // PACKAGE FUNCTIONS

@@ -26,7 +26,7 @@ func (d *DefaultFactory) SetContainer(c api.Container) {
 
 func (d *DefaultFactory) CreateCondition(t string) api.Condition {
 	var condition api.Condition
-	if t == "sense" {
+	if t == "triggered" {
 		condition = new(conditions.Sense)
 	} else if t == "hourly" {
 		condition = new(conditions.Hourly)

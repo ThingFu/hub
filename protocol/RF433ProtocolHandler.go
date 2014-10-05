@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"reflect"
 )
 
 // Data given by the MCU
@@ -129,11 +130,14 @@ func (p *RF433ProtocolHandler) handleCodeMatch(data *RF433Data) {
 	}
 
 	dev, service, ok := p.getThing(ser)
-
 	if ok != nil {
 		log.Println("Unknown Thing ", ser)
 	} else {
-		t := p.thingManager.GetThingType(dev.Type)
+		t, err := p.thingManager.GetThingType(dev.Type)
+		if err != nil {
+			log.Println(err)
+		}
+
 		drv := p.factory.CreateThingAdapter(t.TypeId)
 		if drv == nil {
 			log.Println("No adapter for thing type " + dev.Type)
@@ -160,19 +164,46 @@ func (p *RF433ProtocolHandler) handleCodeMatch(data *RF433Data) {
 }
 
 func (p *RF433ProtocolHandler) getThing(ser string) (*api.Thing, *api.ThingService, error) {
-
 	things := p.thingManager.GetThings()
+
 	for i, _ := range things {
 		thing := &things[i]
-		services := thing.Services
 		desc := thing.Descriptor
-
 		if desc.Protocol == "433MHZ" {
-			for j, _ := range services {
-				service := &services[j]
 
-				if service.Code == ser {
-					return thing, service, nil
+			if thing.Data != nil {
+				c := thing.Data["codes"]
+
+				if c != nil {
+					if reflect.TypeOf(c).String() == "[]map[string]interface {}" {
+						codeList := c.([]map[string]interface {})
+						for _, item := range codeList {
+							i := item
+							code := i["code"]
+							name := i["n"].(string)
+
+							if code == ser {
+								thingType, _ := p.thingManager.GetThingType(thing.Type)
+								service := thingType.GetService(name)
+
+								return thing, service, nil
+							}
+						}
+					} else {
+						codeList := c.([]interface {})
+						for _, item := range codeList {
+							i := item.(map[string]interface {})
+							code := i["code"]
+							name := i["n"].(string)
+
+							if code == ser {
+								thingType, _ := p.thingManager.GetThingType(thing.Type)
+								service := thingType.GetService(name)
+
+								return thing, service, nil
+							}
+						}
+					}
 				}
 			}
 		}
