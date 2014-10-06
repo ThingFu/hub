@@ -215,7 +215,7 @@ func (app *WebApplicationDashboard) handleWidgetUpdateConfiguration(w http.Respo
 			}
 		} else if strings.HasPrefix(key, "attrib.") {
 			key = strings.Replace(key, "attrib.", "", -1)
-			dev.SaveAttribute(key, val)
+			dev.SaveAttributeValue(key, val)
 		} else {
 			log.Println("Unknown form value " + key)
 		}

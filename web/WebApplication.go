@@ -311,20 +311,17 @@ func (app *WebApplication) addThing(w http.ResponseWriter, req *http.Request) {
 	t.LogEvents = true
 	t.Enabled = true
 
-	data := make(map[string]interface{})
-	codes := make([]map[string]interface{}, 0)
+	// Handle Atrributes
+	attrs := make(map[string]api.ThingAttributeValue, 0)
 	for k, v := range payload {
-		if strings.HasPrefix(k, "svc_") {
-			c := make(map[string]interface{})
-			c["n"] = strings.Replace(k, "svc_code_", "", -1)
-			c["code"] = v
+		if strings.HasPrefix(k, "attrib_") {
+			n := strings.Replace(k, "attrib_", "", -1)
+			attr := api.NewThingAttributeValue(n, v)
 
-			codes = append(codes, c)
+			attrs[n] = attr
 		}
 	}
-	data["codes"] = codes
-
-	t.Data = data
+	t.Attributes = attrs
 
 	app.thingManager.CreateThing(t)
 	/*

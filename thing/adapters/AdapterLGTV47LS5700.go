@@ -27,9 +27,9 @@ func (tv *AdapterLGTV47LS5700) OnSense(dev *api.Thing, data api.ThingData) (stat
 }
 
 func (tv *AdapterLGTV47LS5700) initSession(dev *api.Thing) {
-	host := dev.GetAttribute("host").Value.(string)
+	host := dev.GetAttributeValue("host").Value.(string)
 	url := "http://" + host + ":8080/roap/api/auth"
-	pairingKey := dev.GetAttribute("pairingKey").Value.(string)
+	pairingKey := dev.GetAttributeValue("pairingKey").Value.(string)
 	payload := "<auth><type>AuthReq</type><value>" + pairingKey + "</value></auth>"
 
 	client := &http.Client{}

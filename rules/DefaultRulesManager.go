@@ -38,8 +38,8 @@ func (r DefaultRulesManager) Trigger(triggerType uint8, facts *api.RuleFacts) {
 		thingDescriptor := thing.Descriptor
 		target := facts.Target
 
-		thingLastEvent := thing.LastEvent
-		if utils.TimeWithinThreshold(thingLastEvent, thingDescriptor.EventUpdateBuffer, 5000) {
+		lastEvent := thing.LastEvent
+		if utils.TimeWithinThreshold(lastEvent, thingDescriptor.EventUpdateBuffer, 5000) {
 			thing.UpdateLastEvent(time.Now())
 
 			r.thingManager.SaveThing(*thing)

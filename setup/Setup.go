@@ -115,6 +115,7 @@ func loadThingTypes(env api.Environment) {
 			err = json.Unmarshal(content, &thingType)
 
 			if err != nil {
+				fmt.Println(path)
 				log.Println("error: ", err)
 			}
 			thingType.Path = strings.Replace(path, "/descriptor.json", "", -1)

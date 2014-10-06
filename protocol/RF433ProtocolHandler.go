@@ -6,7 +6,6 @@ import (
 	"github.com/thingfu/hub/api"
 	"github.com/thingfu/hub/utils"
 	"log"
-	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -130,6 +129,7 @@ func (p *RF433ProtocolHandler) handleCodeMatch(data *RF433Data) {
 	}
 
 	dev, service, ok := p.getThing(ser)
+
 	if ok != nil {
 		log.Println("Unknown Thing ", ser)
 	} else {
@@ -155,6 +155,7 @@ func (p *RF433ProtocolHandler) handleCodeMatch(data *RF433Data) {
 			desc := dev.Descriptor
 			if utils.TimeWithinThreshold(lastEvent, desc.EventUpdateBuffer, 5000) {
 				service.UpdateLastEvent(time.Now())
+				dev.UpdateService(service)
 				p.thingManager.SaveThing(*dev)
 
 				p.thingManager.Handle(dev, service, state)
@@ -170,42 +171,61 @@ func (p *RF433ProtocolHandler) getThing(ser string) (*api.Thing, *api.ThingServi
 		thing := &things[i]
 		desc := thing.Descriptor
 		if desc.Protocol == "433MHZ" {
+			attrs := thing.GetAttributeValues("^code_")
 
-			if thing.Data != nil {
-				c := thing.Data["codes"]
+			if len(attrs) > 0 {
+				for _, item := range attrs {
+					name := item.Name
+					code := item.Value
 
-				if c != nil {
-					if reflect.TypeOf(c).String() == "[]map[string]interface {}" {
-						codeList := c.([]map[string]interface{})
-						for _, item := range codeList {
-							i := item
-							code := i["code"]
-							name := i["n"].(string)
+					if code == ser {
+						thingType, _ := p.thingManager.GetThingType(thing.Type)
+						svc := strings.Replace(name, "code_", "", -1)
+						service := thingType.GetService(svc)
 
-							if code == ser {
-								thingType, _ := p.thingManager.GetThingType(thing.Type)
-								service := thingType.GetService(name)
+						return thing, service, nil
+					}
+				}
+			}
 
-								return thing, service, nil
+			/*
+				if thing.Data != nil {
+
+					c := thing.Data["codes"]
+
+					if c != nil {
+						if reflect.TypeOf(c).String() == "[]map[string]interface {}" {
+							codeList := c.([]map[string]interface{})
+							for _, item := range codeList {
+								i := item
+								code := i["code"]
+								name := i["n"].(string)
+
+								if code == ser {
+									thingType, _ := p.thingManager.GetThingType(thing.Type)
+									service := thingType.GetService(name)
+
+									return thing, service, nil
+								}
 							}
-						}
-					} else {
-						codeList := c.([]interface{})
-						for _, item := range codeList {
-							i := item.(map[string]interface{})
-							code := i["code"]
-							name := i["n"].(string)
+						} else {
+							codeList := c.([]interface{})
+							for _, item := range codeList {
+								i := item.(map[string]interface{})
+								code := i["code"]
+								name := i["n"].(string)
 
-							if code == ser {
-								thingType, _ := p.thingManager.GetThingType(thing.Type)
-								service := thingType.GetService(name)
+								if code == ser {
+									thingType, _ := p.thingManager.GetThingType(thing.Type)
+									service := thingType.GetService(name)
 
-								return thing, service, nil
+									return thing, service, nil
+								}
 							}
 						}
 					}
 				}
-			}
+			*/
 		}
 	}
 	return new(api.Thing), new(api.ThingService), errors.New("Unknown Thing")
