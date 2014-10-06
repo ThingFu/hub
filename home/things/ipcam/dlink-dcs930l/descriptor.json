@@ -3,7 +3,7 @@
     "name": "Dlink Wireless N Camera DCS 930L",
     "description": "",
     "protocol": "WIFI",
-    "attributes": [],
     "eventUpdateBuffer": 3000,
-    "logEvents": false
+    "logEvents": false,
+    "attributes": []
 }

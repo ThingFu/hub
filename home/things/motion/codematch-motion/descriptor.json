@@ -4,5 +4,9 @@
     "description": "",
     "protocol": "433MHZ",
     "event_update_buffer": 5000,
-    "logEvents": true
+    "logEvents": true,
+    "attributes": [],
+    "services": [
+        { "name": "motion", "label": "Motion PIR" }
+    ]
 }

@@ -3,11 +3,11 @@
     "name": "4 Button",
     "description": "",
     "protocol": "433MHZ",
-    "attributes": [],
     "event_update_buffer": 3000,
     "vendor": "unknown",
     "model": "unknown",
     "logEvents": true,
+    "attributes": [],
     "services": [
         { "name" : "press_a", "lbl" : "Button A" },
         { "name" : "press_b", "lbl" : "Button B" },

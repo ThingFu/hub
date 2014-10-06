@@ -1,8 +1,8 @@
 {
     "tid": "weather",
-    "name": "Weather Widget",
+    "name": "OpenWeather",
     "description": "",
-    "cycletime": 5000,
+    "cycletime": 900000,
     "vendor": "unknown",
     "model": "unknown",
     "logEvents": false,

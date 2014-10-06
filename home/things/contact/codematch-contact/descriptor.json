@@ -5,6 +5,9 @@
     "eventUpdateBuffer": 1000,
     "vendor": "unknown",
     "model": "unknown",
-    "logEvents": true
-
+    "logEvents": true,
+    "attributes": [],
+    "services": [
+        { "name": "contact", "label": "Contact" }
+    ]
 }
