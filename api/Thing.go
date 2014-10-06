@@ -11,27 +11,29 @@ import (
 	"html/template"
 	"io/ioutil"
 	"log"
+	"regexp"
 	"time"
 )
 
 // Representing a thing
 type Thing struct {
-	DatabaseId  bson.ObjectId             `bson:"_id"`
-	Id          string                    `bson:"uid"`
-	Name        string                    `bson:"lbl"`
-	Group       string                    `bson:"grp"`
-	Class       string                    `bson:"c"`
-	Type        string                    `bson:"tid"`
-	Enabled     bool                      `bson:"en"`
-	Description string                    `bson:"desc"`
-	LogEvents   bool                      `bson:"logEvents"`
-	Descriptor  ThingType                 `bson:",omitempty"`
-	LastState   map[string]interface{}    `bson:"state"`
-	Attributes  map[string]ThingAttribute `bson:"attrs"`
+	DatabaseId  bson.ObjectId                  `bson:"_id"`
+	Id          string                         `bson:"uid"`
+	Name        string                         `bson:"lbl"`
+	Group       string                         `bson:"grp"`
+	Class       string                         `bson:"c"`
+	Type        string                         `bson:"tid"`
+	Enabled     bool                           `bson:"en"`
+	Description string                         `bson:"desc"`
+	LogEvents   bool                           `bson:"logEvents"`
+	Descriptor  ThingType                      `bson:",omitempty"`
+	Attributes  map[string]ThingAttributeValue `bson:"attrs"`
+	LastEvents  map[string]time.Time
 	LastEvent   time.Time
 	LastCycle   time.Time
-	Data        map[string]interface{} `bson:"data"`
-	Content     string
+	Data        map[string]interface{}  `bson:"data"`
+	Content     string                  `bson:""`
+	Services    map[string]ThingService `bson:"services"`
 }
 
 func NewThing() *Thing {
@@ -70,12 +72,25 @@ func (d *Thing) RenderWidget() template.HTML {
 	return template.HTML(htmlContent)
 }
 
-func (d Thing) GetAttribute(name string) ThingAttribute {
+func (d Thing) GetAttributeValue(name string) ThingAttributeValue {
 	if val, ok := d.Attributes[name]; ok {
 		return val
 	} else {
-		return ThingAttribute{}
+		return ThingAttributeValue{}
 	}
+}
+
+func (d Thing) GetAttributeValues(expr string) (attrs map[string]ThingAttributeValue) {
+	attrs = make(map[string]ThingAttributeValue)
+
+	for k, v := range d.Attributes {
+		match, _ := regexp.MatchString(expr, k)
+		if match {
+			attrs[k] = v
+		}
+	}
+
+	return
 }
 
 //func (d *Thing) GetService(name string) *ThingService {
@@ -87,7 +102,7 @@ func (d Thing) GetAttribute(name string) ThingAttribute {
 //	return nil
 //}
 
-func (d *Thing) SaveAttribute(name string, value interface{}) error {
+func (d *Thing) SaveAttributeValue(name string, value interface{}) error {
 	if val, ok := d.Attributes[name]; ok {
 		val.Value = value
 		d.Attributes[name] = val
@@ -97,21 +112,10 @@ func (d *Thing) SaveAttribute(name string, value interface{}) error {
 	return nil
 }
 
+func (d *Thing) UpdateService(s *ThingService) {
+	d.Services[s.Name] = *s
+}
+
 func (d *Thing) UpdateLastEvent(t time.Time) {
 	d.LastEvent = t
-}
-
-// Things
-type Things []Thing
-
-func (slice Things) Len() int {
-	return len(slice)
-}
-
-func (slice Things) Less(i, j int) bool {
-	return slice[i].Name < slice[j].Name
-}
-
-func (slice Things) Swap(i, j int) {
-	slice[i], slice[j] = slice[j], slice[i]
 }

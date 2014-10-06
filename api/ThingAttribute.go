@@ -6,16 +6,11 @@ package api
 
 // Attributes for a given Thing
 type ThingAttribute struct {
-	Name     string      `bson:"n"`
-	Type     string      `bson:"t"`
-	Config   bool        `bson:"cfg"`
-	Required bool        `bson:"req"`
-	Default  interface{} `bson:"def"`
-	Value    interface{} `bson:"val"`
-}
-
-func (d *ThingAttribute) AsString() string {
-	return d.Value.(string)
+	Name     string      `json:"name"`
+	Type     string      `json:"type"`
+	Config   bool        `json:"config"`
+	Required bool        `json:"required"`
+	Default  interface{} `json:"default"`
 }
 
 func (d *ThingAttribute) IsStringType() bool {

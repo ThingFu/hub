@@ -16,9 +16,10 @@ type ThingType struct {
 	EventUpdateBuffer int
 	Path              string
 	Group             string
-	Operations        []ThingOperation
 	CycleTime         int
+	Operations        []ThingOperation
 	Services          []ThingService
+	Attributes        []ThingAttribute `json:"attributes"`
 }
 
 func (d *ThingType) GetService(name string) *ThingService {
