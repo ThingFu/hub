@@ -125,9 +125,9 @@
                     </div>
                 </div>
             </div>
-        </div><!-- /.row (main row) -->
-    </section><!-- /.content -->
-</aside><!-- /.right-side -->
+        </div>
+    </section>
+</aside>
 <script>
     var __APP = angular.module("gohomeapp", [])
     __APP.factory("ThingManager", ["$http", ThingManager])
@@ -143,9 +143,12 @@
         $scope.model = {}
 
         $scope.deleteThing = function(id) {
-            ThingManager.delete(id, function (){
-                ReloadDashboard($http, $scope);
-            });
+            var r = confirm("Confirm delete Thing?");
+            if (r == true) {
+                ThingManager.delete(id, function (){
+                    ReloadDashboard($http, $scope);
+                });
+            }
         }
 
         ReloadDashboard($http, $scope);

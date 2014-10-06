@@ -12,7 +12,7 @@ func TestFactoryConditions(t *testing.T) {
 		t.Errorf("Condition not Expected")
 	}
 
-	if f.CreateCondition("sense") == nil {
+	if f.CreateCondition("triggered") == nil {
 		t.Errorf("'Sense' Condition Expected")
 	}
 

@@ -44,10 +44,10 @@ func (app *WebApplicationDashboard) Setup(r *mux.Router) {
 	// r.HandleFunc("/widget/{thingId}/configure", app.handleWidgetConfigure).Methods("GET")
 	r.HandleFunc("/widget/{thingId}/configure", app.handleWidgetUpdateConfiguration).Methods("POST")
 	r.HandleFunc("/widget/{thingId}/view", app.handleWidgetView)
-//	r.HandleFunc("/thing/{thingType}/resource/icon/128x", app.handleResourceIcon)
+	//	r.HandleFunc("/thing/{thingType}/resource/icon/128x", app.handleResourceIcon)
 	r.HandleFunc("/thing/add", app.handleThingAdd)
-//	r.HandleFunc("/thing/add/{typeId}", app.handleThingAddNew).Methods("POST", "GET")
-//	r.HandleFunc("/things", app.handleThings)
+	//	r.HandleFunc("/thing/add/{typeId}", app.handleThingAddNew).Methods("POST", "GET")
+	//	r.HandleFunc("/things", app.handleThings)
 	r.HandleFunc("/sysinfo", app.handleSysInfo)
 	r.HandleFunc("/about", app.handleAbout)
 }

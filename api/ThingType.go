@@ -18,7 +18,7 @@ type ThingType struct {
 	Group             string
 	Operations        []ThingOperation
 	CycleTime         int
-	Services     	  []ThingService
+	Services          []ThingService
 }
 
 func (d *ThingType) GetService(name string) *ThingService {

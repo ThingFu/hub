@@ -54,7 +54,7 @@ func startScheduler() {
 func loadRules(env api.Environment) {
 	log.Println("[INFO] Dividing by Zero")
 	rulesService := container.Instance().RulesManager()
-	filepath.Walk(env.GetHome() + "/rules", func(path string, f os.FileInfo, err error) error {
+	filepath.Walk(env.GetHome()+"/rules", func(path string, f os.FileInfo, err error) error {
 		if !f.IsDir() {
 			content, err := ioutil.ReadFile(path)
 			if err != nil {

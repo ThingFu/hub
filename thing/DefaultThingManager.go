@@ -5,12 +5,12 @@
 package thing
 
 import (
+	"fmt"
 	"github.com/thingfu/hub/api"
 	"github.com/thingfu/hub/utils"
 	"log"
 	"sort"
 	"time"
-	"fmt"
 )
 
 type DefaultThingManager struct {

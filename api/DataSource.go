@@ -6,7 +6,7 @@ package api
 
 // DataSource for Things, States and Events
 type DataSource interface {
-	PutThing(*Thing) (Thing)
+	PutThing(*Thing) Thing
 
 	GetThingCount() int
 	GetThings() []Thing

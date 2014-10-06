@@ -10,7 +10,6 @@ import (
 
 // Executed when a Sensor senses
 type Triggered struct {
-
 }
 
 func (s Triggered) Evaluate(when *api.RuleWhen, facts *api.RuleFacts, rule *api.Rule) bool {

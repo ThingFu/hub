@@ -35,8 +35,8 @@ type Rule struct {
 }
 
 type RuleFacts struct {
-	Target string
-	Thing  *Thing
+	Target  string
+	Thing   *Thing
 	Service *ThingService
 }
 
@@ -46,9 +46,9 @@ type RuleThen struct {
 }
 
 type RuleWhen struct {
-	Target	string
-	Service	string
-	Event	string
+	Target  string
+	Service string
+	Event   string
 }
 
 type Consequence interface {

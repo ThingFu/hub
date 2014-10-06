@@ -57,7 +57,7 @@ func (m *MongoDataSource) GetThings() []api.Thing {
 	return results
 }
 
-func (m *MongoDataSource) PutThing(t *api.Thing) (api.Thing){
+func (m *MongoDataSource) PutThing(t *api.Thing) api.Thing {
 	session := m.session.Copy()
 	defer session.Close()
 

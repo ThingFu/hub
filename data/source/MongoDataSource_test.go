@@ -43,7 +43,7 @@ func TestThings(t *testing.T) {
 
 func TestEvents(t *testing.T) {
 	/*
-	
+
 		ds := NewMongoDataSource()
 
 		events_count := ds.GetEventsCount()

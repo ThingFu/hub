@@ -42,8 +42,13 @@ func (o *MockThingManager) SaveThing(d api.Thing) {
 
 }
 
-func (o *MockThingManager) GetThingType(id string) api.ThingType {
-	return o.thingTypes[id]
+func (o *MockThingManager) RemoveThing(t api.Thing) {
+
+}
+
+func (o *MockThingManager) GetThingType(id string) (t api.ThingType, e error) {
+
+	return
 }
 
 func (o *MockThingManager) GetThingTypes() map[string]api.ThingType {
@@ -62,6 +67,14 @@ func (o *MockThingManager) GetThings() []api.Thing {
 	v := make(api.Things, len(o.things))
 
 	return v
+}
+
+func (o *MockThingManager) CreateThing(t *api.Thing) {
+
+}
+
+func (o *MockThingManager) LoadThings() {
+
 }
 
 func (o *MockThingManager) Handle(thing *api.Thing, service *api.ThingService, state map[string]interface{}) {

@@ -33,3 +33,9 @@ function ThingManager($http) {
         }
     }
 }
+
+// Events
+
+// UI
+
+// Rules

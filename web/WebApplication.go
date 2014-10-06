@@ -11,6 +11,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/thingfu/hub/api"
 	"github.com/thingfu/hub/container"
+	"github.com/thingfu/hub/utils"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -18,7 +19,6 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
-	"github.com/thingfu/hub/utils"
 )
 
 type WebApplication struct {
@@ -108,7 +108,6 @@ func (w WebApplication) initializeRoutes() *mux.Router {
 
 	return r
 }
-
 
 // POST /api/sim/event/{prot}
 func (app *WebApplication) simulateProtocol(w http.ResponseWriter, req *http.Request) {
@@ -296,7 +295,7 @@ func (app *WebApplication) addThing(w http.ResponseWriter, req *http.Request) {
 	}
 
 	// Create Thing Instance
-	t := new (api.Thing)
+	t := new(api.Thing)
 
 	// Create ID if not assigned
 	if payload["Id"] != nil {
@@ -312,11 +311,11 @@ func (app *WebApplication) addThing(w http.ResponseWriter, req *http.Request) {
 	t.LogEvents = true
 	t.Enabled = true
 
-	data := make(map[string]interface {})
-	codes := make([]map[string]interface {}, 0)
+	data := make(map[string]interface{})
+	codes := make([]map[string]interface{}, 0)
 	for k, v := range payload {
 		if strings.HasPrefix(k, "svc_") {
-			c := make(map[string]interface {})
+			c := make(map[string]interface{})
 			c["n"] = strings.Replace(k, "svc_code_", "", -1)
 			c["code"] = v
 
@@ -329,11 +328,11 @@ func (app *WebApplication) addThing(w http.ResponseWriter, req *http.Request) {
 
 	app.thingManager.CreateThing(t)
 	/*
-	DatabaseId
-	Descriptor  <Auto>
-	Attributes  <attrib:name>
+		DatabaseId
+		Descriptor  <Auto>
+		Attributes  <attrib:name>
 
-	 */
+	*/
 
 	// Check with Protocol Handler if
 	// this instance already exists and return
@@ -399,7 +398,7 @@ func (app *WebApplication) triggerEventForThing(w http.ResponseWriter, req *http
 	thingType, _ := app.thingManager.GetThingType(thing.Type)
 	service := thingType.GetService(svc)
 
-	var state map[string] interface {}
+	var state map[string]interface{}
 	json.Unmarshal(body, &state)
 
 	app.thingManager.Handle(&thing, service, state)
@@ -470,9 +469,9 @@ func (app *WebApplication) showAddThing(w http.ResponseWriter, req *http.Request
 		log.Println(err)
 	}
 
-	model := make(map[string] interface {})
+	model := make(map[string]interface{})
 	model["type"] = t
-	model["content"] = renderContent(t.Path + "/add.html", t)
+	model["content"] = renderContent(t.Path+"/add.html", t)
 
 	w.Write(templateOutput("thing_addnew", model))
 }

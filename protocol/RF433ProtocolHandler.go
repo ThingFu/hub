@@ -6,10 +6,10 @@ import (
 	"github.com/thingfu/hub/api"
 	"github.com/thingfu/hub/utils"
 	"log"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
-	"reflect"
 )
 
 // Data given by the MCU
@@ -176,7 +176,7 @@ func (p *RF433ProtocolHandler) getThing(ser string) (*api.Thing, *api.ThingServi
 
 				if c != nil {
 					if reflect.TypeOf(c).String() == "[]map[string]interface {}" {
-						codeList := c.([]map[string]interface {})
+						codeList := c.([]map[string]interface{})
 						for _, item := range codeList {
 							i := item
 							code := i["code"]
@@ -190,9 +190,9 @@ func (p *RF433ProtocolHandler) getThing(ser string) (*api.Thing, *api.ThingServi
 							}
 						}
 					} else {
-						codeList := c.([]interface {})
+						codeList := c.([]interface{})
 						for _, item := range codeList {
-							i := item.(map[string]interface {})
+							i := item.(map[string]interface{})
 							code := i["code"]
 							name := i["n"].(string)
 
