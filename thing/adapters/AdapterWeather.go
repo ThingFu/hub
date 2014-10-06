@@ -50,7 +50,7 @@ func (d *AdapterWeather) Cycle(dev *api.Thing) {
 	*/
 }
 
-func (d *AdapterWeather) OnSense(dev *api.Thing, data api.ThingData) (state map[string]interface{}) {
+func (d *AdapterWeather) OnSense(dev *api.Thing, service *api.ThingService, data api.ThingData) (state map[string]interface{}) {
 	return nil
 }
 

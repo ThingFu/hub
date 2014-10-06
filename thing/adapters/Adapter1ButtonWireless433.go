@@ -17,7 +17,7 @@ func (d *Adapter1ButtonWireless433) Cycle(dev *api.Thing) {
 
 }
 
-func (d *Adapter1ButtonWireless433) OnSense(dev *api.Thing, data api.ThingData) (state map[string]interface{}) {
+func (d *Adapter1ButtonWireless433) OnSense(dev *api.Thing, service *api.ThingService, data api.ThingData) (state map[string]interface{}) {
 	log.Println("Sense : Wireless Button")
 
 	return nil

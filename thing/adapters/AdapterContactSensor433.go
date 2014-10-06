@@ -7,10 +7,12 @@ package adapters
 import (
 	"fmt"
 	"github.com/thingfu/hub/api"
+	"log"
 )
 
 type AdapterContactSensor433 struct {
 }
+
 
 func (s *AdapterContactSensor433) Cycle(dev *api.Thing) {
 
@@ -20,7 +22,8 @@ func (d *AdapterContactSensor433) OnActuate(t *api.Thing, op string, params map[
 
 }
 
-func (sensor *AdapterContactSensor433) OnSense(dev *api.Thing, data api.ThingData) (state map[string]interface{}) {
+func (sensor *AdapterContactSensor433) OnSense(dev *api.Thing, service *api.ThingService, data api.ThingData) (state map[string]interface{}) {
+	log.Println("Sense : Contact Sensor")
 	return nil
 }
 

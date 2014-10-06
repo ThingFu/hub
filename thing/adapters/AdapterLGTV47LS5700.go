@@ -22,7 +22,7 @@ func (tv *AdapterLGTV47LS5700) Cycle(dev *api.Thing) {
 	tv.initSession(dev)
 }
 
-func (tv *AdapterLGTV47LS5700) OnSense(dev *api.Thing, data api.ThingData) (state map[string]interface{}) {
+func (tv *AdapterLGTV47LS5700) OnSense(dev *api.Thing, service *api.ThingService, data api.ThingData) (state map[string]interface{}) {
 	return nil
 }
 

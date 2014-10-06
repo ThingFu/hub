@@ -21,7 +21,7 @@ func (d *AdapterDigitalHumidityTemperature433) Cycle(dev *api.Thing) {
 
 }
 
-func (d *AdapterDigitalHumidityTemperature433) OnSense(dev *api.Thing, data api.ThingData) (state map[string]interface{}) {
+func (d *AdapterDigitalHumidityTemperature433) OnSense(dev *api.Thing, service *api.ThingService, data api.ThingData) (state map[string]interface{}) {
 	dec, _ := strconv.Atoi(data.GetData()["dec"].(string))
 	mask := 0x7f
 	humidity := mask & (dec >> 16)

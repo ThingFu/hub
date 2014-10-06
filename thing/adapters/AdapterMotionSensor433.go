@@ -20,7 +20,7 @@ func (d *AdapterMotionSensor433) OnActuate(t *api.Thing, op string, params map[s
 
 }
 
-func (d *AdapterMotionSensor433) OnSense(dev *api.Thing, data api.ThingData) (state map[string]interface{}) {
+func (d *AdapterMotionSensor433) OnSense(dev *api.Thing, service *api.ThingService, data api.ThingData) (state map[string]interface{}) {
 	return nil
 }
 

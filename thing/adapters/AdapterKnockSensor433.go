@@ -19,7 +19,7 @@ func (d *AdapterKnockSensor433) OnActuate(t *api.Thing, op string, params map[st
 
 }
 
-func (o *AdapterKnockSensor433) OnSense(dev *api.Thing, data api.ThingData) (state map[string]interface{}) {
+func (o *AdapterKnockSensor433) OnSense(dev *api.Thing, service *api.ThingService, data api.ThingData) (state map[string]interface{}) {
 	return nil
 }
 

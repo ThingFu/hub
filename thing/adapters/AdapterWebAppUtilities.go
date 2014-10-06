@@ -22,7 +22,7 @@ func (d *AdapterWebAppUtilities) Cycle(dev *api.Thing) {
 	fmt.Println("AdapterWebAppUtilities -- Cycle")
 }
 
-func (d *AdapterWebAppUtilities) OnSense(dev *api.Thing, data api.ThingData) (state map[string]interface{}) {
+func (d *AdapterWebAppUtilities) OnSense(dev *api.Thing, service *api.ThingService, data api.ThingData) (state map[string]interface{}) {
 	return nil
 }
 

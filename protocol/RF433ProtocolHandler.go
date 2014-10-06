@@ -102,7 +102,7 @@ func (p *RF433ProtocolHandler) handleWT450(data *RF433Data) {
 		drv := p.factory.CreateThingAdapter("433mhz-wt450")
 
 		go func() {
-			state := drv.OnSense(dev, data)
+			state := drv.OnSense(dev, service, data)
 
 			lastEvent := service.LastEvent
 			desc := dev.Descriptor
@@ -146,7 +146,7 @@ func (p *RF433ProtocolHandler) handleCodeMatch(data *RF433Data) {
 
 		// Sense and Handle Thing Event
 		go func() {
-			state := drv.OnSense(dev, data)
+			state := drv.OnSense(dev, service, data)
 
 			// We don't want to run rules or fire events too frequently,
 			// so check against thing descriptor's Event Update Buffer

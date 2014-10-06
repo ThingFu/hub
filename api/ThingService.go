@@ -3,9 +3,8 @@ package api
 import "time"
 
 type ThingService struct {
-	Name      string `bson:"n"`
-	Label     string `bson:"lbl"`
-	Code      string `bson:"code"`
+	Name      string `json:"name"`
+	Label     string `json:"lbl"`
 	LastEvent time.Time
 }
 

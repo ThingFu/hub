@@ -19,7 +19,7 @@ func (d *AdapterIPCamera) Cycle(dev *api.Thing) {
 
 }
 
-func (d *AdapterIPCamera) OnSense(dev *api.Thing, data api.ThingData) (state map[string]interface{}) {
+func (d *AdapterIPCamera) OnSense(dev *api.Thing, service *api.ThingService, data api.ThingData) (state map[string]interface{}) {
 	return nil
 }
 
