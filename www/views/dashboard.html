@@ -1,6 +1,6 @@
 #{define "dashboard"}#
 #{template "header" .}#
-<aside class="right-side" ng-app="gohomeapp" ng-controller="ctrl-dashboard">
+<aside class="right-side" ng-controller="ctrl-dashboard">
     <section class="content-header">
         <h1>Dashboard</h1>
         <ol class="breadcrumb">
@@ -98,10 +98,11 @@
                                         <button class="btn btn-info btn-sm" ng-click="deleteThing(Thing.Id)" data-widget="remove" data-toggle="tooltip" title="Remove">
                                             <i class="fa fa-times"></i>
                                         </button>
-                                    </div><!-- /. tools -->
+                                    </div>
 
                                 </div>
                                 <div class="box-body" ng-bind-html="Thing.Content | htmlcontent"></div>
+
                                 <div class="box-footer">
                                     <div class="text-center">
                                         <a href="/thing/{{Thing.Id}}/view" class="btn btn-social-icon btn-bitbucket">
@@ -129,23 +130,49 @@
     </section>
 </aside>
 <script>
-    var __APP = angular.module("gohomeapp", [])
-    __APP.factory("ThingManager", ["$http", ThingManager])
+    var app = angular.module("thingfuapp", [])
+
+    app.config(function($provide, $controllerProvider) {
+        provide = $provide;
+        controllerProvider = $controllerProvider;
+    })
+
+    app.factory('Lazy', function($compile) {
+        return {
+            factory: provide.factory,
+
+            controller: function(id, impl) {
+                var el = angular.element(document.getElementById(id)),
+                        scope = el.scope();
+
+                // register the controller with angular
+                controllerProvider.register(id, impl);
+
+                // add ng-controller to the element and compile it
+                el.attr('ng-controller', id);
+                $compile(el)(scope);
+            }
+        };
+    });
+
+    app.factory("ThingManager", ["$http", ThingManager])
 
     // Filters
-    __APP.filter("htmlcontent", function($sce){
+    app.filter("htmlcontent", function($sce, $compile){
         return function(input) {
             return $sce.trustAsHtml(input);
         }
     });
+    app.factory("HttpProxy", ["$http", HttpProxy])
+    app.factory("ThingManager", ["$http", ThingManager])
 
-    __APP.controller("ctrl-dashboard", function($scope, $http, $interval, ThingManager) {
+    app.controller("ctrl-dashboard", function($scope, $http, $interval, ThingManager) {
         $scope.model = {}
 
         $scope.deleteThing = function(id) {
             var r = confirm("Confirm delete Thing?");
             if (r == true) {
-                ThingManager.delete(id, function (){
+                ThingManager.delete(id, function () {
                     ReloadDashboard($http, $scope);
                 });
             }
