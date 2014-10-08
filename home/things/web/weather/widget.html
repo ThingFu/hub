@@ -68,18 +68,26 @@
     (function() {
         "use strict";
 
-        var widgetId = "#{.Id}#Controller";
+        var ID = "#{.Id}#";
+        var ctrlId = ID + "Controller";
         var Lazy = angular.element(document).injector().get('Lazy');
-        Lazy.controller(widgetId, function($scope, HttpProxy) {
-            HttpProxy.get("http://api.openweathermap.org/data/2.5/weather?q=London,uk", function (ret){
-                var data = $.parseJSON(ret.data.content);
-                var w = data.weather[0].main;
-                var icn = data.weather[0].icon;
-                $scope.WeatherIcon = icn;
-                $scope.Weather = w;
-                $scope.Location = data.name;
-                $("#" + widgetId).parent().parent().addClass("weather-" + w);
+
+        Lazy.controller(ctrlId, function($scope, HttpProxy, ThingManager) {
+            ThingManager.get(ID, function (ret){
+                var loc = ret.thing.Attributes.location.Value;
+                HttpProxy.get("http://api.openweathermap.org/data/2.5/weather?q=" + loc, function (ret){
+                    var data = $.parseJSON(ret.data.content);
+                    var w = data.weather[0].main;
+                    var icn = data.weather[0].icon;
+                    $scope.WeatherIcon = icn;
+                    $scope.Weather = w;
+                    $scope.Location = data.name;
+                    $("#" + ctrlId).parent().parent().addClass("weather-" + w);
+                });
             });
+            /*
+
+            */
         });
     })();
 </script>
