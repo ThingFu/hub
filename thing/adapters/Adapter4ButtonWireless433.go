@@ -19,7 +19,7 @@ func (d *Adapter4ButtonWireless433) Cycle(dev *api.Thing) {
 
 func (d *Adapter4ButtonWireless433) OnSense(dev *api.Thing, service *api.ThingService, data api.ThingData) (state map[string]interface{}) {
 	log.Println(fmt.Sprintf("4 Button Wireless Triggered %s", service.Label))
-	
+
 	return nil
 }
 

@@ -1,6 +1,6 @@
 #{define "events"}#
 #{template "header" .}#
-<aside class="right-side" ng-app="app" ng-controller="controller">
+<aside class="right-side" ng-controller="controller">
     <section class="content-header">
         <h1>Events</h1>
         <ol class="breadcrumb">
@@ -37,7 +37,7 @@
 <script src="/public/js/moment.min.js"></script>
 <script src="/public/js/angular/angular-moment.min.js"></script>
 <script>
-    var app = angular.module("app", ['angularMoment']);
+    var app = angular.module("thingfuapp", ['angularMoment']);
     app.controller("controller", function($scope, $http, $interval) {
         $scope.model = {};
 

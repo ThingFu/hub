@@ -13,7 +13,6 @@ import (
 type AdapterContactSensor433 struct {
 }
 
-
 func (s *AdapterContactSensor433) Cycle(dev *api.Thing) {
 
 }

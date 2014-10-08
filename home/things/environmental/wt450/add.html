@@ -42,7 +42,7 @@
 
         $scope.submitForm = function() {
             ThingManager.create($scope.model, function (ret) {
-
+                window.location.href = "/dashboard";
             });
         }
     });

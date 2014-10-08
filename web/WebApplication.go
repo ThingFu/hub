@@ -84,6 +84,7 @@ func (w WebApplication) initializeRoutes() *mux.Router {
 	r.HandleFunc("/api/thing", w.addThing).Methods("POST")
 	r.HandleFunc("/api/thing/{id}", w.getThing).Methods("GET")
 	r.HandleFunc("/api/thing/{id}", w.deleteThing).Methods("DELETE")
+	r.HandleFunc("/api/thing/{id}", w.updateThing).Methods("PUT")
 
 	r.HandleFunc("/api/thing/{id}/event/{svc}", w.triggerEventForThing).Methods("POST")
 	r.HandleFunc("/api/thing/{id}/events/{limit}", w.getEventsForThing).Methods("POST")
@@ -141,10 +142,11 @@ func (app *WebApplication) getProxyHttp(w http.ResponseWriter, req *http.Request
 	model := make(map[string]interface{})
 	if method == "GET" {
 		resp, err := http.Get(url)
-		if err != nil {
-			// handle error
-		}
 		defer resp.Body.Close()
+
+		if err != nil {
+			log.Println(err)
+		}
 		body, err := ioutil.ReadAll(resp.Body)
 
 		model["content"] = string(body)
@@ -355,6 +357,21 @@ func (app *WebApplication) getThing(w http.ResponseWriter, req *http.Request) {
 	}
 
 	writeJsonModel(w, model)
+}
+
+// PUT http://localhost:8181/api/thing/{id}
+func (app *WebApplication) updateThing(w http.ResponseWriter, req *http.Request) {
+	body, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		log.Println(err)
+	}
+	// var payload map[string]interface{}
+	var thing api.Thing
+	if err := json.Unmarshal(body, &thing); err != nil {
+		panic(err)
+	}
+
+	app.thingManager.SaveThing(thing)
 }
 
 // DELETE http://localhost:8181/api/thing/{id}

@@ -1,6 +1,6 @@
 #{define "thing_config"}#
 #{template "header" .}#
-<aside class="right-side">
+<aside class="right-side"  ng-controller="controller">
     <section class="content-header">
         <h1>Configure Widget</h1>
         <ol class="breadcrumb">
@@ -24,41 +24,61 @@
 
                         <div class="form-group">
                             <label>id</label>
-                            <input type="text" class="form-control" value="#{.Id}#" type="text" disabled />
+                            <input type="text" class="form-control" ng-model="model.Id" type="text" disabled />
                         </div>
 
                         <div class="form-group">
                             <label>Type</label>
-                            <input type="text" class="form-control" value="#{.Type}#" type="text" disabled />
+                            <input type="text" class="form-control" ng-model="model.Type" type="text" disabled />
                         </div>
 
                         <div class="form-group">
                             <label>Name</label>
-                            <input type="text" class="form-control" name="thing.name" value="#{.Name}#" type="text" />
+                            <input type="text" class="form-control" ng-model="model.Name" name="thing.name" type="text" />
                         </div>
 
                         <div class="form-group">
                             <label>Description</label>
-                            <textarea name="thing.description" class="form-control" rows="3">#{.Description}#</textarea>
+                            <textarea name="thing.description" ng-model="model.Description" class="form-control" rows="3">#{.Description}#</textarea>
                         </div>
 
                         <h4 class="panel-body-title">Attributes</h4>
 
-                    #{range $index, $element := .Attributes }#
-                        <div class="form-group">
-                            <label>#{$element.Name}#</label>
-                            <input type="text" class="form-control" name="attrib.#{$element.Name}#" value="#{$element.Value}#" type="text" />
+
+                        <div class="form-group" ng-repeat="Attr in model.Attributes">
+                            <label>{{Attr.Name}}</label>
+                            <input type="text" class="form-control" ng-model="model.Attributes[Attr.Name].Value" type="text" />
                         </div>
-                    #{end}#
+
                     </div>
 
                     <div class="box-footer">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button ng-click="submitForm()" class="btn btn-primary">Save</button>
                     </div>
                 </form>
             </div>
         </div>
     </section>
 </aside>
+<script>
+    var app = angular.module("thingfuapp", [])
+    app.factory("HttpProxy", ["$http", HttpProxy])
+    app.factory("ThingManager", ["$http", ThingManager])
+
+    app.controller("controller", function($scope, ThingManager){
+        var ID = "#{.Id}#";
+        $scope.model = {};
+
+        ThingManager.get(ID, function (ret){
+            $scope.model = ret.thing;
+        });
+
+        $scope.submitForm = function() {
+            ThingManager.update(ID, $scope.model, function (ret){
+                window.location.href = "/dashboard";
+            })
+        }
+    });
+</script>
 #{template "footer" .}#
 #{end}#

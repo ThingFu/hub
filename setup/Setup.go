@@ -65,7 +65,8 @@ func loadRules(env api.Environment) {
 			err = json.Unmarshal(content, &rule)
 
 			if err != nil {
-				fmt.Printf("Error Parsing Rule %s\n", path)
+				log.Printf("[ERROR] Parsing Rule %s\n", path)
+				return nil
 			}
 			rule.Id = utils.RandomString(7)
 

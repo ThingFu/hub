@@ -1,6 +1,6 @@
 #{define "rules"}#
 #{template "header" .}#
-<aside class="right-side" ng-app="app" ng-controller="controller">
+<aside class="right-side" ng-controller="controller">
     <section class="content-header">
         <h1>Rules</h1>
         <ol class="breadcrumb">
@@ -39,7 +39,7 @@
     </section><!-- /.content -->
 </aside><!-- /.right-side -->
 <script>
-    var app = angular.module("app", []);
+    var app = angular.module("thingfuapp", []);
     app.controller("controller", function($scope, $http, $interval) {
         $scope.model = {};
 

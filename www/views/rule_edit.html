@@ -3,7 +3,7 @@
 <style>
     .ace_editor { height: 200px; }
 </style>
-<aside class="right-side" ng-app="app" ng-controller="controller">
+<aside class="right-side" ng-controller="controller">
     <section class="content-header">
         <h1>Edit <span ng-bind="model.name"></span></h1>
         <ol class="breadcrumb">
@@ -45,7 +45,7 @@
 <script src="/public/js/ace/ace.js"></script>
 <script src="/public/js/ace/ui-ace.js"></script>
 <script>
-    var app = angular.module("app", ['ui.ace']);
+    var app = angular.module("thingfuapp", ['ui.ace']);
     app.controller("controller", function($scope, $http, $interval, $location) {
         $scope.model = {};
 

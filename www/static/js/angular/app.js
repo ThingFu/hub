@@ -1,5 +1,5 @@
 function HttpProxy($http) {
-    var proxyUrl = "/api/ui/httpproxy";
+    var proxyUrl = "/api/ui/proxy";
     return {
         get: function (url, cb) {
             $http.post(proxyUrl, { url: url, method: "GET" }).then(cb);
@@ -18,6 +18,12 @@ function HttpProxy($http) {
 
 function ThingManager($http) {
     return {
+        get: function (id, cb) {
+            $http({
+                method: "GET",
+                url: "/api/thing/" + id
+            }).success(cb);
+        },
         create: function(t, cb) {
             $http({
                 method: "POST",
@@ -30,6 +36,14 @@ function ThingManager($http) {
                 method: "DELETE",
                 url: "/api/thing/" + id
             }).success(cb);
+        },
+        update: function(id, t, cb) {
+            $http({
+                method: "PUT",
+                url: "/api/thing/" + id,
+                data: t
+            }).success(cb);
+
         }
     }
 }

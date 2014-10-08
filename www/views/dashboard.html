@@ -89,6 +89,8 @@
 
                 <div class="tab-content no-padding">
                     <div class="tab-pane active" id="dashboard-home">
+
+                        <!-- Widget Start -->
                         <div class="col-md-4" ng-repeat="Thing in model.Things">
                             <br />
                             <div class="box box-primary">
@@ -99,9 +101,9 @@
                                             <i class="fa fa-times"></i>
                                         </button>
                                     </div>
-
                                 </div>
-                                <div class="box-body" ng-bind-html="Thing.Content | htmlcontent"></div>
+
+                                <div class="box-body" style="padding: 0px !important;" ng-bind-html="Thing.Content | htmlcontent"></div>
 
                                 <div class="box-footer">
                                     <div class="text-center">
@@ -117,6 +119,9 @@
 
                             </div>
                         </div>
+                        <!-- Widget End -->
+
+
                     </div>
                     <div class="tab-pane" id="dashboard-health" style="position:relative;">
 

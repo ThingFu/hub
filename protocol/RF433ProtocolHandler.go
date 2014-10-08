@@ -187,45 +187,6 @@ func (p *RF433ProtocolHandler) getThing(ser string) (*api.Thing, *api.ThingServi
 					}
 				}
 			}
-
-			/*
-				if thing.Data != nil {
-
-					c := thing.Data["codes"]
-
-					if c != nil {
-						if reflect.TypeOf(c).String() == "[]map[string]interface {}" {
-							codeList := c.([]map[string]interface{})
-							for _, item := range codeList {
-								i := item
-								code := i["code"]
-								name := i["n"].(string)
-
-								if code == ser {
-									thingType, _ := p.thingManager.GetThingType(thing.Type)
-									service := thingType.GetService(name)
-
-									return thing, service, nil
-								}
-							}
-						} else {
-							codeList := c.([]interface{})
-							for _, item := range codeList {
-								i := item.(map[string]interface{})
-								code := i["code"]
-								name := i["n"].(string)
-
-								if code == ser {
-									thingType, _ := p.thingManager.GetThingType(thing.Type)
-									service := thingType.GetService(name)
-
-									return thing, service, nil
-								}
-							}
-						}
-					}
-				}
-			*/
 		}
 	}
 	return new(api.Thing), new(api.ThingService), errors.New("Unknown Thing")

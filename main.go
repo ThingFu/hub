@@ -29,13 +29,13 @@ func main() {
 	// Read config file and parse
 	content, err := ioutil.ReadFile(string(home + "/" + api.CONFIG_FILE))
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Error parsing hub config: %v", err)
 	}
 
 	var config api.Configuration
 	err = json.Unmarshal(content, &config)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("StartUp Error - Parsing Hub config: %v", err)
 	}
 
 	// Do any validation on config, set sensible defaults or die if any

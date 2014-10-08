@@ -12,9 +12,9 @@
         </ol>
     </section>
 
-    <section class="content" ng-app="app">
+    <section class="content">
         <script>
-            var app = angular.module("app", []);
+            var app = angular.module("thingfuapp", [])
             app.factory("HttpProxy", ["$http", HttpProxy])
             app.factory("ThingManager", ["$http", ThingManager])
         </script>

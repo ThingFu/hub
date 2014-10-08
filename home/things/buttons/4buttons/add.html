@@ -56,9 +56,9 @@
             "type": {{.TypeId}}
         };
 
-        $scope.submitForm = function() {
+        $scope.submitForm = function($location) {
             ThingManager.create($scope.model, function (ret) {
-                console.log(ret);
+                window.location.href = "/dashboard";
             });
         }
     });
