@@ -13,6 +13,13 @@
 
     <section class="content">
         <div class="col-md-12">
+            <div class="callout callout-info">
+                <div class="form-group">
+                    <label>Filter Events</label>
+                    <input type="text" ng-model="query" class="form-control" type="text" />
+                </div>
+            </div>
+
             <table class="table table-condensed">
                 <thead>
                 <tr>
@@ -22,7 +29,7 @@
                 </thead>
                 <tbody>
 
-                    <tr ng-repeat="Rule in model.Rules">
+                    <tr ng-repeat="Rule in model.Rules | filter: query">
                         <td>{{Rule.Name}}</td>
                         <td class="hidden-xs text-center">
                             <div class="btn-group">
