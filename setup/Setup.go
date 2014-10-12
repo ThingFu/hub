@@ -6,7 +6,6 @@ package setup
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/thingfu/hub/api"
 	"github.com/thingfu/hub/container"
 	"github.com/thingfu/hub/utils"
@@ -32,7 +31,9 @@ func Setup(env api.Environment) {
 
 	// Register protocols. Has to be goroutines since these buggers
 	// loops forever
-	go setupProtocols()
+	// go setupProtocols()
+
+	go setupChannels()
 
 	// Start scheduler for stuff like the peroidic rule invoker
 	startScheduler()
@@ -116,7 +117,6 @@ func loadThingTypes(env api.Environment) {
 			err = json.Unmarshal(content, &thingType)
 
 			if err != nil {
-				fmt.Println(path)
 				log.Println("error: ", err)
 			}
 			thingType.Path = strings.Replace(path, "/descriptor.json", "", -1)
@@ -134,14 +134,14 @@ func setupWebApplication(env api.Environment) {
 // Each protocol handler would need its own dedicated
 // goroutine/thread to run in
 //
-func setupProtocols() {
-	log.Println("[INFO] Register Protocols")
+func setupChannels() {
+	log.Println("[INFO] Setting Up Channels")
 	c := container.Instance()
 
-	handlers := c.ProtocolHandlers()
-	for _, handler := range handlers {
-		if handler.IsEnabled() {
-			handler.Start()
+	chs := c.Channels()
+	for _, ch := range chs {
+		if ch.IsEnabled() {
+			ch.Start()
 		}
 	}
 }

@@ -4,11 +4,11 @@
 
 package consequences
 
-import "fmt"
+import "log"
 
 type SetEnvironmentVariable struct {
 }
 
 func (s SetEnvironmentVariable) Execute(config map[string]interface{}) {
-	fmt.Println("Consequence: Set Environment Variable")
+	log.Println("Consequence: Set Environment Variable")
 }

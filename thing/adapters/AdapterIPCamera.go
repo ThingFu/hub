@@ -11,7 +11,7 @@ import (
 type AdapterIPCamera struct {
 }
 
-func (d *AdapterIPCamera) OnActuate(t *api.Thing, op string, params map[string]interface{}, db api.AppDB) {
+func (d *AdapterIPCamera) OnWrite(t *api.Thing, op string, params api.WriteRequest, db api.AppDB) {
 
 }
 
@@ -19,7 +19,7 @@ func (d *AdapterIPCamera) Cycle(dev *api.Thing) {
 
 }
 
-func (d *AdapterIPCamera) OnSense(dev *api.Thing, service *api.ThingService, data api.ThingData) (state map[string]interface{}) {
+func (d *AdapterIPCamera) OnRead(dev *api.Thing, service *api.ThingService, data api.ReadRequest) (state map[string]interface{}) {
 	return nil
 }
 

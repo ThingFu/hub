@@ -2,7 +2,7 @@
     "tid": "433mhz-motion",
     "name": "Wireless Motion Sensor",
     "description": "",
-    "protocol": "433MHZ",
+    "protocol": "CodeMatch",
     "event_update_buffer": 5000,
     "logEvents": true,
     "attributes": [],

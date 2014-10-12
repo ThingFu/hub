@@ -5,14 +5,12 @@
 package api
 
 type ProtocolHandler interface {
-	Start()
-	Stop()
-	IsEnabled() bool
+	OnStart()
+	OnStop()
 	GetName() string
 	GetLabel() string
-	Handle(data interface{})
+	OnRead(data ReadRequest)
 
-	SetProtocolConfiguration(ProtocolConfiguration)
 	SetThingManager(ThingManager)
 	SetFactory(Factory)
 	SetEnvironment(Environment)

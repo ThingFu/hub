@@ -5,27 +5,27 @@
 package adapters
 
 import (
-	"fmt"
+	"log"
 	"github.com/thingfu/hub/api"
 )
 
 type AdapterWebAppUtilities struct {
 }
 
-func (d *AdapterWebAppUtilities) OnActuate(t *api.Thing, op string, params map[string]interface{}, db api.AppDB) {
-	db.Put(op, params)
+func (d *AdapterWebAppUtilities) OnWrite(t *api.Thing, op string, req api.WriteRequest, db api.AppDB) {
+	db.Put(op, req)
 
-	fmt.Println("AdapterWebAppUtilities -- Actuate")
+	log.Println("AdapterWebAppUtilities -- Actuate")
 }
 
 func (d *AdapterWebAppUtilities) Cycle(dev *api.Thing) {
-	fmt.Println("AdapterWebAppUtilities -- Cycle")
+	log.Println("AdapterWebAppUtilities -- Cycle")
 }
 
-func (d *AdapterWebAppUtilities) OnSense(dev *api.Thing, service *api.ThingService, data api.ThingData) (state map[string]interface{}) {
+func (d *AdapterWebAppUtilities) OnRead(dev *api.Thing, service *api.ThingService, data api.ReadRequest) (state map[string]interface{}) {
 	return nil
 }
 
-func (d *AdapterWebAppUtilities) GetEventText(dev *api.Thing, sensor *api.ThingService, state map[string]interface{}) (shortText string, longText string) {
+func (d *AdapterWebAppUtilities) GetEventText(dev *api.Thing, sensor *api.ThingService, req map[string]interface{}) (shortText string, longText string) {
 	return
 }

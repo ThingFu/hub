@@ -5,7 +5,6 @@
 package consequences
 
 import (
-	"fmt"
 	"github.com/thingfu/hub/api"
 	"github.com/thingfu/hub/utils"
 	"log"
@@ -31,5 +30,5 @@ func (s SendMail) Execute(config map[string]interface{}, container api.Container
 		log.Print("Error sending email ", err)
 	}
 
-	fmt.Println("%v", config)
+	log.Println("%v", config)
 }

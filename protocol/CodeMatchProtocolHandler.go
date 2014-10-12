@@ -1,15 +1,24 @@
 package protocol
 
-import "github.com/thingfu/hub/api"
+import (
+	"github.com/thingfu/hub/api"
+	"log"
+	"github.com/thingfu/hub/utils"
+	"time"
+	"strings"
+	"errors"
+)
 
 type CodeMatchProtocolHandler struct {
+	api.BaseProtocolHandler
 }
 
-func (cm *CodeMatchProtocolHandler) Start() {}
-func (cm *CodeMatchProtocolHandler) Stop()  {}
+func (cm *CodeMatchProtocolHandler) OnStart() {
 
-func (cm *CodeMatchProtocolHandler) IsEnabled() bool {
-	return true
+}
+
+func (cm *CodeMatchProtocolHandler) OnStop()  {
+
 }
 
 func (cm *CodeMatchProtocolHandler) GetName() string {
@@ -20,11 +29,86 @@ func (cm *CodeMatchProtocolHandler) GetLabel() string {
 	return "Code Match"
 }
 
-func (cm *CodeMatchProtocolHandler) Handle(data interface{}) {
+func (cm *CodeMatchProtocolHandler) OnRead(data api.ReadRequest) {
+	parsed, err := utils.ParseThingFuSerialData(data.GetPayload().(string))
 
+	// Probably not the right thing we're looking for
+	if parsed["Protocol"] != "1" {
+		return
+	}
+
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	ser := parsed["Data"].(string)
+	if ser == "" {
+		log.Println("Something is wrong. Code is nil. Skipping..")
+		return
+	}
+
+	dev, service, ok := cm.getThing(ser)
+
+	if ok != nil {
+		log.Println("Unknown Thing ", ser)
+	} else {
+		thingManager := cm.GetThingManager()
+		t, err := thingManager.GetThingType(dev.Type)
+		if err != nil {
+			log.Println(err)
+		}
+
+		drv := cm.GetFactory().CreateThingAdapter(t.TypeId)
+		if drv == nil {
+			log.Println("No adapter for thing type " + dev.Type)
+			return
+		}
+
+		// Sense and Handle Thing Event
+		go func() {
+			state := drv.OnRead(dev, service, data)
+
+			// We don't want to run rules or fire events too frequently,
+			// so check against thing descriptor's Event Update Buffer
+			// if we should go ahead
+			lastEvent := service.LastEvent
+			desc := dev.Descriptor
+			if utils.TimeWithinThreshold(lastEvent, desc.EventUpdateBuffer, 5000) {
+				service.UpdateLastEvent(time.Now())
+				dev.UpdateService(service)
+				thingManager.SaveThing(*dev)
+
+				thingManager.Handle(dev, service, state)
+			}
+		}()
+	}
 }
 
-func (cm *CodeMatchProtocolHandler) SetProtocolConfiguration(api.ProtocolConfiguration) {}
-func (cm *CodeMatchProtocolHandler) SetThingManager(api.ThingManager)                   {}
-func (cm *CodeMatchProtocolHandler) SetFactory(api.Factory)                             {}
-func (cm *CodeMatchProtocolHandler) SetEnvironment(api.Environment)                     {}
+func (p *CodeMatchProtocolHandler) getThing(ser string) (*api.Thing, *api.ThingService, error) {
+	thingManager := p.GetThingManager()
+	things := thingManager.GetThings()
+
+	for i, _ := range things {
+		thing := &things[i]
+		desc := thing.Descriptor
+		if desc.Protocol == "CodeMatch" {
+			attrs := thing.GetAttributeValues("^code_")
+
+			if len(attrs) > 0 {
+				for _, item := range attrs {
+					name := item.Name
+					code := item.Value
+
+					if code == ser {
+						thingType, _ := thingManager.GetThingType(thing.Type)
+						svc := strings.Replace(name, "code_", "", -1)
+						service := thingType.GetService(svc)
+
+						return thing, service, nil
+					}
+				}
+			}
+		}
+	}
+	return new(api.Thing), new(api.ThingService), errors.New("Unknown Thing")
+}

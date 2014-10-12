@@ -20,7 +20,7 @@ type ThingManager interface {
 	LoadThings()
 
 	Cycle()
-	Actuate(t *Thing, op string, params map[string]interface{})
+	Actuate(*Thing, string, map[string]interface{})
 
 	ContainerAware
 	SetRulesManager(RulesManager)

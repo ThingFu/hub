@@ -1,10 +1,10 @@
 package consequences
 
-import "fmt"
+import "log"
 
 type CallRestService struct {
 }
 
 func (s CallRestService) Execute(config map[string]interface{}) {
-	fmt.Println("Consequence: Call REST Service")
+	log.Println("Consequence: Call REST Service")
 }

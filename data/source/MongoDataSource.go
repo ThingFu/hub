@@ -5,7 +5,6 @@
 package source
 
 import (
-	"fmt"
 	"github.com/thingfu/hub/api"
 	mgo "gopkg.in/mgo.v2"
 	bson "gopkg.in/mgo.v2/bson"
@@ -38,8 +37,6 @@ func (m *MongoDataSource) GetThingCount() (count int) {
 
 	c := session.DB("devices").C("devices")
 	count, _ = c.Count()
-
-	fmt.Println(count)
 
 	return
 }
@@ -131,16 +128,13 @@ func (m *MongoDataSource) SaveThing(dev api.Thing) {
 }
 
 func (m *MongoDataSource) DeleteThing(dev api.Thing) {
-	fmt.Println("Delete Thing")
 	session := m.session.Copy()
 	defer session.Close()
 
 	c := session.DB("devices").C("devices")
-	fmt.Println(dev)
 	err := c.RemoveId(dev.DatabaseId)
 	if err != nil {
-		fmt.Println("error deleting: ")
-		fmt.Println(err)
+		log.Printf("error deleting: %s", err)
 	}
 }
 

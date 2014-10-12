@@ -17,13 +17,13 @@ func (d *Adapter1ButtonWireless433) Cycle(dev *api.Thing) {
 
 }
 
-func (d *Adapter1ButtonWireless433) OnSense(dev *api.Thing, service *api.ThingService, data api.ThingData) (state map[string]interface{}) {
+func (d *Adapter1ButtonWireless433) OnRead(dev *api.Thing, service *api.ThingService, data api.ReadRequest) (state map[string]interface{}) {
 	log.Println("Sense : Wireless Button")
 
 	return nil
 }
 
-func (d *Adapter1ButtonWireless433) OnActuate(t *api.Thing, op string, params map[string]interface{}, db api.AppDB) {
+func (d *Adapter1ButtonWireless433) OnWrite(t *api.Thing, op string, params api.WriteRequest, db api.AppDB) {
 
 }
 

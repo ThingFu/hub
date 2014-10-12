@@ -10,6 +10,7 @@ import (
 	"github.com/thingfu/hub/rules/conditions"
 	"github.com/thingfu/hub/rules/consequences"
 	"github.com/thingfu/hub/thing/adapters"
+	"github.com/thingfu/hub/channels"
 )
 
 type DefaultFactory struct {
@@ -47,26 +48,51 @@ func (d *DefaultFactory) CreateConsequence(t string) api.Consequence {
 	return consequence
 }
 
-func (d *DefaultFactory) CreateProtocolHandler(t string, cfg api.ProtocolConfiguration) api.ProtocolHandler {
-	var handler api.ProtocolHandler
-	switch t {
-	case "RF433":
-		handler = new(protocol.RF433ProtocolHandler)
-
-	case "http":
-		handler = new(protocol.HttpProtocolHandler)
-
-	case "zigbee":
-		handler = new(protocol.ZigbeeProtocolHandler)
-
-	case "sim":
-		handler = new(protocol.DelegatingSimulationProtocolHandler)
+func (d *DefaultFactory) CreateChannelHandler(cfg api.ChannelConfiguration) (api.CommunicationChannel) {
+	var channel api.CommunicationChannel
+	switch cfg.Type {
+	case "Serial":
+		channel = channels.NewSerialChannel()
 	}
+
+	channel.SetThingManager(d.container.ThingManager())
+	channel.SetChannelConfiguration(cfg)
+	channel.SetFactory(d.container.Factory())
+
+	return channel
+}
+
+func (d *DefaultFactory) CreateProtocolHandler(t string) (handler api.ProtocolHandler) {
+	switch t {
+	case "CodeMatch":
+		handler = new(protocol.CodeMatchProtocolHandler)
+		break;
+
+	case "WT450":
+		handler = new(protocol.WT450ProtocolHandler)
+		break;
+
+	case "ThingFuSimple":
+		handler = new(protocol.ThingFuSimpleProtocolHandler)
+		break;
+
+	case "ZigBee":
+		handler = new(protocol.ZigbeeProtocolHandler)
+		break;
+
+	case "ZWave":
+		handler = new(protocol.ZWaveProtocolHandler)
+		break;
+
+	case "EnOcean":
+		handler = new(protocol.EnOceanProtocolHandler)
+		break;
+	}
+
 	handler.SetThingManager(d.container.ThingManager())
-	handler.SetProtocolConfiguration(cfg)
 	handler.SetFactory(d.container.Factory())
 
-	return handler
+	return
 }
 
 func (s *DefaultFactory) CreateThingAdapter(t string) api.ThingAdapter {
@@ -101,6 +127,9 @@ func (s *DefaultFactory) CreateThingAdapter(t string) api.ThingAdapter {
 
 	case "utilities-webapp":
 		adapter = new(adapters.AdapterWebAppUtilities)
+
+	case "thingfudemo":
+		adapter = new(adapters.AdapterThingFuDemoAdapter)
 
 	default:
 		return nil

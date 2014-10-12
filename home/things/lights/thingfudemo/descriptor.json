@@ -1,0 +1,14 @@
+{
+    "tid": "thingfudemo",
+    "name": "ThingFu 2-LED Demo",
+    "protocol": "ThingFuSimple",
+    "eventUpdateBuffer": 1000,
+    "vendor": "unknown",
+    "model": "unknown",
+    "logEvents": true,
+    "attributes": [],
+    "services": [
+        { "name": "redLed", "label": "Red LED" },
+        { "name": "yellowLed", "label": "Yellow LED" }
+    ]
+}

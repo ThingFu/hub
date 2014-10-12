@@ -19,7 +19,16 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"time"
 )
+
+var funcMap = template.FuncMap{
+	"Ago": func(_t time.Time) string {
+		gt := new(utils.GoTime)
+		gt.SetTime(_t)
+		return gt.Ago()
+	},
+}
 
 type WebApplication struct {
 	port uint16
@@ -87,8 +96,8 @@ func (w WebApplication) initializeRoutes() *mux.Router {
 	r.HandleFunc("/api/thing/{id}", w.updateThing).Methods("PUT")
 
 	r.HandleFunc("/api/thing/{id}/event/{svc}", w.triggerEventForThing).Methods("POST")
-	r.HandleFunc("/api/thing/{id}/events/{limit}", w.getEventsForThing).Methods("POST")
-	r.HandleFunc("/api/thing/{id}/op", w.invokeThingOperation).Methods("POST")
+	r.HandleFunc("/api/thing/{id}/events/{limit}", w.getEventsForThing).Methods("GET")
+	r.HandleFunc("/api/thing/{id}/action/{action}", w.invokeThingAction).Methods("POST")
 
 	r.HandleFunc("/api/things", w.getThings).Methods("GET")
 	r.HandleFunc("/api/things/types", w.getThingTypes).Methods("GET")
@@ -122,7 +131,9 @@ func (app *WebApplication) simulateProtocol(w http.ResponseWriter, req *http.Req
 	content := string(body)
 	handler := app.container.ProtocolHandler(protocol)
 
-	handler.Handle(content)
+	data := api.NewReadRequest(content)
+
+	handler.OnRead(data)
 }
 
 // POST http://localhost:8181/services/proxyhttp
@@ -173,7 +184,7 @@ func (app *WebApplication) getDashboardState(w http.ResponseWriter, req *http.Re
 
 	for i := 0; i < len(things); i++ {
 		dev := &things[i]
-		content := renderStringContent(dev.Descriptor.Path+"/widget.html", dev)
+		content := renderStringContent(dev.Descriptor.Path + "/widget.html", dev)
 		dev.Content = content
 		thing_models = append(thing_models, dev)
 	}
@@ -233,6 +244,17 @@ func (app *WebApplication) addRule(w http.ResponseWriter, req *http.Request) {
 func (app *WebApplication) saveRule(w http.ResponseWriter, req *http.Request) {
 	model := make(map[string]interface{})
 
+	vars := mux.Vars(req)
+	ruleId := vars["id"]
+
+	body, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		log.Println(err)
+	}
+
+	fmt.Println(ruleId);
+	fmt.Println(body);
+
 	writeJsonModel(w, model)
 }
 
@@ -261,11 +283,11 @@ func (app *WebApplication) getRule(w http.ResponseWriter, req *http.Request) {
 	writeJsonModel(w, model)
 }
 
-// POST http://localhost:8181/api/thing/{id}/op/{op}
-func (app *WebApplication) invokeThingOperation(w http.ResponseWriter, req *http.Request) {
+// POST http://localhost:8181/api/thing/{id}/action/{action}
+func (app *WebApplication) invokeThingAction(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
-	op := vars["op"]
+	action := vars["action"]
 
 	thing, ok := app.thingManager.GetThing(id)
 	if !ok {
@@ -273,7 +295,8 @@ func (app *WebApplication) invokeThingOperation(w http.ResponseWriter, req *http
 	}
 
 	params := make(map[string]interface{})
-	app.thingManager.Actuate(&thing, op, params)
+	fmt.Println("invokeThingAction")
+	app.thingManager.Actuate(&thing, action, params)
 
 	model := make(map[string]interface{})
 
@@ -455,9 +478,9 @@ func (app *WebApplication) showThingView(w http.ResponseWriter, req *http.Reques
 
 	dev, ok := app.thingManager.GetThing(vars["id"])
 	if ok {
-		model := new(webModelWidgetView)
-		model.Content = template.HTML(renderStringContent(dev.Descriptor.Path+"/view.html", dev))
-		model.Thing = dev
+		model := make(map[string] interface {})
+		model["Content"] = template.HTML(renderStringContent(dev.Descriptor.Path+"/view.html", dev))
+		model["Thing"] = dev
 
 		w.Write(templateOutput("thing_view", model))
 	}
@@ -485,7 +508,7 @@ func (app *WebApplication) showAddThing(w http.ResponseWriter, req *http.Request
 
 	model := make(map[string]interface{})
 	model["type"] = t
-	model["content"] = renderContent(t.Path+"/add.html", t)
+	model["content"] = template.HTML(renderStringContent(t.Path + "/add.html", t))
 
 	w.Write(templateOutput("thing_addnew", model))
 }

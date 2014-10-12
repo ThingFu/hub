@@ -28,6 +28,18 @@ func NewTime(when string) (t time.Time) {
 	case when == "yesterday":
 		t = t.Add(-(time.Hour * 24))
 
+	case when == "a_minute_Ago":
+		t = t.Add(-(time.Minute))
+
+	case when == "hour_ago":
+		t = t.Add(-(time.Hour))
+
+	case when == "2hours_ago":
+		t = t.Add(-(time.Hour * 2))
+
+	case when == "half_day":
+		t = t.Add(-(time.Hour * 12))
+
 	default:
 		break
 	}

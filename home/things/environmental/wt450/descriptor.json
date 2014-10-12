@@ -2,9 +2,12 @@
     "tid": "433mhz-wt450",
     "name": "WT450 Temperature and Humidity",
     "description": "",
-    "protocol": "433MHZ",
+    "protocol": "WT450",
     "vendor": "unknown",
     "model": "unknown",
     "logEvents": true,
-    "attributes": []
+    "attributes": [],
+    "services": [
+        { "name": "DHT", "label": "Digital Humidity and Temperature" }
+    ]
 }

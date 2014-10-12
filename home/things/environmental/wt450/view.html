@@ -1,4 +1,4 @@
-<div class="nav-tabs-custom" ng-app="app" ng-controller="controller">
+<div class="nav-tabs-custom" ng-controller="controller">
     <ul class="nav nav-tabs pull-right">
         <li class="active">
             <a href="##{.Id}#-Chart" data-toggle="tab">Between X and Y</a>
@@ -25,7 +25,6 @@
 <link rel="stylesheet" href="/public/js/d3//nv.d3.min.css"/>
 <script>
     var thingId = "#{.Id}#";
-    var app = angular.module("app", ["nvd3ChartDirectives"]);
     app.controller("controller", function($scope, $http, $interval) {
         $scope.model = {};
 
@@ -66,4 +65,5 @@
         }
         loadFeed();
     });
+
 </script>

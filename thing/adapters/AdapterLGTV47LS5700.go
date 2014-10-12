@@ -14,7 +14,7 @@ import (
 type AdapterLGTV47LS5700 struct {
 }
 
-func (d *AdapterLGTV47LS5700) OnActuate(t *api.Thing, op string, params map[string]interface{}, db api.AppDB) {
+func (d *AdapterLGTV47LS5700) OnWrite(t *api.Thing, op string, params api.WriteRequest, db api.AppDB) {
 
 }
 
@@ -22,11 +22,12 @@ func (tv *AdapterLGTV47LS5700) Cycle(dev *api.Thing) {
 	tv.initSession(dev)
 }
 
-func (tv *AdapterLGTV47LS5700) OnSense(dev *api.Thing, service *api.ThingService, data api.ThingData) (state map[string]interface{}) {
+func (tv *AdapterLGTV47LS5700) OnRead(dev *api.Thing, service *api.ThingService, data api.ReadRequest) (state map[string]interface{}) {
 	return nil
 }
 
 func (tv *AdapterLGTV47LS5700) initSession(dev *api.Thing) {
+	log.Printf("initSession")
 	host := dev.GetAttributeValue("host").Value.(string)
 	url := "http://" + host + ":8080/roap/api/auth"
 	pairingKey := dev.GetAttributeValue("pairingKey").Value.(string)

@@ -1,10 +1,10 @@
 package consequences
 
-import "fmt"
+import "log"
 
 type ExecuteShell struct {
 }
 
 func (s ExecuteShell) Execute(config map[string]interface{}) {
-	fmt.Println("Consequence: Execute Shell")
+	log.Println("Consequence: Execute Shell")
 }

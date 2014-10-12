@@ -153,10 +153,12 @@ func (o *DefaultThingManager) Handle(thing *api.Thing, service *api.ThingService
 }
 
 func (o *DefaultThingManager) Actuate(t *api.Thing, op string, params map[string]interface{}) {
-	drv := o.factory.CreateThingAdapter(t.Type)
+	adapter := o.factory.CreateThingAdapter(t.Type)
 
 	appDB := o.dataSource.CreateAppDB(t)
-	drv.OnActuate(t, op, params, appDB)
+
+	req := api.NewWriteRequest(params)
+	adapter.OnWrite(t, op, req, appDB)
 }
 
 func (o *DefaultThingManager) Cycle() {

@@ -7,13 +7,12 @@ package adapters
 import (
 	"fmt"
 	"github.com/thingfu/hub/api"
-	"strconv"
 )
 
 type AdapterDigitalHumidityTemperature433 struct {
 }
 
-func (d *AdapterDigitalHumidityTemperature433) OnActuate(t *api.Thing, op string, params map[string]interface{}, db api.AppDB) {
+func (d *AdapterDigitalHumidityTemperature433) OnWrite(t *api.Thing, op string, params api.WriteRequest, db api.AppDB) {
 
 }
 
@@ -21,8 +20,10 @@ func (d *AdapterDigitalHumidityTemperature433) Cycle(dev *api.Thing) {
 
 }
 
-func (d *AdapterDigitalHumidityTemperature433) OnSense(dev *api.Thing, service *api.ThingService, data api.ThingData) (state map[string]interface{}) {
-	dec, _ := strconv.Atoi(data.GetData()["dec"].(string))
+func (d *AdapterDigitalHumidityTemperature433) OnRead(dev *api.Thing, service *api.ThingService, data api.ReadRequest) (state map[string]interface{}) {
+	fmt.Println(data.GetPayload())
+
+	dec := data.GetAsInt("dhtdata")
 	mask := 0x7f
 	humidity := mask & (dec >> 16)
 
@@ -35,6 +36,8 @@ func (d *AdapterDigitalHumidityTemperature433) OnSense(dev *api.Thing, service *
 	state["h"] = humidity
 	state["tH"] = tempHigh - 50
 	state["tL"] = tempLow
+
+	fmt.Println(state)
 
 	return
 }

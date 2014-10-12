@@ -12,6 +12,7 @@ import (
 	"strings"
 	"text/template"
 	"time"
+	"errors"
 )
 
 func RandomString(str_size int) string {
@@ -90,4 +91,32 @@ func NewGoTime(o time.Time) *GoTime {
 	t.SetTime(o)
 
 	return t
+}
+
+func ParseThingFuSerialData(data string) (p map[string]interface {}, e error) {
+	parts := strings.Split(data, "|")
+
+	if len(parts) < 4 {
+		e = errors.New("Malformed ThingFu Serial Data: Invalid parameter length :" +  data)
+		return
+	}
+
+	if parts[0] != "TF" {
+		e = errors.New("Malformed ThingFu Serial Data: Does not start with TF :" +  data)
+		return
+	}
+
+	/*
+	if parts[3] != "E0" {
+		e = errors.New("Malformed ThingFu Serial Data: Does not end with E0.")
+		return
+	}
+	*/
+	p = make(map[string]interface {})
+	p["Protocol"] = parts[1]
+	p["Data"] = parts[2]
+
+	return
+
+	// TF|1|13981013|E0
 }

@@ -5,9 +5,9 @@
 package conditions
 
 import (
-	"fmt"
 	"github.com/thingfu/hub/api"
 	"time"
+	"log"
 )
 
 // Executed every hour
@@ -15,17 +15,17 @@ type Hourly struct {
 }
 
 func (s Hourly) Evaluate(when *api.RuleWhen, facts *api.RuleFacts, rule *api.Rule) bool {
-	fmt.Println("----------- ConditionHourly ---------------------")
+	log.Println("----------- ConditionHourly ---------------------")
 	lastRun := rule.LastRun
 	trigger, now := s.getTrigger()
 	nowDiff := now.Sub(trigger).Seconds()
-	fmt.Println("LastRun:")
-	fmt.Println(lastRun)
-	fmt.Println("Now: ")
-	fmt.Println(now)
-	fmt.Println("Diff: ")
-	fmt.Println(nowDiff)
-	fmt.Println("----------- ConditionHourly ---------------------")
+	log.Println("LastRun:")
+	log.Println(lastRun)
+	log.Println("Now: ")
+	log.Println(now)
+	log.Println("Diff: ")
+	log.Println(nowDiff)
+	log.Println("----------- ConditionHourly ---------------------")
 
 	if nowDiff > 0 {
 		lastRunDiff := trigger.Sub(lastRun).Seconds()

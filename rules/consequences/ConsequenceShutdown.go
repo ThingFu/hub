@@ -4,11 +4,11 @@
 
 package consequences
 
-import "fmt"
+import "log"
 
 type Shutdown struct {
 }
 
 func (s Shutdown) Execute(config map[string]interface{}) {
-	fmt.Println("Consequence: Shut Down")
+	log.Println("Consequence: Shut Down")
 }

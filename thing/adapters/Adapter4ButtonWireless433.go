@@ -9,7 +9,7 @@ import (
 type Adapter4ButtonWireless433 struct {
 }
 
-func (d *Adapter4ButtonWireless433) OnActuate(t *api.Thing, op string, params map[string]interface{}, db api.AppDB) {
+func (d *Adapter4ButtonWireless433) OnWrite(t *api.Thing, op string, params api.WriteRequest, db api.AppDB) {
 
 }
 
@@ -17,7 +17,7 @@ func (d *Adapter4ButtonWireless433) Cycle(dev *api.Thing) {
 
 }
 
-func (d *Adapter4ButtonWireless433) OnSense(dev *api.Thing, service *api.ThingService, data api.ThingData) (state map[string]interface{}) {
+func (d *Adapter4ButtonWireless433) OnRead(dev *api.Thing, service *api.ThingService, data api.ReadRequest) (state map[string]interface{}) {
 	log.Println(fmt.Sprintf("4 Button Wireless Triggered %s", service.Label))
 
 	return nil
