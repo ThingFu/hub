@@ -59,7 +59,7 @@ func validateConfig(cfg *api.Configuration) {
 		cfg.ServerPort = 8181
 	}
 
-	if len(cfg.Protocols) == 0 {
-		log.Println("No protocols defined")
+	if len(cfg.Channels) == 0 {
+		log.Println("No channels defined. Will only work via HTTP.")
 	}
 }

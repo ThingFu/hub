@@ -4,9 +4,10 @@
 
 package api
 
-type ProtocolConfiguration struct {
-	Enabled bool
-	Port    string
-	Baud    uint32
-	Conn    string
+type ChannelConfiguration struct {
+	Type 		string
+	Enabled 	bool
+	Port    	string
+	Baud    	uint32
+	Protocols	[] string
 }
