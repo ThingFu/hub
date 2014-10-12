@@ -44,6 +44,14 @@ function ThingManager($http) {
                 data: t
             }).success(cb);
 
+        },
+        action: function (id, action, data, cb) {
+            $http({
+                method: "POST",
+                url: "/api/thing/" + id + "/action/" + action,
+                data: data
+            }).success(cb);
+
         }
     }
 }
@@ -53,3 +61,45 @@ function ThingManager($http) {
 // UI
 
 // Rules
+function RulesManager($http) {
+    return {
+        save: function (file, id, content, cb) {
+            $http({
+                method: "POST",
+                url: "/api/rule/" + id,
+                data: {
+                    file: file,
+                    content: content
+                }
+            }).success(cb);
+        },
+        get: function (id, cb) {
+            $http({
+                method: "GET",
+                url: "/api/rule/" + id
+            }).success(cb);
+        },
+        getAll: function (cb) {
+            $http({
+                method: "GET",
+                url: "/api/rules"
+            }).success(cb);
+        },
+        add: function (file, content, cb) {
+            $http({
+                method: "PUT",
+                url: "/api/rule/" + id,
+                data: {
+                    file: file,
+                    content: content
+                }
+            }).success(cb);
+        },
+        delete: function (id, cb) {
+            $http({
+                method: "DELETE",
+                url: "/api/rule/" + id
+            }).success(cb);
+        }
+    }
+}

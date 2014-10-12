@@ -46,7 +46,10 @@
 <script src="/public/js/ace/ui-ace.js"></script>
 <script>
     var app = angular.module("thingfuapp", ['ui.ace']);
-    app.controller("controller", function($scope, $http, $interval, $location) {
+    app.factory("HttpProxy", ["$http", HttpProxy])
+    app.factory("RulesManager", ["$http", RulesManager])
+
+    app.controller("controller", function($scope, $location, RulesManager) {
         $scope.model = {};
 
         absUrl = $location.absUrl()
@@ -60,10 +63,13 @@
         };
 
         $scope.saveRule = function() {
-            alert("Save Rule")
-        }
+            console.log($scope.model.path)
+            RulesManager.save($scope.model.path, ruleId, $scope.model.content, function (data) {
 
-        $http.get("/api/rule/" + ruleId).success(function(data, status, headers, config){
+            })
+        };
+
+        RulesManager.get(ruleId, function(data, status, headers, config) {
             $scope.model.content = data.content
             $scope.model.name = data.name
             $scope.model.path = data.path

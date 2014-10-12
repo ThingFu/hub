@@ -13,6 +13,11 @@
     </section>
 
     <section class="content">
+        <script>
+            var app = angular.module("thingfuapp", [])
+            app.factory("HttpProxy", ["$http", HttpProxy])
+            app.factory("ThingManager", ["$http", ThingManager])
+        </script>
         <div class="col-md-12">
         #{.Content}#
         </div>
