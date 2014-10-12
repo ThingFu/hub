@@ -35,10 +35,26 @@ func Initialize(home string, config api.Configuration) (api.Container, api.Envir
 	CONTAINER.startWire()
 
 	// Register Protocol Handlers
+	/*
 	protocols := config.Protocols
 	for k, protocol := range protocols {
 		handler := CONTAINER.Factory().CreateProtocolHandler(k, protocol)
 		CONTAINER.Register(handler.(api.ContainerAware), "api.ProtocolHandler")
+	}
+	*/
+
+	// Register Channels
+	for _, channel := range config.Channels {
+		c := CONTAINER.Factory().CreateChannelHandler(channel)
+		c.SetChannelConfiguration(channel)
+
+		for _, protocol := range channel.Protocols {
+			p := CONTAINER.Factory().CreateProtocolHandler(protocol)
+
+			c.AddProtocol(p)
+		}
+
+		CONTAINER.Register(c.(api.ContainerAware), "api.Channel")
 	}
 
 	return CONTAINER, env
@@ -51,7 +67,8 @@ type DefaultContainer struct {
 	scheduleService  api.ScheduleService
 	environment      api.Environment
 	factory          api.Factory
-	protocolHandlers map[string]api.ProtocolHandler
+	protocolHandlers map[string] api.ProtocolHandler
+	channels 		 map[string] api.CommunicationChannel
 }
 
 func (c *DefaultContainer) Register(svc api.ContainerAware, t string) {
@@ -77,6 +94,10 @@ func (c *DefaultContainer) Register(svc api.ContainerAware, t string) {
 	case t == "api.ProtocolHandler":
 		name := svc.(api.ProtocolHandler).GetName()
 		c.protocolHandlers[name] = svc.(api.ProtocolHandler)
+
+	case t == "api.Channel":
+		name := svc.(api.CommunicationChannel).GetName()
+		c.channels[name] = svc.(api.CommunicationChannel)
 
 	default:
 		log.Println("Unknown Service")
@@ -112,6 +133,7 @@ func (c *DefaultContainer) startWire() {
 
 	// Protocol Handlers
 	c.protocolHandlers = make(map[string]api.ProtocolHandler)
+	c.channels = make(map[string] api.CommunicationChannel)
 
 	services := make([]api.ContainerAware, 6)
 	services[0] = rulesService
@@ -186,4 +208,12 @@ func (c *DefaultContainer) ProtocolHandlers() map[string]api.ProtocolHandler {
 
 func (c *DefaultContainer) ProtocolHandler(p string) api.ProtocolHandler {
 	return c.protocolHandlers[p]
+}
+
+func (c *DefaultContainer) Channels() map[string]api.CommunicationChannel {
+	return c.channels
+}
+
+func (c *DefaultContainer) Channel(s string) api.CommunicationChannel {
+	return c.channels[s]
 }

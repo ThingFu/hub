@@ -7,7 +7,8 @@ package api
 type Factory interface {
 	CreateCondition(string) Condition
 	CreateConsequence(string) Consequence
-	CreateProtocolHandler(string, ProtocolConfiguration) ProtocolHandler
+	CreateChannelHandler(ChannelConfiguration) CommunicationChannel
+	CreateProtocolHandler(string) ProtocolHandler
 	CreateThingAdapter(string) ThingAdapter
 	ContainerAware
 }

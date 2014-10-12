@@ -2,18 +2,19 @@
     "NodeID": "LocalDev",
     "MaxProcs": 1,
     "DB": "localhost:27017",
-    "Protocols": {
-        "sim": {
+    "Channels": [
+        {
+            "Type": "Serial",
             "Enabled": true,
-            "Conn": "http"
-        },
-        "RF433": {
-            "Enabled": true,
-            "Conn": "Serial",
             "Port": "/dev/tty.usbmodem1411",
-            "Baud": 9600
+            "Baud": 9600,
+            "Protocols": [
+                "CodeMatch",
+                "WT450",
+                "ThingFuSimple"
+            ]
         }
-    },
+    ],
     "Mail": {
         "User": "username@host",
         "Pass": "passwd",

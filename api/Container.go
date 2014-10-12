@@ -14,4 +14,7 @@ type Container interface {
 	Factory() Factory
 	ProtocolHandlers() map[string]ProtocolHandler
 	ProtocolHandler(string) ProtocolHandler
+
+	Channels() map[string] CommunicationChannel
+	Channel(string) CommunicationChannel
 }

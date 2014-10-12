@@ -23,10 +23,6 @@ type Configuration struct {
 	Db         string
 	MaxProcs   uint8
 	ServerPort uint16
-	Protocols  map[string]ProtocolConfiguration
+	Channels   []ChannelConfiguration
 	Mail       MailConfig
-}
-
-func (c Configuration) GetProtocolConfiguration(protocol string) ProtocolConfiguration {
-	return c.Protocols[protocol]
 }
