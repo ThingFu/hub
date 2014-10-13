@@ -88,6 +88,16 @@ func (m *MongoDataSource) GetThingEvents(limit int, id string) []api.Event {
 	return events
 }
 
+
+func (m *MongoDataSource) GetEventsCountForThing(t *api.Thing) (count int) {
+	session := m.session.Copy()
+	defer session.Close()
+
+	count, _ = session.DB("events").C("events").Find(bson.M{"thing": t.Id}).Count()
+
+	return
+}
+
 func (m *MongoDataSource) GetEventsCount() (count int) {
 	session := m.session.Copy()
 	defer session.Close()

@@ -95,6 +95,7 @@ func (w WebApplication) initializeRoutes() *mux.Router {
 	r.HandleFunc("/api/thing/{id}", w.deleteThing).Methods("DELETE")
 	r.HandleFunc("/api/thing/{id}", w.updateThing).Methods("PUT")
 
+	r.HandleFunc("/api/thing/{id}/event/count", w.getEventsCountForThing).Methods("GET")
 	r.HandleFunc("/api/thing/{id}/event/{svc}", w.triggerEventForThing).Methods("POST")
 	r.HandleFunc("/api/thing/{id}/events/{limit}", w.getEventsForThing).Methods("GET")
 	r.HandleFunc("/api/thing/{id}/action/{action}", w.invokeThingAction).Methods("POST")
@@ -186,8 +187,6 @@ func (app *WebApplication) getDashboardState(w http.ResponseWriter, req *http.Re
 		dev := &things[i]
 		content := renderStringContent(dev.Descriptor.Path + "/widget.html", dev)
 		dev.Content = content
-
-		fmt.Println(dev)
 
 		thing_models = append(thing_models, dev)
 	}
@@ -419,6 +418,21 @@ func (app *WebApplication) getEventsForThing(w http.ResponseWriter, req *http.Re
 	events := app.dataSource.GetThingEvents(limit, id)
 
 	writeJsonModel(w, events)
+}
+
+// GET /api/thing/{id}/event/count
+func (app *WebApplication) getEventsCountForThing(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+	id := vars["id"]
+
+	t, _ := app.thingManager.GetThing(id)
+	count := app.dataSource.GetEventsCountForThing(&t)
+
+	model := make(map[string]interface {})
+	model["count"] = count
+
+	writeJsonModel(w, model)
+
 }
 
 // POST http://localhost:8181/api/thing/{id}/event/{svc}

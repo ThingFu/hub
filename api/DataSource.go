@@ -11,6 +11,7 @@ type DataSource interface {
 	GetThingCount() int
 	GetThings() []Thing
 
+	GetEventsCountForThing(*Thing) int
 	GetEventsCount() int
 	GetEvents(int) []Event
 
