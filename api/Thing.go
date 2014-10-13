@@ -31,9 +31,10 @@ type Thing struct {
 	LastEvents  map[string]time.Time
 	LastEvent   time.Time
 	LastCycle   time.Time
-	Data        map[string]interface{}  `bson:"data"`
-	Content     string                  `bson:""`
-	Services    map[string]ThingService `bson:"services"`
+	Data        map[string]interface{}  		`bson:"data"`
+	Content     string                  		`bson:""`
+	Services    map[string]ThingService 		`bson:"services"`
+	State		State							`bson:"state"`
 }
 
 func NewThing() *Thing {

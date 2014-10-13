@@ -13,9 +13,10 @@ type ThingManager interface {
 	RegisterThingType(ThingType)
 	RegisterThing(Thing)
 	GetThings() []Thing
-	Handle(*Thing, *ThingService, map[string]interface{})
+	Handle(*Thing, *ThingService, State)
 	CreateThing(*Thing)
 	RemoveThing(Thing)
+	GetProtocolHandlerForThing(*Thing) (ProtocolHandler)
 
 	LoadThings()
 
@@ -26,4 +27,5 @@ type ThingManager interface {
 	SetRulesManager(RulesManager)
 	SetFactory(Factory)
 	SetDataSource(DataSource)
+	SetCommChannelManager(CommChannelManager)
 }

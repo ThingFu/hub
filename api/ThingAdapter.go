@@ -9,8 +9,7 @@ import _ "net/http"
 // Thing adapter to support any sensing or actuation
 type ThingAdapter interface {
 	Cycle(*Thing)
-	OnRead(*Thing, *ThingService, ReadRequest) (state map[string]interface{})
-	OnWrite(*Thing, string, WriteRequest, AppDB)
-	GetEventText(Thing *Thing, service *ThingService, state map[string]interface{}) (shortText string, longText string)
-	// HandleGet(req http.Request, res http.Response)
+	OnRead(*Thing, *ThingService, ReadRequest, ProtocolHandler) (State)
+	OnWrite(*Thing, string, WriteRequest, AppDB, ProtocolHandler)
+	GetEventText(*Thing, *ThingService, State) (shortText string, longText string)
 }
