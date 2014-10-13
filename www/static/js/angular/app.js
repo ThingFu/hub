@@ -43,7 +43,12 @@ function ThingManager($http) {
                 url: "/api/thing/" + id,
                 data: t
             }).success(cb);
-
+        },
+        count: function (id, cb) {
+            $http({
+                method: "GET",
+                url: "/api/thing/" + id + "/event/count"
+            }).success(cb);
         },
         action: function (id, action, data, cb) {
             $http({
@@ -51,7 +56,6 @@ function ThingManager($http) {
                 url: "/api/thing/" + id + "/action/" + action,
                 data: data
             }).success(cb);
-
         }
     }
 }

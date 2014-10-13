@@ -1,8 +1,8 @@
-<div style="height: 150px;">
+<div style="height: 150px;" id="#{.Id}#Controller">
     <table width="100%">
         <tr>
-            <td style="text-align: center;">
-                111
+            <td style="text-align: center; font-size: 8.0em;">
+                {{model.count}}
             </td>
         </tr>
     </table>
@@ -15,10 +15,11 @@
         var ctrlId = ID + "Controller";
         var Lazy = angular.element(document).injector().get('Lazy');
 
-        Lazy.controller(ctrlId, function($scope, HttpProxy, ThingManager) {
-            ThingManager.get(ID, function (ret){
-                console.log(ret);
-            });
+        Lazy.controller(ctrlId, function($scope, ThingManager) {
+            $scope.model = {}
+            ThingManager.count("doorCountContact", function (ret) {
+                $scope.model.count = ret.count;
+            })
         });
     })();
 </script>

@@ -147,8 +147,7 @@
             factory: provide.factory,
 
             controller: function(id, impl) {
-                var el = angular.element(document.getElementById(id)),
-                        scope = el.scope();
+                var el = angular.element(document.getElementById(id)), scope = el.scope();
 
                 // register the controller with angular
                 controllerProvider.register(id, impl);
@@ -186,7 +185,7 @@
         ReloadDashboard($http, $scope);
         $interval(function () {
             ReloadDashboard($http, $scope);
-        }, 10000, 0)
+        }, 5000, 0)
     });
 
     function ReloadDashboard($http, $scope) {
