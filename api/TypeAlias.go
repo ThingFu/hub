@@ -14,3 +14,5 @@ func (slice Things) Less(i, j int) bool {
 func (slice Things) Swap(i, j int) {
 	slice[i], slice[j] = slice[j], slice[i]
 }
+
+type State map[string]interface{}
