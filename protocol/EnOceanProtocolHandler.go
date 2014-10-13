@@ -25,3 +25,8 @@ func (p *EnOceanProtocolHandler) GetLabel() string {
 func (p *EnOceanProtocolHandler) OnRead(payload api.ReadRequest) {
 
 }
+
+func (p *EnOceanProtocolHandler) Write(t *api.Thing, req api.WriteRequest) {
+
+}
+

@@ -47,41 +47,46 @@ func (cm *CodeMatchProtocolHandler) OnRead(data api.ReadRequest) {
 		return
 	}
 
-	dev, service, ok := cm.getThing(ser)
+	thing, service, ok := cm.getThing(ser)
 
 	if ok != nil {
 		log.Println("Unknown Thing ", ser)
 	} else {
 		thingManager := cm.GetThingManager()
-		t, err := thingManager.GetThingType(dev.Type)
+		t, err := thingManager.GetThingType(thing.Type)
 		if err != nil {
 			log.Println(err)
 		}
 
 		drv := cm.GetFactory().CreateThingAdapter(t.TypeId)
 		if drv == nil {
-			log.Println("No adapter for thing type " + dev.Type)
+			log.Println("No adapter for thing type " + thing.Type)
 			return
 		}
 
 		// Sense and Handle Thing Event
 		go func() {
-			state := drv.OnRead(dev, service, data)
+			handler := thingManager.GetProtocolHandlerForThing(thing)
+			state := drv.OnRead(thing, service, data, handler)
 
 			// We don't want to run rules or fire events too frequently,
 			// so check against thing descriptor's Event Update Buffer
 			// if we should go ahead
 			lastEvent := service.LastEvent
-			desc := dev.Descriptor
+			desc := thing.Descriptor
 			if utils.TimeWithinThreshold(lastEvent, desc.EventUpdateBuffer, 5000) {
 				service.UpdateLastEvent(time.Now())
-				dev.UpdateService(service)
-				thingManager.SaveThing(*dev)
+				thing.UpdateService(service)
+				thingManager.SaveThing(*thing)
 
-				thingManager.Handle(dev, service, state)
+				thingManager.Handle(thing, service, state)
 			}
 		}()
 	}
+}
+
+func (p *CodeMatchProtocolHandler) Write(t *api.Thing, req api.WriteRequest) {
+
 }
 
 func (p *CodeMatchProtocolHandler) getThing(ser string) (*api.Thing, *api.ThingService, error) {

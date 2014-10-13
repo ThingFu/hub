@@ -25,3 +25,8 @@ func (p *ZigbeeProtocolHandler) GetLabel() string {
 func (p *ZigbeeProtocolHandler) OnRead(payload api.ReadRequest) {
 
 }
+
+func (p *ZigbeeProtocolHandler) Write(t *api.Thing, req api.WriteRequest) {
+
+}
+

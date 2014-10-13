@@ -33,3 +33,6 @@ func (p *DelegatingSimulationProtocolHandler) OnRead(payload api.ReadRequest) {
 
 }
 
+func (p *DelegatingSimulationProtocolHandler) Write(t *api.Thing, req api.WriteRequest) {
+
+}

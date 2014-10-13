@@ -25,3 +25,8 @@ func (p *ZWaveProtocolHandler) GetLabel() string {
 func (p *ZWaveProtocolHandler) OnRead(payload api.ReadRequest) {
 
 }
+
+func (p *ZWaveProtocolHandler) Write(t *api.Thing, req api.WriteRequest) {
+
+}
+

@@ -22,6 +22,11 @@ func (p *ThingFuSimpleProtocolHandler) OnRead(payload api.ReadRequest) {
 
 }
 
+func (p *ThingFuSimpleProtocolHandler) Write(t *api.Thing, req api.WriteRequest) {
+	channel := p.GetChannel()
+	channel.Write(req)
+}
+
 func (p *ThingFuSimpleProtocolHandler) getThing(ser string) (*api.Thing, *api.ThingService, error) {
 	return new(api.Thing), new(api.ThingService), errors.New("Unknown Thing")
 }

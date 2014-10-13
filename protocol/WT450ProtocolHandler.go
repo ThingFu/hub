@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 	"errors"
+	"fmt"
 )
 
 type WT450ProtocolHandler struct {
@@ -29,6 +30,10 @@ func (h *WT450ProtocolHandler) GetLabel() string {
 	return "WT450 Digital Humidity and Temperature"
 }
 
+func (p *WT450ProtocolHandler) Write(t *api.Thing, req api.WriteRequest) {
+
+}
+
 func (h *WT450ProtocolHandler) OnRead(data api.ReadRequest) {
 	parsed, err := utils.ParseThingFuSerialData(data.GetPayload().(string))
 	if err != nil {
@@ -38,7 +43,7 @@ func (h *WT450ProtocolHandler) OnRead(data api.ReadRequest) {
 
 	val, _ := strconv.Atoi(parsed["Data"].(string))
 	ch := val >> 26
-	dev, service, err := h.getThing(strconv.Itoa(ch))
+	thing, service, err := h.getThing(strconv.Itoa(ch))
 
 	if err == nil {
 		factory := h.GetFactory()
@@ -50,15 +55,17 @@ func (h *WT450ProtocolHandler) OnRead(data api.ReadRequest) {
 			data.Put("channel", ch)
 			data.Put("dhtdata", val)
 
-			state := drv.OnRead(dev, service, data)
+			handler := thingManager.GetProtocolHandlerForThing(thing)
+			state := drv.OnRead(thing, service, data, handler)
 
 			lastEvent := service.LastEvent
-			desc := dev.Descriptor
+			desc := thing.Descriptor
 			if utils.TimeWithinThreshold(lastEvent, desc.EventUpdateBuffer, 5000) {
+				fmt.Println(thing.State)
 				service.UpdateLastEvent(time.Now())
-				thingManager.SaveThing(*dev)
+				thingManager.SaveThing(*thing)
 
-				thingManager.Handle(dev, service, state)
+				thingManager.Handle(thing, service, state)
 			}
 		}()
 	}
@@ -86,29 +93,3 @@ func (p *WT450ProtocolHandler) getThing(ch string) (*api.Thing, *api.ThingServic
 	return new(api.Thing), new(api.ThingService), errors.New("Unknown Thing")
 }
 
-
-/*
-func (p *RF433ProtocolHandler) handleWT450(data *RF433Data) {
-	dec, _ := strconv.Atoi(data.DecData)
-	ser := "nb-wt450-" + strconv.Itoa(dec>>26)
-
-	dev, service, err := p.getThing(ser)
-
-	if err == nil {
-		drv := p.factory.CreateThingAdapter("433mhz-wt450")
-
-		go func() {
-			state := drv.OnSense(dev, service, data)
-
-			lastEvent := service.LastEvent
-			desc := dev.Descriptor
-			if utils.TimeWithinThreshold(lastEvent, desc.EventUpdateBuffer, 5000) {
-				service.UpdateLastEvent(time.Now())
-				p.thingManager.SaveThing(*dev)
-
-				p.thingManager.Handle(dev, service, state)
-			}
-		}()
-	}
-}
- */
