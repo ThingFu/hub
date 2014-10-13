@@ -12,3 +12,11 @@ func NewWriteRequest(payload interface {}) WriteRequest {
 
 	return *p
 }
+
+func (c *WriteRequest) Put(key string, val interface {}) {
+	c.data[key] = val
+}
+
+func (c *WriteRequest) Get(key string) (interface {}) {
+	return c.data[key]
+}

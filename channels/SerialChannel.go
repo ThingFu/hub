@@ -5,10 +5,12 @@ import (
 	serial "github.com/tarm/goserial"
 	"log"
 	"strings"
+	"io"
 )
 
 type SerialChannel struct {
 	api.BaseCommunicationChannel
+	serial	io.ReadWriteCloser
 }
 
 func NewSerialChannel() (*SerialChannel) {
@@ -18,7 +20,7 @@ func NewSerialChannel() (*SerialChannel) {
 	return s
 }
 
-func (ser SerialChannel) Start() error     {
+func (ser *SerialChannel) Start() error     {
 	log.Println("[INFO] Starting Serial")
 
 	cfg := ser.GetConfiguration()
@@ -27,6 +29,7 @@ func (ser SerialChannel) Start() error     {
 
 	c := &serial.Config{ Name: port, Baud: int(baud) }
 	s, err := serial.OpenPort(c)
+	ser.serial = s
 	if err == nil {
 		buf := ""
 
@@ -58,6 +61,12 @@ func (ser SerialChannel) Start() error     {
 		log.Print("[ERROR] Unable to start Serial -- ", err)
 	}
 	return nil
+}
+
+func (s SerialChannel) Write(req api.WriteRequest) {
+	content := req.Get("content").(string)
+
+	s.serial.Write([]byte(content))
 }
 
 func (s SerialChannel) GetName() string  {
