@@ -4,6 +4,15 @@ type BaseProtocolHandler struct {
 	factory      Factory
 	environment  Environment
 	thingManager ThingManager
+	channel 	 CommunicationChannel
+}
+
+func (h *BaseProtocolHandler) SetChannel(c CommunicationChannel) {
+	h.channel = c
+}
+
+func (h *BaseProtocolHandler) GetChannel() (CommunicationChannel) {
+	return h.channel
 }
 
 func (h *BaseProtocolHandler) SetThingManager(t ThingManager) {

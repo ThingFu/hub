@@ -20,6 +20,10 @@ func (cc BaseCommunicationChannel) GetProtocols() map[string] ProtocolHandler {
 	return cc.protocols
 }
 
+func (cc BaseCommunicationChannel) GetProtocol(p string) (ProtocolHandler) {
+	return cc.protocols[p]
+}
+
 
 func (cc BaseCommunicationChannel) GetConfiguration() ChannelConfiguration {
 	return cc.config
