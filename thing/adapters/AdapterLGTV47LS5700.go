@@ -14,7 +14,7 @@ import (
 type AdapterLGTV47LS5700 struct {
 }
 
-func (d *AdapterLGTV47LS5700) OnWrite(t *api.Thing, op string, params api.WriteRequest, db api.AppDB) {
+func (d *AdapterLGTV47LS5700) OnWrite(t *api.Thing, op string, params api.WriteRequest, db api.AppDB, handler api.ProtocolHandler) {
 
 }
 
@@ -22,7 +22,7 @@ func (tv *AdapterLGTV47LS5700) Cycle(dev *api.Thing) {
 	tv.initSession(dev)
 }
 
-func (tv *AdapterLGTV47LS5700) OnRead(dev *api.Thing, service *api.ThingService, data api.ReadRequest) (state map[string]interface{}) {
+func (tv *AdapterLGTV47LS5700) OnRead(dev *api.Thing, service *api.ThingService, data api.ReadRequest, handler api.ProtocolHandler) (state api.State) {
 	return nil
 }
 
@@ -44,6 +44,6 @@ func (tv *AdapterLGTV47LS5700) initSession(dev *api.Thing) {
 	}
 }
 
-func (d *AdapterLGTV47LS5700) GetEventText(thing *api.Thing, sensor *api.ThingService, state map[string]interface{}) (shortText string, longText string) {
+func (d *AdapterLGTV47LS5700) GetEventText(thing *api.Thing, sensor *api.ThingService, state api.State) (shortText string, longText string) {
 	return "", ""
 }

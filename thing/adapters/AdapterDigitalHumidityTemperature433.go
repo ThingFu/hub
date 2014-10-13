@@ -12,7 +12,7 @@ import (
 type AdapterDigitalHumidityTemperature433 struct {
 }
 
-func (d *AdapterDigitalHumidityTemperature433) OnWrite(t *api.Thing, op string, params api.WriteRequest, db api.AppDB) {
+func (d *AdapterDigitalHumidityTemperature433) OnWrite(t *api.Thing, op string, params api.WriteRequest, db api.AppDB, handler api.ProtocolHandler) {
 
 }
 
@@ -20,7 +20,7 @@ func (d *AdapterDigitalHumidityTemperature433) Cycle(dev *api.Thing) {
 
 }
 
-func (d *AdapterDigitalHumidityTemperature433) OnRead(dev *api.Thing, service *api.ThingService, data api.ReadRequest) (state map[string]interface{}) {
+func (d *AdapterDigitalHumidityTemperature433) OnRead(dev *api.Thing, service *api.ThingService, data api.ReadRequest, handler api.ProtocolHandler) (state api.State) {
 	fmt.Println(data.GetPayload())
 
 	dec := data.GetAsInt("dhtdata")
@@ -37,12 +37,10 @@ func (d *AdapterDigitalHumidityTemperature433) OnRead(dev *api.Thing, service *a
 	state["tH"] = tempHigh - 50
 	state["tL"] = tempLow
 
-	fmt.Println(state)
-
 	return
 }
 
-func (d *AdapterDigitalHumidityTemperature433) GetEventText(thing *api.Thing, service *api.ThingService, state map[string]interface{}) (shortText string, longText string) {
+func (d *AdapterDigitalHumidityTemperature433) GetEventText(thing *api.Thing, service *api.ThingService, state api.State) (shortText string, longText string) {
 	humidity := state["h"]
 	tH := state["tH"]
 	tL := state["tL"]

@@ -15,14 +15,14 @@ func (o *AdapterKnockSensor433) Cycle(dev *api.Thing) {
 
 }
 
-func (d *AdapterKnockSensor433) OnWrite(t *api.Thing, op string, params api.WriteRequest, db api.AppDB) {
+func (d *AdapterKnockSensor433) OnWrite(t *api.Thing, op string, params api.WriteRequest, db api.AppDB, handler api.ProtocolHandler) {
 
 }
 
-func (o *AdapterKnockSensor433) OnRead(dev *api.Thing, service *api.ThingService, data api.ReadRequest) (state map[string]interface{}) {
+func (o *AdapterKnockSensor433) OnRead(dev *api.Thing, service *api.ThingService, data api.ReadRequest, handler api.ProtocolHandler) (state api.State) {
 	return nil
 }
 
-func (d *AdapterKnockSensor433) GetEventText(thing *api.Thing, sensor *api.ThingService, state map[string]interface{}) (shortText string, longText string) {
+func (d *AdapterKnockSensor433) GetEventText(thing *api.Thing, sensor *api.ThingService, state api.State) (shortText string, longText string) {
 	return "", ""
 }
