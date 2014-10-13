@@ -1,6 +1,7 @@
 {
     "tid": "utilities-webapp",
     "name": "Utilities App",
+    "protocol": "HTTP",
     "description": "",
     "cycletime": 1800000,
     "vendor": "thingfu",
