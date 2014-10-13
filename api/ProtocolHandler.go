@@ -10,6 +10,10 @@ type ProtocolHandler interface {
 	GetName() string
 	GetLabel() string
 	OnRead(data ReadRequest)
+	Write(*Thing, WriteRequest)
+
+	GetChannel() (CommunicationChannel)
+	SetChannel(CommunicationChannel)
 
 	SetThingManager(ThingManager)
 	SetFactory(Factory)

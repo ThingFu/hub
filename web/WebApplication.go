@@ -186,6 +186,9 @@ func (app *WebApplication) getDashboardState(w http.ResponseWriter, req *http.Re
 		dev := &things[i]
 		content := renderStringContent(dev.Descriptor.Path + "/widget.html", dev)
 		dev.Content = content
+
+		fmt.Println(dev)
+
 		thing_models = append(thing_models, dev)
 	}
 
@@ -295,7 +298,6 @@ func (app *WebApplication) invokeThingAction(w http.ResponseWriter, req *http.Re
 	}
 
 	params := make(map[string]interface{})
-	fmt.Println("invokeThingAction")
 	app.thingManager.Actuate(&thing, action, params)
 
 	model := make(map[string]interface{})

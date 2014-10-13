@@ -18,8 +18,6 @@ import (
 )
 
 func Setup(env api.Environment) {
-	// setupChan := make(chan bool, 6)
-
 	// Load Thing Definitions
 	go loadThingTypes(env)
 
@@ -29,10 +27,8 @@ func Setup(env api.Environment) {
 	// Load Rule Defintions
 	loadRules(env)
 
-	// Register protocols. Has to be goroutines since these buggers
+	// Register communication channels. Has to be goroutines since these buggers
 	// loops forever
-	// go setupProtocols()
-
 	go setupChannels()
 
 	// Start scheduler for stuff like the peroidic rule invoker
@@ -138,10 +134,7 @@ func setupChannels() {
 	log.Println("[INFO] Setting Up Channels")
 	c := container.Instance()
 
-	chs := c.Channels()
-	for _, ch := range chs {
-		if ch.IsEnabled() {
-			ch.Start()
-		}
-	}
+	// func (d *DefaultCommChannelManager) Register(protocol string, channel api.CommunicationChannel) {
+	commManager := c.CommChannelManager()
+	commManager.InitChannels(c.Env().GetConfig().Channels)
 }

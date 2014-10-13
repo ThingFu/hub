@@ -21,6 +21,7 @@ type DefaultThingManager struct {
 	container    api.Container
 	factory      api.Factory
 	dataSource   api.DataSource
+	commManager	 api.CommChannelManager
 }
 
 func NewThingManager() *DefaultThingManager {
@@ -30,6 +31,11 @@ func NewThingManager() *DefaultThingManager {
 
 	return svc
 }
+
+func (s *DefaultThingManager) SetCommChannelManager(svc api.CommChannelManager) {
+	s.commManager = svc
+}
+
 
 func (s *DefaultThingManager) SetDataSource(svc api.DataSource) {
 	s.dataSource = svc
@@ -121,7 +127,7 @@ func (o *DefaultThingManager) LoadThings() {
 	}
 }
 
-func (o *DefaultThingManager) Handle(thing *api.Thing, service *api.ThingService, state map[string]interface{}) {
+func (o *DefaultThingManager) Handle(thing *api.Thing, service *api.ThingService, state api.State) {
 	facts := new(api.RuleFacts)
 	facts.Thing = thing
 	facts.Service = service
@@ -152,13 +158,20 @@ func (o *DefaultThingManager) Handle(thing *api.Thing, service *api.ThingService
 	o.rulesService.Trigger(api.TRIGGER_THING, facts)
 }
 
-func (o *DefaultThingManager) Actuate(t *api.Thing, op string, params map[string]interface{}) {
+func (o *DefaultThingManager) Actuate(t *api.Thing, action string, params map[string]interface{}) {
 	adapter := o.factory.CreateThingAdapter(t.Type)
 
 	appDB := o.dataSource.CreateAppDB(t)
 
 	req := api.NewWriteRequest(params)
-	adapter.OnWrite(t, op, req, appDB)
+	req.Put("action", action)
+
+	for k, v := range params {
+		req.Put(k, v)
+	}
+
+	handler := o.GetProtocolHandlerForThing(t)
+	adapter.OnWrite(t, action, req, appDB, handler)
 }
 
 func (o *DefaultThingManager) Cycle() {
@@ -178,6 +191,14 @@ func (o *DefaultThingManager) Cycle() {
 			}
 		}
 	}
+}
+
+func (o *DefaultThingManager) GetProtocolHandlerForThing(t *api.Thing) (api.ProtocolHandler) {
+	protocol := t.Descriptor.Protocol
+
+	ch := o.commManager.GetChannelForProtocol(protocol)
+
+	return ch.GetProtocol(protocol)
 }
 
 func (s *DefaultThingManager) ValidateWiring() {
