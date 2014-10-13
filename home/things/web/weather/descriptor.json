@@ -2,6 +2,7 @@
     "tid": "weather",
     "name": "OpenWeather",
     "description": "",
+    "protocol": "HTTP",
     "cycletime": 900000,
     "vendor": "unknown",
     "model": "unknown",

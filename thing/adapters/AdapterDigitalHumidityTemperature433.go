@@ -21,8 +21,6 @@ func (d *AdapterDigitalHumidityTemperature433) Cycle(dev *api.Thing) {
 }
 
 func (d *AdapterDigitalHumidityTemperature433) OnRead(dev *api.Thing, service *api.ThingService, data api.ReadRequest, handler api.ProtocolHandler) (state api.State) {
-	fmt.Println(data.GetPayload())
-
 	dec := data.GetAsInt("dhtdata")
 	mask := 0x7f
 	humidity := mask & (dec >> 16)

@@ -4,6 +4,7 @@
     "description": "",
     "cycletime": 1800000,
     "vendor": "LG",
+    "protocol": "HTTP/ROAP",
     "model": "47LS5700",
     "logEvents": false,
     "attributes": [

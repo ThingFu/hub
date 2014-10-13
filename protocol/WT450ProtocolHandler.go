@@ -7,7 +7,6 @@ import (
 	"strconv"
 	"time"
 	"errors"
-	"fmt"
 )
 
 type WT450ProtocolHandler struct {
@@ -61,7 +60,6 @@ func (h *WT450ProtocolHandler) OnRead(data api.ReadRequest) {
 			lastEvent := service.LastEvent
 			desc := thing.Descriptor
 			if utils.TimeWithinThreshold(lastEvent, desc.EventUpdateBuffer, 5000) {
-				fmt.Println(thing.State)
 				service.UpdateLastEvent(time.Now())
 				thingManager.SaveThing(*thing)
 

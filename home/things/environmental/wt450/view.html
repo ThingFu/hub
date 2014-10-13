@@ -1,28 +1,32 @@
-<div class="nav-tabs-custom" ng-controller="controller">
-    <ul class="nav nav-tabs pull-right">
-        <li class="active">
-            <a href="##{.Id}#-Chart" data-toggle="tab">Between X and Y</a>
-        </li>
-        <li class="pull-left header"><i class="fa fa-inbox"></i> #{.Name}#</li>
-    </ul>
-    <div class="tab-content no-padding">
-        <div class="tab-pane active" id="#{.Id}#-Chart" style="position:relative;">
-            <div class="panel-body" style="height: 450px;">
-                <nvd3-line-chart
-                        data="DHTData"
-                        showXAxis="true"
-                        showYAxis="true"
-                        tooltips="true"
-                        interactive="true">
-                </nvd3-line-chart>
+<div ng-controller="controller">
+<div class="nav-tabs-custom">
+        <ul class="nav nav-tabs pull-right">
+            <li class="active">
+                <a href="##{.Id}#-Chart-Temp" data-toggle="tab">Temperature</a>
+            </li>
+            <li>
+                <a href="##{.Id}#-Chart-Hum" data-toggle="tab">Humidity</a>
+            </li>
+
+            <li class="pull-left header"><i class="fa fa-inbox"></i> #{.Name}#</li>
+        </ul>
+        <div class="tab-content no-padding">
+            <div class="tab-pane active" id="#{.Id}#-Chart-Temp" style="position:relative;">
+                <div class="panel-body" style="width: 100%;">
+                    <canvas id="#{.Id}#-Chart-Temp-View" width="930" height="350"></canvas>
+                </div>
             </div>
+
+            <div class="tab-pane" id="#{.Id}#-Chart-Hum" style="position:relative;">
+                <div class="panel-body" style="width: 100%;">
+                    <canvas id="#{.Id}#-Chart-Hum-View" width="930" height="350"></canvas>
+                </div>
+            </div>
+
         </div>
-    </div>
 </div>
-<script src="/public/js/d3/d3.min.js"></script>
-<script src="/public/js/d3/nv.d3.min.js"></script>
-<script src="/public/js/d3/angularjs-nvd3-directives.min.js"></script>
-<link rel="stylesheet" href="/public/js/d3//nv.d3.min.css"/>
+    </div>
+<script src="/public/js/chart/chart.min.js"></script>
 <script>
     var thingId = "#{.Id}#";
     app.controller("controller", function($scope, $http, $interval) {
@@ -40,27 +44,99 @@
          */
 
         function loadFeed() {
-            $http.get("/api/thing/" + thingId + "/events/200").success(function(data, status, headers, config){
-                console.debug (data);
+            $http.get("/api/thing/" + thingId + "/events/50").success(function(data, status, headers, config){
+                var ctxTmp = document.getElementById(thingId + "-Chart-Temp-View").getContext("2d");
+                var ctxHum = document.getElementById(thingId + "-Chart-Hum-View").getContext("2d");
+
+                var options = {
+
+                    ///Boolean - Whether grid lines are shown across the chart
+                    scaleShowGridLines : true,
+
+                    //String - Colour of the grid lines
+                    scaleGridLineColor : "rgba(0,0,0,.05)",
+
+                    //Number - Width of the grid lines
+                    scaleGridLineWidth : 1,
+
+                    //Boolean - Whether the line is curved between points
+                    bezierCurve : true,
+
+                    //Number - Tension of the bezier curve between points
+                    bezierCurveTension : 0.4,
+
+                    //Boolean - Whether to show a dot for each point
+                    pointDot : true,
+
+                    //Number - Radius of each point dot in pixels
+                    pointDotRadius : 4,
+
+                    //Number - Pixel width of point dot stroke
+                    pointDotStrokeWidth : 1,
+
+                    //Number - amount extra to add to the radius to cater for hit detection outside the drawn point
+                    pointHitDetectionRadius : 4,
+
+                    //Boolean - Whether to show a stroke for datasets
+                    datasetStroke : true,
+
+                    //Number - Pixel width of dataset stroke
+                    datasetStrokeWidth : 2,
+
+                    //Boolean - Whether to fill the dataset with a colour
+                    datasetFill : true,
+
+                    //String - A legend template
+                    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+
+                };
+
                 tempData = []
                 humData = []
-
-                for (var i=0; i < data.length; i++) {
+                labels = []
+                for (var i=data.length-1; i > 0; i--) {
                     var state = data[i].Data;
-                    tmp = state.tH + (state.tL/100)
-                    tempData.push(
-                        [i, tmp]
-                    )
+                    var tmp = state.tH + (state.tL/100)
+                    var ts = new Date(data[i].Ts);
 
-                    humData.push(
-                        [i, state.h]
-                    )
+                    labels.push(ts.getHours() + ":" + ts.getMinutes())
+                    tempData.push(tmp);
+                    humData.push(state.h);
                 }
 
-                $scope.DHTData = [
-                    { "key": "Temperature", "values": tempData },
-                    { "key": "Humidity", "values": humData }
-                ]
+                var dsTemp = {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: "Temperature",
+                            fillColor: "rgba(220,220,220,0.2)",
+                            strokeColor: "rgba(220,220,220,1)",
+                            pointColor: "rgba(220,220,220,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(220,220,220,1)",
+                            data: tempData
+                        }
+                    ]
+                };
+
+                var dsHum = {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: "Humidity",
+                            fillColor: "rgba(151,187,205,0.2)",
+                            strokeColor: "rgba(151,187,205,1)",
+                            pointColor: "rgba(151,187,205,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(151,187,205,1)",
+                            data: humData
+                        }
+                    ]
+                }
+                new Chart(ctxTmp).Line(dsTemp, options);
+                new Chart(ctxHum).Line(dsHum, options);
             });
         }
         loadFeed();
