@@ -6,6 +6,7 @@ package api
 
 // Container handles all the services used as well as any cross-dependencies
 type Container interface {
+	CommChannelManager() CommChannelManager
 	RulesManager() RulesManager
 	ThingManager() ThingManager
 	Env() Environment

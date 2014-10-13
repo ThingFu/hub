@@ -13,6 +13,7 @@ import (
 	"github.com/thingfu/hub/rules"
 	"github.com/thingfu/hub/thing"
 	"log"
+	"github.com/thingfu/hub/channels"
 )
 
 var CONTAINER *DefaultContainer = nil
@@ -25,37 +26,16 @@ func Initialize(home string, config api.Configuration) (api.Container, api.Envir
 	CONTAINER = new(DefaultContainer)
 
 	env := env.NewEnvironment(home, config)
+
 	CONTAINER.Register(env, "api.Environment")
 	CONTAINER.Register(rules.NewRulesManager(), "api.RulesManager")
 	CONTAINER.Register(thing.NewThingManager(), "api.ThingManager")
 	CONTAINER.Register(new(events.DefaultScheduleService), "api.ScheduleService")
 	CONTAINER.Register(source.NewMongoDataSource(), "api.DataSource")
 	CONTAINER.Register(new(factory.DefaultFactory), "api.Factory")
+	CONTAINER.Register(channels.NewCommChannelManager(), "api.CommChannelManager")
 
 	CONTAINER.startWire()
-
-	// Register Protocol Handlers
-	/*
-	protocols := config.Protocols
-	for k, protocol := range protocols {
-		handler := CONTAINER.Factory().CreateProtocolHandler(k, protocol)
-		CONTAINER.Register(handler.(api.ContainerAware), "api.ProtocolHandler")
-	}
-	*/
-
-	// Register Channels
-	for _, channel := range config.Channels {
-		c := CONTAINER.Factory().CreateChannelHandler(channel)
-		c.SetChannelConfiguration(channel)
-
-		for _, protocol := range channel.Protocols {
-			p := CONTAINER.Factory().CreateProtocolHandler(protocol)
-
-			c.AddProtocol(p)
-		}
-
-		CONTAINER.Register(c.(api.ContainerAware), "api.Channel")
-	}
 
 	return CONTAINER, env
 }
@@ -67,6 +47,7 @@ type DefaultContainer struct {
 	scheduleService  api.ScheduleService
 	environment      api.Environment
 	factory          api.Factory
+	commManager		 api.CommChannelManager
 	protocolHandlers map[string] api.ProtocolHandler
 	channels 		 map[string] api.CommunicationChannel
 }
@@ -95,9 +76,8 @@ func (c *DefaultContainer) Register(svc api.ContainerAware, t string) {
 		name := svc.(api.ProtocolHandler).GetName()
 		c.protocolHandlers[name] = svc.(api.ProtocolHandler)
 
-	case t == "api.Channel":
-		name := svc.(api.CommunicationChannel).GetName()
-		c.channels[name] = svc.(api.CommunicationChannel)
+	case t == "api.CommChannelManager":
+		c.commManager = svc.(api.CommChannelManager)
 
 	default:
 		log.Println("Unknown Service")
@@ -111,11 +91,15 @@ func (c *DefaultContainer) startWire() {
 	env := c.Env()
 	dataSource := c.DataSource()
 	scheduleServices := c.ScheduleService()
+	commManager := c.CommChannelManager()
 
 	// Wire Up Services
 	// Rules Service
 	rulesService.SetThingManager(thingManager)
 	rulesService.SetFactory(factory)
+
+	// Comm Channel Manager
+	commManager.SetFactory(factory)
 
 	// Factory
 
@@ -123,6 +107,7 @@ func (c *DefaultContainer) startWire() {
 	thingManager.SetRulesManager(rulesService)
 	thingManager.SetFactory(factory)
 	thingManager.SetDataSource(dataSource)
+	thingManager.SetCommChannelManager(commManager)
 
 	// DataSource
 	dataSource.SetEnvironment(env)
@@ -202,6 +187,10 @@ func (c *DefaultContainer) Factory() api.Factory {
 	return c.factory
 }
 
+func (c *DefaultContainer) CommChannelManager() api.CommChannelManager {
+	return c.commManager
+}
+
 func (c *DefaultContainer) ProtocolHandlers() map[string]api.ProtocolHandler {
 	return c.protocolHandlers
 }
@@ -217,3 +206,5 @@ func (c *DefaultContainer) Channels() map[string]api.CommunicationChannel {
 func (c *DefaultContainer) Channel(s string) api.CommunicationChannel {
 	return c.channels[s]
 }
+
+
