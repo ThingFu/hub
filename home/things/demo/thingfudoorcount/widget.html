@@ -1,0 +1,24 @@
+<div style="height: 150px;">
+    <table width="100%">
+        <tr>
+            <td style="text-align: center;">
+                111
+            </td>
+        </tr>
+    </table>
+</div>
+<script>
+    (function() {
+        "use strict";
+
+        var ID = "#{.Id}#";
+        var ctrlId = ID + "Controller";
+        var Lazy = angular.element(document).injector().get('Lazy');
+
+        Lazy.controller(ctrlId, function($scope, HttpProxy, ThingManager) {
+            ThingManager.get(ID, function (ret){
+                console.log(ret);
+            });
+        });
+    })();
+</script>

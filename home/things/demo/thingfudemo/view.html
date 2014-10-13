@@ -64,21 +64,19 @@
 <script>
     app.controller("controller", function($scope, $http, HttpProxy, ThingManager) {
         $scope.opTurnOnRed = function() {
-            ThingManager.action("2LEDDemo", "turnOffRed", null, function (data){
-
-            });
+            ThingManager.action("2LEDDemo", "turnOnRed", null, function (data){});
         }
 
         $scope.opTurnOffRed = function() {
-
+            ThingManager.action("2LEDDemo", "turnOffRed", null, function (data){});
         }
 
         $scope.opTurnOnYellow = function() {
-
+            ThingManager.action("2LEDDemo", "turnOnYellow", null, function (data){});
         }
 
         $scope.opTurnOffYellow = function() {
-
+            ThingManager.action("2LEDDemo", "turnOffYellow", null, function (data){});
         }
     });
 </script>

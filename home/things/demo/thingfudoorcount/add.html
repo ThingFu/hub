@@ -1,0 +1,46 @@
+<div ng-controller="controller">
+    <form name="mainFrm">
+        <div class="box-body">
+
+            <input type="hidden" ng-model="model.type" />
+
+            <div class="form-group">
+                <label>Type</label>
+                <input type="text" class="form-control" value="#{.Name}#" disabled />
+            </div>
+
+            <div class="form-group">
+                <label>ID</label>
+                <input type="text" ng-model="model.Id" class="form-control" value="" />
+            </div>
+
+            <div class="form-group">
+                <label>Label</label>
+                <input type="text" ng-model="model.name" class="form-control" value="" />
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea ng-model="model.description"  class="form-control" rows="3"></textarea>
+            </div>
+        </div>
+        <div class="box-footer">
+            <button ng-click="submitForm()" class="btn btn-primary">Create</button>
+        </div>
+    </form>
+</div>
+<script>
+    app.controller("controller", function($scope, $http, HttpProxy, ThingManager) {
+        $scope.model = {
+            "type": #{.TypeId}#
+        };
+
+        $scope.submitForm = function() {
+            ThingManager.create($scope.model, function (ret) {
+                window.location.href = "/dashboard";
+            });
+        }
+    });
+</script>
+
+
