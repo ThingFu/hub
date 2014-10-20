@@ -67,3 +67,15 @@ func (c *MockContainer) ProtocolHandlers() map[string]api.ProtocolHandler {
 func (c *MockContainer) ProtocolHandler(p string) api.ProtocolHandler {
 	return c.protocolHandlers[p]
 }
+
+func (c *MockContainer) Channel(p string) api.CommunicationChannel {
+	return nil
+}
+
+func (c *MockContainer) Channels() map[string]api.CommunicationChannel {
+	return nil
+}
+
+func (c *MockContainer) CommChannelManager() api.CommChannelManager {
+	return nil
+}

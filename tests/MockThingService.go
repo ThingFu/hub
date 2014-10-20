@@ -77,7 +77,7 @@ func (o *MockThingManager) LoadThings() {
 
 }
 
-func (o *MockThingManager) Handle(thing *api.Thing, service *api.ThingService, state map[string]interface{}) {
+func (o *MockThingManager) Handle(thing *api.Thing, service *api.ThingService, state api.State) {
 
 }
 
@@ -90,5 +90,13 @@ func (o *MockThingManager) Actuate(t *api.Thing, op string, params map[string]in
 }
 
 func (s *MockThingManager) ValidateWiring() {
+
+}
+
+func (o *MockThingManager) GetProtocolHandlerForThing(t *api.Thing) api.ProtocolHandler {
+	return nil
+}
+
+func (o *MockThingManager) SetCommChannelManager(c api.CommChannelManager) {
 
 }
